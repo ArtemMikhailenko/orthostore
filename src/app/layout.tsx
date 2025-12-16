@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/layout/header/header';
 import { FooterSection } from '@/components/layout/footer/footer';
+import Providers from './providers';
 
 const inter = Inter({ 
   subsets: ['latin', 'cyrillic'],
@@ -56,9 +57,11 @@ export default function RootLayout({
         <Header />
         
         {/* Основной контент */}
-        <main className="min-h-screen">
-          {children}
-        </main>
+        <Providers>
+          <main className="min-h-screen">
+            {children}
+          </main>
+        </Providers>
         <FooterSection/>
         {/* Дополнительные скрипты */}
         <script

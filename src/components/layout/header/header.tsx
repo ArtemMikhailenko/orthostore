@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 import { 
   Menu, 
   X, 
@@ -14,6 +15,9 @@ import {
   Heart,
   Package
 } from 'lucide-react';
+import { CartDrawer } from '@/components/cart/cart-drawer';
+import { useCartStore } from '@/lib/cart-store';
+import { useAuthStore } from '@/lib/auth-store';
 
 interface HeaderProps {
   className?: string;
@@ -67,6 +71,11 @@ const navigationItems = [
     title: 'Контакты',
     href: '/contacts'
   }
+  ,
+  {
+    title: 'Доставка',
+    href: '/delivery'
+  }
 ];
 
 // Top Bar Component
@@ -112,7 +121,7 @@ function TopBar() {
 // Logo Component
 function Logo() {
   return (
-    <div className="flex items-center space-x-3 group cursor-pointer">
+    <Link href="/" className="flex items-center space-x-3 group cursor-pointer" aria-label="На главную">
       <div className="w-10 h-10 bg-stone-900 rounded-sm flex items-center justify-center group-hover:bg-stone-800 transition-all duration-300">
         <div className="text-white text-lg font-bold tracking-wide">O</div>
       </div>
@@ -124,7 +133,7 @@ function Logo() {
           Professional
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
@@ -258,25 +267,32 @@ function SearchBar({ isOpen, onToggle, isMobile = false }: { isOpen: boolean; on
 
 // Cart Button Component
 function CartButton() {
-  const [cartCount] = useState(3);
   const [isHovered, setIsHovered] = useState(false);
+  const count = useCartStore((s) => s.totalItems());
+  const open = useCartStore((s) => s.open);
 
   return (
-    <button 
+    <button
+      onClick={open}
       className="relative p-2 text-stone-600 hover:text-stone-900 transition-colors group"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      aria-label="Открыть корзину"
     >
-      <ShoppingCart className={cn(
-        "w-5 h-5 transition-transform duration-300",
-        isHovered && "scale-110"
-      )} />
-      {cartCount > 0 && (
-        <span className={cn(
-          "absolute -top-1 -right-1 w-5 h-5 bg-stone-900 text-white text-xs font-bold rounded-full flex items-center justify-center transition-all duration-300",
-          isHovered && "scale-110 bg-stone-700"
-        )}>
-          {cartCount > 9 ? '9+' : cartCount}
+      <ShoppingCart
+        className={cn(
+          "w-5 h-5 transition-transform duration-300",
+          isHovered && "scale-110"
+        )}
+      />
+      {count > 0 && (
+        <span
+          className={cn(
+            "absolute -top-1 -right-1 min-w-5 h-5 px-1 bg-stone-900 text-white text-[10px] font-bold rounded-full flex items-center justify-center transition-all duration-300",
+            isHovered && "scale-110 bg-stone-700"
+          )}
+        >
+          {count > 99 ? '99+' : count}
         </span>
       )}
     </button>
@@ -286,7 +302,10 @@ function CartButton() {
 // User Menu Component
 function UserMenu() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoggedIn] = useState(false);
+  const isLoggedIn = useAuthStore((s) => s.isLoggedIn());
+  const phone = useAuthStore((s) => s.phone);
+  const name = useAuthStore((s) => s.name);
+  const logout = useAuthStore((s) => s.logout);
 
   return (
     <div className="relative">
@@ -306,12 +325,12 @@ function UserMenu() {
           <div className="p-2">
             {isLoggedIn ? (
               <>
-                <a href="/profile" className="flex items-center gap-3 px-4 py-3 text-stone-700 hover:bg-stone-50 rounded-lg transition-colors">
-                  <User className="w-4 h-4" />
-                  Личный кабинет
-                </a>
+                <div className="px-4 py-3 text-stone-700">
+                  <div className="font-medium">{name || 'Профиль'}</div>
+                  {phone ? <div className="text-sm text-stone-500">{phone}</div> : null}
+                </div>
                 <a href="/orders" className="flex items-center gap-3 px-4 py-3 text-stone-700 hover:bg-stone-50 rounded-lg transition-colors">
-                  <Package className="w-4 h-4" />
+                  <User className="w-4 h-4" />
                   Мои заказы
                 </a>
                 <a href="/favorites" className="flex items-center gap-3 px-4 py-3 text-stone-700 hover:bg-stone-50 rounded-lg transition-colors">
@@ -319,7 +338,7 @@ function UserMenu() {
                   Избранное
                 </a>
                 <hr className="my-2 border-stone-200" />
-                <button className="w-full text-left px-4 py-3 text-stone-700 hover:bg-stone-50 rounded-lg transition-colors">
+                <button onClick={() => { logout(); setIsOpen(false); }} className="w-full text-left px-4 py-3 text-stone-700 hover:bg-stone-50 rounded-lg transition-colors">
                   Выйти
                 </button>
               </>
@@ -555,6 +574,9 @@ export function Header({ className }: HeaderProps) {
           />
         </div>
       )}
+
+      {/* Cart Drawer mounted at layout root */}
+      <CartDrawer />
     </>
   );
 }

@@ -1,6 +1,9 @@
-'use client'
+"use client";
 import React, { useState, useEffect, useMemo } from 'react';
 import { cn } from '@/lib/utils';
+import { useProducts, useManufacturers, useCategories, useCountries } from '@/lib/api/hooks';
+import type { ProductWithDiscounts } from '@/lib/api/public.types';
+import { pickI18n } from '@/snippets/i18n';
 import { 
   Search, 
   SlidersHorizontal, 
@@ -24,9 +27,11 @@ import {
   Clock,
   CheckCircle2
 } from 'lucide-react';
+import Image from 'next/image';
+import { useCartStore } from '@/lib/cart-store';
 
-// Enhanced Types
-interface Product {
+// UI product used by ProductCard
+interface UiProduct {
   id: string;
   name: string;
   brand: string;
@@ -52,369 +57,220 @@ interface Product {
   gallery?: string[];
 }
 
-// Enhanced Mock Data
-const products: Product[] = [
-  {
-    id: '1',
-    name: 'Clarity ADVANCED Ceramic Brackets',
-    brand: '3M Unitek',
-    category: 'Брекет-системы',
-    subcategory: 'Керамические',
-    price: 24500,
-    originalPrice: 28000,
-    rating: 4.8,
-    reviews: 127,
-    isNew: true,
-    isPopular: true,
-    isBestseller: false,
-    origin: 'США',
-    material: 'Керамика',
-    certification: ['ISO 13485', 'CE Mark', 'FDA'],
-    features: ['Self-ligating', 'Aesthetic', 'Low friction', 'Stain resistant'],
-    tags: ['premium', 'aesthetic', 'self-ligating'],
-    inStock: true,
+function mapApiToUi(
+  p: ProductWithDiscounts,
+  lookups: {
+    manufacturers: Map<string, string>;
+    categories: Map<string, string>;
+    countries: Map<string, string>;
+  },
+  lang: 'uk' | 'en' = 'uk'
+): UiProduct {
+  const title = pickI18n(p.titleI18n as any, lang) || p.slug;
+  const price = (p as any).priceMinFinal ?? p.priceMin ?? 0;
+  const originalPrice = p.priceMin && (p as any).priceMinFinal && (p as any).priceMinFinal < p.priceMin ? p.priceMin : undefined;
+  const isNew = p.createdAt ? Date.now() - new Date(p.createdAt).getTime() < 1000 * 60 * 60 * 24 * 30 : false;
+  const image = p.images && p.images[0] ? p.images[0] : '';
+  const mId = p.manufacturerIds?.[0];
+  const brandName = (mId && lookups.manufacturers.get(mId)) || '';
+  const cId = p.categoryIds?.[0];
+  const categoryName = (cId && lookups.categories.get(cId)) || '';
+  const coId = p.countryIds?.[0];
+  const countryName = (coId && lookups.countries.get(coId)) || '';
+  return {
+    id: (p._id as string) || p.slug,
+    name: title,
+    brand: brandName || p.slug,
+    category: categoryName || 'Каталог',
+    price,
+    originalPrice,
+    rating: 0,
+    reviews: 0,
+    isNew,
+    isPopular: p.tags?.includes('popular') ?? false,
+    isBestseller: p.tags?.includes('stock') ?? false,
+    origin: countryName,
+    material: '',
+    certification: [],
+    features: p.attributes?.map(a => `${a.key}: ${String(a.value)}`) ?? [],
+    tags: p.tags ?? [],
+    inStock: !!p.isActive,
     stockLevel: 'high',
-    imageUrl: '/api/placeholder/400/400'
-  },
-  {
-    id: '2',
-    name: 'Damon Q Self-Ligating System',
-    brand: 'Ormco',
-    category: 'Брекет-системы',
-    subcategory: 'Металлические',
-    price: 32000,
-    rating: 4.9,
-    reviews: 89,
-    isNew: false,
-    isPopular: true,
-    isBestseller: true,
-    origin: 'США',
-    material: 'Нержавеющая сталь',
-    certification: ['ISO 13485', 'CE Mark'],
-    features: ['Passive self-ligating', 'SpinTek', 'Reduced friction', 'Predictable'],
-    tags: ['bestseller', 'professional', 'efficient'],
-    inStock: true,
-    stockLevel: 'medium',
-    imageUrl: '/api/placeholder/400/400'
-  },
-  {
-    id: '3',
-    name: 'Spark Clear Aligners',
-    brand: 'Ormco',
-    category: 'Элайнеры',
-    subcategory: 'Прозрачные каппы',
-    price: 45000,
-    rating: 4.7,
-    reviews: 203,
-    isNew: true,
-    isPopular: false,
-    isBestseller: false,
-    origin: 'США',
-    material: 'TruGEN',
-    certification: ['ISO 13485', 'FDA'],
-    features: ['Invisible', 'Removable', 'Comfortable', 'Precise'],
-    tags: ['innovative', 'invisible', 'modern'],
-    inStock: true,
-    stockLevel: 'low',
-    imageUrl: '/api/placeholder/400/400'
-  },
-  {
-    id: '4',
-    name: 'NiTi Copper Archwires',
-    brand: 'Ormco',
-    category: 'Дуги',
-    subcategory: 'NiTi дуги',
-    price: 1850,
-    rating: 4.6,
-    reviews: 156,
-    isNew: false,
-    isPopular: true,
-    isBestseller: false,
-    origin: 'США',
-    material: 'NiTi + Copper',
-    certification: ['ISO 13485'],
-    features: ['Shape memory', 'Heat activated', 'Biocompatible', 'Flexible'],
-    tags: ['advanced', 'temperature-activated'],
-    inStock: true,
-    stockLevel: 'high',
-    imageUrl: '/api/placeholder/400/400'
-  },
-  {
-    id: '5',
-    name: 'Professional Orthodontic Kit',
-    brand: 'Hu-Friedy',
-    category: 'Инструменты',
-    subcategory: 'Наборы инструментов',
-    price: 28500,
-    rating: 4.9,
-    reviews: 78,
-    isNew: false,
-    isPopular: false,
-    isBestseller: true,
-    origin: 'США',
-    material: 'Нержавеющая сталь',
-    certification: ['ISO 13485', 'CE Mark'],
-    features: ['Ergonomic', 'Autoclavable', 'Precision', 'Durable'],
-    tags: ['professional', 'complete-set', 'ergonomic'],
-    inStock: true,
-    stockLevel: 'medium',
-    imageUrl: '/api/placeholder/400/400'
-  },
-  {
-    id: '6',
-    name: 'Elastic Power Chain',
-    brand: 'American Orthodontics',
-    category: 'Эластики',
-    subcategory: 'Цепочки',
-    price: 650,
-    originalPrice: 750,
-    rating: 4.4,
-    reviews: 289,
-    isNew: false,
-    isPopular: true,
-    isBestseller: false,
-    origin: 'США',
-    material: 'Латекс',
-    certification: ['ISO 13485'],
-    features: ['High force', 'Color coded', 'Consistent', 'Biocompatible'],
-    tags: ['essential', 'color-variety'],
-    colors: ['clear', 'silver', 'blue', 'red', 'green'],
-    inStock: true,
-    stockLevel: 'high',
-    imageUrl: '/api/placeholder/400/400'
-  }
-];
+    imageUrl: image,
+  };
+}
 
-// Smart Filter Component with Floating UI
-function SmartFilters({ onFiltersChange }: { onFiltersChange: (filters: any) => void }) {
+// Backend-aware filters per API docs
+type CatalogFilters = {
+  category?: string; // ObjectId
+  manufacturerId?: string[];
+  countryId?: string[];
+  priceFrom?: number;
+  priceTo?: number;
+  tags?: string[];
+};
+
+function SmartFilters({
+  categories,
+  manufacturers,
+  countries,
+  value,
+  onChange,
+}: {
+  categories: { _id?: string; slug: string; nameI18n: any }[] | undefined;
+  manufacturers: { _id?: string; nameI18n: any }[] | undefined;
+  countries: { _id?: string; nameI18n: any }[] | undefined;
+  value: CatalogFilters;
+  onChange: (filters: CatalogFilters) => void;
+}) {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeFilters, setActiveFilters] = useState<Record<string, any>>({});
-  const [searchTerm, setSearchTerm] = useState('');
 
-  // Smart filter suggestions based on popular combinations
-  const smartSuggestions = [
-    { id: 'premium', label: 'Премиум', filters: { certification: ['ISO 13485', 'FDA'], price: [20000, 50000] } },
-    { id: 'bestsellers', label: 'Хиты продаж', filters: { isBestseller: true } },
-    { id: 'new-arrivals', label: ' Новинки', filters: { isNew: true } },
-    { id: 'budget', label: 'Бюджетные', filters: { price: [0, 5000] } },
-    { id: 'american', label: 'США', filters: { origin: 'США' } },
-    { id: 'self-ligating', label: 'Самолигирующие', filters: { tags: 'self-ligating' } }
-  ];
+  const categoryId = value.category;
+  const manufacturerIds = value.manufacturerId || [];
+  const countryIds = value.countryId || [];
+  const priceTo = value.priceTo ?? 50000;
 
-  const filterCategories = [
-    {
-      id: 'category',
-      name: 'Категория',
-      type: 'pills',
-      options: [
-        { value: 'Брекет-системы', label: 'Брекеты', icon: '🦷', count: 2 },
-        { value: 'Элайнеры', label: 'Элайнеры', icon: '👁️', count: 1 },
-        { value: 'Дуги', label: 'Дуги', icon: '〰️', count: 1 },
-        { value: 'Инструменты', label: 'Инструменты', icon: '🔧', count: 1 },
-        { value: 'Эластики', label: 'Эластики', icon: '🔗', count: 1 }
-      ]
-    },
-    {
-      id: 'brand',
-      name: 'Бренд',
-      type: 'checkbox',
-      options: [
-        { value: '3M Unitek', label: '3M Unitek', count: 1 },
-        { value: 'Ormco', label: 'Ormco', count: 3 },
-        { value: 'Hu-Friedy', label: 'Hu-Friedy', count: 1 },
-        { value: 'American Orthodontics', label: 'American Orthodontics', count: 1 }
-      ]
-    },
-    {
-      id: 'price',
-      name: 'Цена',
-      type: 'range',
-      min: 0,
-      max: 50000,
-      step: 1000
-    },
-    {
-      id: 'features',
-      name: 'Особенности',
-      type: 'tags',
-      options: [
-        { value: 'aesthetic', label: 'Эстетичные', color: 'bg-pink-100 text-pink-800' },
-        { value: 'self-ligating', label: 'Самолигирующие', color: 'bg-blue-100 text-blue-800' },
-        { value: 'biocompatible', label: 'Биосовместимые', color: 'bg-green-100 text-green-800' },
-        { value: 'autoclavable', label: 'Автоклавируемые', color: 'bg-purple-100 text-purple-800' }
-      ]
-    }
-  ];
-
-  const applySmartSuggestion = (suggestion: any) => {
-    setActiveFilters(prev => ({ ...prev, ...suggestion.filters }));
-    onFiltersChange({ ...activeFilters, ...suggestion.filters });
-  };
-
-  const clearFilters = () => {
-    setActiveFilters({});
-    onFiltersChange({});
-  };
-
-  const activeFilterCount = Object.keys(activeFilters).length;
+  const setFilter = (patch: Partial<CatalogFilters>) => onChange({ ...value, ...patch });
+  const clear = () => onChange({});
 
   return (
     <div className="relative">
-      {/* Filter Trigger */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "flex items-center gap-2 px-4 py-2 bg-white border border-stone-300 rounded-xl hover:border-stone-400 transition-all duration-300 shadow-sm hover:shadow-md",
-          isOpen && "border-stone-900 shadow-md"
+          'flex items-center gap-2 px-4 py-2 bg-white border border-stone-300 rounded-xl hover:border-stone-400 transition-all duration-300 shadow-sm hover:shadow-md',
+          isOpen && 'border-stone-900 shadow-md'
         )}
       >
         <SlidersHorizontal className="w-4 h-4" />
         <span className="font-medium">Фильтры</span>
-        {activeFilterCount > 0 && (
+        {(categoryId || manufacturerIds.length || countryIds.length || value.priceFrom || value.priceTo) && (
           <span className="bg-stone-900 text-white text-xs px-2 py-0.5 rounded-full">
-            {activeFilterCount}
+            {[
+              categoryId ? 1 : 0,
+              manufacturerIds.length ? 1 : 0,
+              countryIds.length ? 1 : 0,
+              value.priceFrom || value.priceTo ? 1 : 0,
+            ].reduce((a, b) => a + b, 0)}
           </span>
         )}
-        <ChevronDown className={cn(
-          "w-4 h-4 transition-transform duration-300",
-          isOpen && "rotate-180"
-        )} />
+        <ChevronDown className={cn('w-4 h-4 transition-transform duration-300', isOpen && 'rotate-180')} />
       </button>
 
-      {/* Floating Filter Panel */}
       {isOpen && (
         <>
-          <div 
-            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
-            onClick={() => setIsOpen(false)}
-          />
+          <div className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
           <div className="absolute -top-40 left-0 z-50 mt-2 w-96 bg-white border border-stone-200 rounded-2xl shadow-2xl overflow-hidden">
-            
-            {/* Header */}
-            <div className="p-6 border-b border-stone-100">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-stone-900">Умные фильтры</h3>
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="p-1 hover:bg-stone-100 rounded-lg transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-              
-              {/* Search in filters */}
-              <div className="mt-4 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-stone-400" />
-                <input
-                  type="text"
-                  placeholder="Поиск по фильтрам..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-900 focus:border-transparent"
-                />
-              </div>
+            <div className="p-6 border-b border-stone-100 flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-stone-900">Фильтры</h3>
+              <button onClick={() => setIsOpen(false)} className="p-1 hover:bg-stone-100 rounded-lg transition-colors">
+                <X className="w-4 h-4" />
+              </button>
             </div>
 
-            {/* Content */}
-            <div className="max-h-96 overflow-y-auto">
-              
-              {/* Smart Suggestions */}
-              <div className="p-6 border-b border-stone-100">
-                <h4 className="text-sm font-medium text-stone-900 mb-3">Быстрый выбор</h4>
-                <div className="grid grid-cols-2 gap-2">
-                  {smartSuggestions.map(suggestion => (
-                    <button
-                      key={suggestion.id}
-                      onClick={() => applySmartSuggestion(suggestion)}
-                      className="p-3 text-left bg-stone-50 hover:bg-stone-100 rounded-lg transition-colors text-sm"
-                    >
-                      {suggestion.label}
-                    </button>
-                  ))}
+            <div className="max-h-96 overflow-y-auto p-6 space-y-6">
+              {/* Category (single) */}
+              <div>
+                <h4 className="text-sm font-medium text-stone-900 mb-3">Категория</h4>
+                <div className="flex flex-wrap gap-2">
+                  {categories?.map(c => {
+                    const id = c._id as string;
+                    const label = pickI18n(c.nameI18n as any, 'uk');
+                    const selected = categoryId === id;
+                    return (
+                      <button
+                        key={id}
+                        onClick={() => setFilter({ category: selected ? undefined : id })}
+                        className={cn(
+                          'px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200',
+                          selected ? 'bg-stone-900 text-white' : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
+                        )}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* Filter Categories */}
-              <div className="p-6 space-y-6">
-                {filterCategories.map(category => (
-                  <div key={category.id}>
-                    <h4 className="text-sm font-medium text-stone-900 mb-3">
-                      {category.name}
-                    </h4>
-                    
-                    {category.type === 'pills' && (
-                      <div className="flex flex-wrap gap-2">
-                        {category.options?.map(option => (
-                          <button
-                            key={option.value}
-                            onClick={() => {
-                              const current = activeFilters[category.id] || [];
-                              const newValue = current.includes(option.value)
-                                ? current.filter((v: string) => v !== option.value)
-                                : [...current, option.value];
-                              
-                              const newFilters = { ...activeFilters, [category.id]: newValue };
-                              setActiveFilters(newFilters);
-                              onFiltersChange(newFilters);
-                            }}
-                            className={cn(
-                              "flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200",
-                              activeFilters[category.id]?.includes(option.value)
-                                ? "bg-stone-900 text-white"
-                                : "bg-stone-100 text-stone-700 hover:bg-stone-200"
-                            )}
-                          >
-                            {/*@ts-ignore*/}
-                            <span>{option.icon}</span>
-                            <span>{option.label}</span> {/*@ts-ignore*/}
-                            <span className="text-xs opacity-60">({option.count})</span>
-                          </button>
-                        ))}
-                      </div>
-                    )}
-
-                    {category.type === 'range' && (
-                      <div className="space-y-4">
+              {/* Manufacturers (multi) */}
+              <div>
+                <h4 className="text-sm font-medium text-stone-900 mb-3">Бренды</h4>
+                <div className="grid grid-cols-2 gap-2">
+                  {manufacturers?.map(m => {
+                    const id = m._id as string;
+                    const label = pickI18n(m.nameI18n as any, 'uk');
+                    const selected = manufacturerIds.includes(id);
+                    return (
+                      <label key={id} className={cn('flex items-center gap-2 px-3 py-2 rounded-lg border', selected ? 'border-stone-900 bg-stone-50' : 'border-stone-200')}> 
                         <input
-                          type="range"
-                          min={category.min}
-                          max={category.max}
-                          step={category.step}
-                          value={activeFilters[category.id] || category.max}
+                          type="checkbox"
+                          checked={selected}
                           onChange={(e) => {
-                            const newFilters = { ...activeFilters, [category.id]: parseInt(e.target.value) };
-                            setActiveFilters(newFilters);
-                            onFiltersChange(newFilters);
+                            const next = e.target.checked
+                              ? [...manufacturerIds, id]
+                              : manufacturerIds.filter(x => x !== id);
+                            setFilter({ manufacturerId: next.length ? next : undefined });
                           }}
-                          className="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer slider"
                         />
-                        <div className="flex justify-between text-sm text-stone-600">
-                          <span>{category.min?.toLocaleString()} ₴</span>
-                          <span className="font-medium">
-                            {(activeFilters[category.id] || category.max)?.toLocaleString()} ₴
-                          </span>
-                        </div>
-                      </div>
-                    )}
+                        <span className="text-sm">{label}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Countries (multi) */}
+              <div>
+                <h4 className="text-sm font-medium text-stone-900 mb-3">Страны</h4>
+                <div className="grid grid-cols-2 gap-2">
+                  {countries?.map(co => {
+                    const id = co._id as string;
+                    const label = pickI18n(co.nameI18n as any, 'uk');
+                    const selected = countryIds.includes(id);
+                    return (
+                      <label key={id} className={cn('flex items-center gap-2 px-3 py-2 rounded-lg border', selected ? 'border-stone-900 bg-stone-50' : 'border-stone-200')}>
+                        <input
+                          type="checkbox"
+                          checked={selected}
+                          onChange={(e) => {
+                            const next = e.target.checked
+                              ? [...countryIds, id]
+                              : countryIds.filter(x => x !== id);
+                            setFilter({ countryId: next.length ? next : undefined });
+                          }}
+                        />
+                        <span className="text-sm">{label}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Price To */}
+              <div>
+                <h4 className="text-sm font-medium text-stone-900 mb-3">Цена до</h4>
+                <div className="space-y-4">
+                  <input
+                    type="range"
+                    min={0}
+                    max={100000}
+                    step={500}
+                    value={priceTo}
+                    onChange={(e) => setFilter({ priceTo: parseInt(e.target.value, 10) || undefined })}
+                    className="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer slider"
+                  />
+                  <div className="flex justify-between text-sm text-stone-600">
+                    <span>0 ₴</span>
+                    <span className="font-medium">{priceTo.toLocaleString()} ₴</span>
                   </div>
-                ))}
+                </div>
               </div>
             </div>
 
-            {/* Footer */}
             <div className="p-4 border-t border-stone-100 bg-stone-50 flex gap-3">
-              <button
-                onClick={clearFilters}
-                className="flex-1 px-4 py-2 text-stone-600 hover:text-stone-900 transition-colors"
-              >
-                Очистить
-              </button>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="flex-1 px-4 py-2 bg-stone-900 text-white rounded-lg hover:bg-stone-800 transition-colors"
-              >
-                Применить
-              </button>
+              <button onClick={clear} className="flex-1 px-4 py-2 text-stone-600 hover:text-stone-900 transition-colors">Очистить</button>
+              <button onClick={() => setIsOpen(false)} className="flex-1 px-4 py-2 bg-stone-900 text-white rounded-lg hover:bg-stone-800 transition-colors">Применить</button>
             </div>
           </div>
         </>
@@ -424,10 +280,12 @@ function SmartFilters({ onFiltersChange }: { onFiltersChange: (filters: any) => 
 }
 
 // Advanced Product Card with Magnetic Hover
-function ProductCard({ product, viewMode }: { product: Product; viewMode: 'grid' | 'list' }) {
+function ProductCard({ product, viewMode }: { product: UiProduct; viewMode: 'grid' | 'list' }) {
   const [isHovered, setIsHovered] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const addItem = useCartStore((s) => s.addItem);
+  const openCart = useCartStore((s) => s.open);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -489,9 +347,20 @@ function ProductCard({ product, viewMode }: { product: Product; viewMode: 'grid'
         "relative overflow-hidden",
         viewMode === 'list' ? "w-48 h-48" : "aspect-square"
       )}>
-        <div className="absolute inset-0 bg-gradient-to-br from-stone-100 to-stone-200 flex items-center justify-center">
-          <Package className="w-16 h-16 text-stone-400" />
-        </div>
+        {product.imageUrl ? (
+          <Image
+            src={product.imageUrl}
+            alt={product.name}
+            fill
+            sizes={viewMode === 'list' ? '(max-width: 768px) 12rem, 12rem' : '(max-width: 1280px) 50vw, 25vw'}
+            className="object-contain"
+            priority={false}
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-stone-100 to-stone-200 flex items-center justify-center">
+            <Package className="w-16 h-16 text-stone-400" />
+          </div>
+        )}
 
         {/* Status Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-1">
@@ -544,7 +413,14 @@ function ProductCard({ product, viewMode }: { product: Product; viewMode: 'grid'
           "absolute bottom-0 left-0 right-0 p-4 transition-all duration-500",
           isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-full"
         )}>
-          <button className="w-full bg-stone-900 text-white py-2.5 rounded-xl font-medium hover:bg-stone-800 transition-all duration-300 flex items-center justify-center gap-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              addItem({ id: product.id, name: product.name, price: product.price, imageUrl: product.imageUrl, brand: product.brand }, 1);
+              openCart();
+            }}
+            className="w-full bg-stone-900 text-white py-2.5 rounded-xl font-medium hover:bg-stone-800 transition-all duration-300 flex items-center justify-center gap-2"
+          >
             <ShoppingCart className="w-4 h-4" />
             Добавить в корзину
           </button>
@@ -705,80 +581,84 @@ function SmartSearch({ onSearch }: { onSearch: (term: string) => void }) {
 // Main Catalog Component
 export default function ModernCatalogPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState<CatalogFilters>({});
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('popular');
+  const [page, setPage] = useState(1);
+  const limit = 24;
 
-  // Filter and sort products
-  const filteredProducts = useMemo(() => {
-    let filtered = products.filter(product => {
-      // Search filter
-      if (searchTerm) {
-        const searchLower = searchTerm.toLowerCase();
-        if (!product.name.toLowerCase().includes(searchLower) &&
-            !product.brand.toLowerCase().includes(searchLower) &&
-            !product.category.toLowerCase().includes(searchLower)) {
-          return false;
-        }
-      }
-
-      // Category filter
-      //@ts-ignore
-      if (filters.category && filters.category.length > 0) {
-        //@ts-ignore
-        if (!filters.category.includes(product.category)) return false;
-      }
-
-      // Brand filter
-      //@ts-ignore
-      if (filters.brand && filters.brand.length > 0) {
-         //@ts-ignore
-        if (!filters.brand.includes(product.brand)) return false;
-      }
-
-      // Price filter
-       //@ts-ignore
-      if (filters.price && product.price > filters.price) {
-        return false;
-      }
-
-      // Features filter
-       //@ts-ignore
-      if (filters.features && filters.features.length > 0) {
-         //@ts-ignore
-        const hasFeature = filters.features.some((feature: string) => 
-          product.tags.includes(feature) || 
-          product.features.some(f => f.toLowerCase().includes(feature))
-        );
-        if (!hasFeature) return false;
-      }
-
-      return true;
-    });
-
-    // Sort products
+  const sortParam = useMemo(() => {
     switch (sortBy) {
       case 'price-low':
-        filtered.sort((a, b) => a.price - b.price);
-        break;
+        return 'priceMinFinal';
       case 'price-high':
-        filtered.sort((a, b) => b.price - a.price);
-        break;
-      case 'rating':
-        filtered.sort((a, b) => b.rating - a.rating);
-        break;
+        return '-priceMinFinal';
       case 'name':
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
-        break;
+        return 'titleI18n.uk';
       case 'new':
-        filtered.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
-        break;
-      default: // popular
-        filtered.sort((a, b) => (b.isPopular ? 1 : 0) - (a.isPopular ? 1 : 0));
+        return '-createdAt';
+      case 'rating':
+        return undefined; // нет рейтинга на бэке — оставим сортировку по умолчанию
+      default:
+        return '-createdAt';
     }
+  }, [sortBy]);
 
-    return filtered;
-  }, [filters, searchTerm, sortBy]);
+  const { data, isLoading, isFetching, error } = useProducts({
+    qLike: searchTerm || undefined,
+    sort: sortParam,
+    page,
+    limit,
+    category: filters.category,
+    manufacturerId: filters.manufacturerId,
+    countryId: filters.countryId,
+    priceFrom: filters.priceFrom,
+    priceTo: filters.priceTo,
+    tags: filters.tags,
+  });
+  const { data: manufacturers } = useManufacturers();
+  const { data: categories } = useCategories();
+  const { data: countries } = useCountries();
+
+  const manufacturerMap = useMemo(() => {
+    const map = new Map<string, string>();
+    manufacturers?.forEach(m => map.set(m._id as string, pickI18n(m.nameI18n as any, 'uk')));
+    return map;
+  }, [manufacturers]);
+
+  const categoryMap = useMemo(() => {
+    const map = new Map<string, string>();
+    categories?.forEach(c => map.set(c._id as string, pickI18n(c.nameI18n as any, 'uk')));
+    return map;
+  }, [categories]);
+
+  const countryMap = useMemo(() => {
+    const map = new Map<string, string>();
+    countries?.forEach(co => map.set(co._id as string, pickI18n(co.nameI18n as any, 'uk')));
+    return map;
+  }, [countries]);
+
+  // агрегируем страницы для кнопки "Загрузить ещё"
+  const [items, setItems] = useState<ProductWithDiscounts[]>([]);
+  const total = data?.total ?? 0;
+
+  // сброс при изменении поиска/фильтров/сортировки
+  useEffect(() => {
+    setPage(1);
+    setItems([]);
+  }, [searchTerm, JSON.stringify(filters), sortBy]);
+
+  // добавляем текущую страницу
+  useEffect(() => {
+    if (data?.items) {
+      setItems(prev => (page === 1 ? data.items : [...prev, ...data.items]));
+    }
+  }, [data, page]);
+
+  const uiProducts: UiProduct[] = useMemo(
+    () => items.map(p => mapApiToUi(p, { manufacturers: manufacturerMap, categories: categoryMap, countries: countryMap })),
+    [items, manufacturerMap, categoryMap, countryMap]
+  );
 
   const sortOptions = [
     { value: 'popular', label: 'По популярности' },
@@ -808,7 +688,7 @@ export default function ModernCatalogPage() {
                 Каталог продукции
               </h1>
               <p className="text-stone-600 mt-2">
-                {filteredProducts.length} из {products.length} товаров
+                {uiProducts.length} из {total} товаров
               </p>
             </div>
 
@@ -864,31 +744,46 @@ export default function ModernCatalogPage() {
 
           {/* Bottom Row: Filters */}
           <div className="flex items-center gap-4 mt-6 pt-6 border-t border-stone-200/50">
-            <SmartFilters onFiltersChange={setFilters} />
+            <SmartFilters 
+              categories={categories}
+              manufacturers={manufacturers}
+              countries={countries}
+              value={filters}
+              onChange={setFilters}
+            />
             
             {/* Active Filters Display */}
             {Object.keys(filters).length > 0 && (
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-sm text-stone-600">Активные фильтры:</span>
-                {Object.entries(filters).map(([key, value]) => (
-                  <div key={key} className="flex items-center gap-1 bg-stone-100 px-3 py-1 rounded-full text-sm">
-                    <span className="font-medium">{key}:</span>
-                    <span className="text-stone-600">
-                      {Array.isArray(value) ? value.join(', ') : String(value)}
-                    </span>
-                    <button
-                      onClick={() => {
-                        const newFilters = { ...filters };
-                         //@ts-ignore
-                        delete newFilters[key];
-                        setFilters(newFilters);
-                      }}
-                      className="ml-1 text-stone-400 hover:text-stone-600"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
+                {filters.category && (
+                  <div className="flex items-center gap-1 bg-stone-100 px-3 py-1 rounded-full text-sm">
+                    <span className="font-medium">Категория:</span>
+                    <span className="text-stone-600">{pickI18n(categories?.find(c => c._id === filters.category)?.nameI18n as any, 'uk')}</span>
+                    <button onClick={() => setFilters({ ...filters, category: undefined })} className="ml-1 text-stone-400 hover:text-stone-600"><X className="w-3 h-3" /></button>
                   </div>
-                ))}
+                )}
+                {filters.manufacturerId?.length ? (
+                  <div className="flex items-center gap-1 bg-stone-100 px-3 py-1 rounded-full text-sm">
+                    <span className="font-medium">Бренды:</span>
+                    <span className="text-stone-600">{filters.manufacturerId.map(id => pickI18n(manufacturers?.find(m => m._id === id)?.nameI18n as any, 'uk')).join(', ')}</span>
+                    <button onClick={() => setFilters({ ...filters, manufacturerId: undefined })} className="ml-1 text-stone-400 hover:text-stone-600"><X className="w-3 h-3" /></button>
+                  </div>
+                ) : null}
+                {filters.countryId?.length ? (
+                  <div className="flex items-center gap-1 bg-stone-100 px-3 py-1 rounded-full text-sm">
+                    <span className="font-medium">Страны:</span>
+                    <span className="text-stone-600">{filters.countryId.map(id => pickI18n(countries?.find(co => co._id === id)?.nameI18n as any, 'uk')).join(', ')}</span>
+                    <button onClick={() => setFilters({ ...filters, countryId: undefined })} className="ml-1 text-stone-400 hover:text-stone-600"><X className="w-3 h-3" /></button>
+                  </div>
+                ) : null}
+                {(filters.priceFrom || filters.priceTo) && (
+                  <div className="flex items-center gap-1 bg-stone-100 px-3 py-1 rounded-full text-sm">
+                    <span className="font-medium">Цена:</span>
+                    <span className="text-stone-600">{filters.priceFrom ? `${filters.priceFrom.toLocaleString()}₴` : ''}{filters.priceFrom && filters.priceTo ? ' — ' : ''}{filters.priceTo ? `до ${filters.priceTo.toLocaleString()}₴` : ''}</span>
+                    <button onClick={() => setFilters({ ...filters, priceFrom: undefined, priceTo: undefined })} className="ml-1 text-stone-400 hover:text-stone-600"><X className="w-3 h-3" /></button>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -911,7 +806,7 @@ export default function ModernCatalogPage() {
             )}
           </div>
           
-          {filteredProducts.length === 0 && (
+          {uiProducts.length === 0 && (
             <button 
               onClick={() => {
                 setFilters({});
@@ -925,16 +820,18 @@ export default function ModernCatalogPage() {
         </div>
 
         {/* Products */}
-        {filteredProducts.length > 0 ? (
+        {isLoading && uiProducts.length === 0 ? (
+          <div className="text-center py-20 text-stone-600">Загрузка…</div>
+        ) : uiProducts.length > 0 ? (
           <div className={cn(
             "gap-8 mb-12",
             viewMode === 'grid' 
               ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
               : "space-y-6"
           )}>
-            {filteredProducts.map(product => (
+            {uiProducts.map(product => (
               <ProductCard 
-                key={product.id} 
+                key={product.id}
                 product={product} 
                 viewMode={viewMode}
               />
@@ -965,10 +862,14 @@ export default function ModernCatalogPage() {
         )}
 
         {/* Load More */}
-        {filteredProducts.length > 0 && filteredProducts.length >= 6 && (
+        {uiProducts.length > 0 && (page * limit < total) && (
           <div className="text-center">
-            <button className="bg-white border border-stone-300 text-stone-900 px-8 py-3 rounded-xl hover:bg-stone-50 hover:border-stone-400 transition-all duration-300 shadow-sm hover:shadow-md">
-              Загрузить ещё товары
+            <button 
+              onClick={() => setPage(p => p + 1)}
+              disabled={isFetching}
+              className="bg-white border border-stone-300 text-stone-900 px-8 py-3 rounded-xl hover:bg-stone-50 hover:border-stone-400 transition-all duration-300 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isFetching ? 'Загрузка…' : 'Загрузить ещё товары'}
             </button>
           </div>
         )}

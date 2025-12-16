@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { ArrowRight } from 'lucide-react';
 
 interface FooterSectionProps {
   className?: string;
@@ -19,37 +18,15 @@ const footerLinks = {
       { name: 'Контакты', href: '/contacts' }
     ]
   },
-  products: {
-    title: 'Продукция',
-    links: [
-      { name: 'Брекет-системы', href: '/braces' },
-      { name: 'Инструменты', href: '/instruments' },
-      { name: 'Аксессуары', href: '/accessories' },
-      { name: 'Новинки', href: '/new-products' },
-      { name: 'Каталог', href: '/catalog' }
-    ]
-  },
   services: {
     title: 'Услуги',
     links: [
       { name: 'Доставка', href: '/delivery' },
-      { name: 'Техподдержка', href: '/support' },
-      { name: 'Обучение', href: '/training' },
-      { name: 'Сервис', href: '/service' },
+  { name: 'Обучение', href: '/training' },
       { name: 'Гарантия', href: '/warranty' }
     ]
-  },
-  support: {
-    title: 'Поддержка',
-    links: [
-      { name: 'Центр помощи', href: '/help' },
-      { name: 'FAQ', href: '/faq' },
-      { name: 'Документация', href: '/docs' },
-      { name: 'Загрузки', href: '/downloads' },
-      { name: 'Обратная связь', href: '/feedback' }
-    ]
   }
-};
+} as const;
 
 const certifications = [
   'ISO 13485',
@@ -68,12 +45,12 @@ export function FooterSection({ className }: FooterSectionProps) {
   };
 
   return (
-    <footer className={cn('bg-gray-900 text-white', className)}>
+  <footer className={cn('bg-gray-900 text-white', className)}>
       {/* Newsletter Section */}
    
       {/* Main Footer Content */}
       <div className="container mx-auto px-6 py-16">
-        <div className="grid lg:grid-cols-6 gap-12">
+        <div className="grid lg:grid-cols-4 gap-12">
           
           {/* Brand */}
           <div className="lg:col-span-2">
@@ -87,6 +64,11 @@ export function FooterSection({ className }: FooterSectionProps) {
               Профессиональное ортодонтическое оборудование от мировых лидеров. 
               Качество, которому доверяют.
             </p>
+            <div className="mt-6">
+              <a href="/catalog" className="inline-flex items-center gap-2 bg-white text-gray-900 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-100 transition-colors">
+                Перейти в каталог
+              </a>
+            </div>
           </div>
 
           {/* Navigation Links */}
@@ -133,9 +115,9 @@ export function FooterSection({ className }: FooterSectionProps) {
               </div>
             </div>
             
-            <button className="bg-white text-gray-900 px-8 py-3 font-medium hover:bg-gray-100 transition-colors uppercase tracking-wider text-sm">
+            <a href="/contacts" className="bg-white text-gray-900 px-8 py-3 font-medium hover:bg-gray-100 transition-colors uppercase tracking-wider text-sm">
               Связаться
-            </button>
+            </a>
           </div>
         </div>
       </div>
