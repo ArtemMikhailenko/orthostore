@@ -11,17 +11,17 @@ interface SearchBarProps {
 }
 
 const popularSearches = [
-  'Металлические брекеты',
-  'Керамические брекеты',
-  'Ортодонтические дуги',
-  'Лигатуры',
-  'Инструменты для установки'
+  'Металеві брекети',
+  'Керамічні брекети',
+  'Ортодонтичні дуги',
+  'Лігатури',
+  'Інструменти для встановлення'
 ];
 
 const recentSearches = [
-  'Брекеты 3M Unitek',
-  'Эластики ортодонтические',
-  'Плоскогубцы ортодонтические'
+  'Брекети 3M Unitek',
+  'Еластики ортодонтичні',
+  'Плоскогубці ортодонтичні'
 ];
 
 export function SearchBar({ isOpen = true, onToggle, isMobile = false }: SearchBarProps) {
@@ -52,7 +52,7 @@ export function SearchBar({ isOpen = true, onToggle, isMobile = false }: SearchB
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setTimeout(() => setIsFocused(false), 200)}
-          placeholder="Поиск товаров..."
+          placeholder="Пошук товарів..."
           className={cn(
             'w-full pl-12 pr-12 py-3 border border-slate-300 rounded-xl bg-slate-50',
             'focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent focus:bg-white',
@@ -77,7 +77,7 @@ export function SearchBar({ isOpen = true, onToggle, isMobile = false }: SearchB
             // Search Results
             <div className="p-4">
               <div className="text-sm text-slate-500 mb-3 font-medium">
-                Результаты поиска для "{query}"
+                Результати пошуку для "{query}"
               </div>
               <div className="space-y-1">
                 {popularSearches

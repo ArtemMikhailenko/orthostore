@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/layout/header/header';
 import { FooterSection } from '@/components/layout/footer/footer';
+import { AIChatWidget } from '@/components/ai-chat/ai-chat-widget';
 import Providers from './providers';
 
 const inter = Inter({ 
@@ -62,6 +63,10 @@ export default function RootLayout({
             {children}
           </main>
         </Providers>
+        
+        {/* AI Chat Widget */}
+        <AIChatWidget />
+        
         <FooterSection/>
         {/* Дополнительные скрипты */}
         <script

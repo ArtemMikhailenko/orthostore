@@ -10,33 +10,33 @@ const navigationItems = [
     href: '/catalog',
     hasDropdown: true,
     items: [
-      { title: 'Брекет-системы', href: '/catalog/braces' },
-      { title: 'Ортодонтические инструменты', href: '/catalog/instruments' },
-      { title: 'Дуги и аксессуары', href: '/catalog/accessories' },
-      { title: 'Расходные материалы', href: '/catalog/materials' },
+      { title: 'Брекет-системи', href: '/catalog/braces' },
+      { title: 'Ортодонтичні інструменти', href: '/catalog/instruments' },
+      { title: 'Дуги та аксесуари', href: '/catalog/accessories' },
+      { title: 'Витратні матеріали', href: '/catalog/materials' },
     ]
   },
   {
-    title: 'Бренды',
+    title: 'Бренди',
     href: '/brands',
     hasDropdown: true,
     items: [
       { title: '3M Unitek', href: '/brands/3m-unitek' },
       { title: 'Ormco', href: '/brands/ormco' },
       { title: 'American Orthodontics', href: '/brands/american-orthodontics' },
-      { title: 'Все бренды', href: '/brands' },
+      { title: 'Всі бренди', href: '/brands' },
     ]
   },
   {
-    title: 'О компании',
+    title: 'Про компанію',
     href: '/about'
   },
   {
-    title: 'Доставка и оплата',
+    title: 'Доставка та оплата',
     href: '/delivery'
   },
   {
-    title: 'Контакты',
+    title: 'Контакти',
     href: '/contacts'
   }
 ];

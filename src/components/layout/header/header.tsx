@@ -31,44 +31,44 @@ const navigationItems = [
     hasDropdown: true,
     items: [
       { 
-        title: 'Брекет-системы', 
+        title: 'Брекет-системи', 
         href: '/catalog/braces',
-        description: 'Металлические, керамические, сапфировые'
+        description: 'Металеві, керамічні, сапфірові'
       },
       { 
-        title: 'Инструменты', 
+        title: 'Інструменти', 
         href: '/catalog/instruments',
-        description: 'Профессиональные ортодонтические инструменты'
+        description: 'Професійні ортодонтичні інструменти'
       },
       { 
-        title: 'Аксессуары', 
+        title: 'Аксесуари', 
         href: '/catalog/accessories',
-        description: 'Дуги, лигатуры, эластики'
+        description: 'Дуги, лігатури, еластики'
       },
       { 
-        title: 'Материалы', 
+        title: 'Матеріали', 
         href: '/catalog/materials',
-        description: 'Расходные материалы для ортодонтии'
+        description: 'Витратні матеріали для ортодонтії'
       }
     ]
   },
   {
-    title: 'Бренды',
+    title: 'Бренди',
     href: '/brands',
     hasDropdown: true,
     items: [
-      { title: '3M Unitek', href: '/brands/3m-unitek', description: 'Премиум системы США' },
-      { title: 'Ormco', href: '/brands/ormco', description: 'Инновационные решения' },
-      { title: 'American Orthodontics', href: '/brands/american-orthodontics', description: 'Полный спектр продукции' },
-      { title: 'Все бренды', href: '/brands', description: 'Полный список партнёров' }
+      { title: '3M Unitek', href: '/brands/3m-unitek', description: 'Преміум системи США' },
+      { title: 'Ormco', href: '/brands/ormco', description: 'Інноваційні рішення' },
+      { title: 'American Orthodontics', href: '/brands/american-orthodontics', description: 'Повний спектр продукції' },
+      { title: 'Всі бренди', href: '/brands', description: 'Повний список партнерів' }
     ]
   },
   {
-    title: 'О компании',
+    title: 'Про компанію',
     href: '/about'
   },
   {
-    title: 'Контакты',
+    title: 'Контакти',
     href: '/contacts'
   }
   ,
@@ -91,26 +91,9 @@ function TopBar() {
                 +38 (050) 303-94-94
               </span>
             </div>
-            <div className="flex items-center gap-2 group cursor-pointer">
-              <Mail className="w-3 h-3 transition-transform group-hover:scale-110" />
-              <span className="text-stone-300 group-hover:text-white transition-colors">
-                info@orthodent.pro
-              </span>
-            </div>
             <div className="text-stone-400 text-xs">
-              ПН-ПТ: 9:00-18:00 • СБ-ВС: онлайн 24/7
+              ПН-ПТ: 9:00-18:00 • СБ-НД: онлайн 24/7
             </div>
-          </div>
-          <div className="flex items-center space-x-6">
-            <button className="text-stone-300 hover:text-white transition-all duration-300 text-sm font-medium relative group">
-              Стать партнёром
-              <span className="absolute bottom-0 left-0 w-0 h-px bg-white transition-all duration-300 group-hover:w-full"></span>
-            </button>
-            <div className="w-px h-3 bg-stone-600"></div>
-            <button className="text-stone-300 hover:text-white transition-all duration-300 text-sm font-medium relative group">
-              Для клиник
-              <span className="absolute bottom-0 left-0 w-0 h-px bg-white transition-all duration-300 group-hover:w-full"></span>
-            </button>
           </div>
         </div>
       </div>
@@ -121,7 +104,7 @@ function TopBar() {
 // Logo Component
 function Logo() {
   return (
-    <Link href="/" className="flex items-center space-x-3 group cursor-pointer" aria-label="На главную">
+    <Link href="/" className="flex items-center space-x-3 group cursor-pointer" aria-label="На головну">
       <div className="w-10 h-10 bg-stone-900 rounded-sm flex items-center justify-center group-hover:bg-stone-800 transition-all duration-300">
         <div className="text-white text-lg font-bold tracking-wide">O</div>
       </div>
@@ -203,10 +186,10 @@ function SearchBar({ isOpen, onToggle, isMobile = false }: { isOpen: boolean; on
   const [isFocused, setIsFocused] = useState(false);
 
   const popularSearches = [
-    'Металлические брекеты',
-    'Керамические брекеты', 
-    'Ортодонтические дуги',
-    'Лигатуры эластичные'
+    'Металеві брекети',
+    'Керамічні брекети', 
+    'Ортодонтичні дуги',
+    'Лігатури еластичні'
   ];
 
   return (
@@ -219,7 +202,7 @@ function SearchBar({ isOpen, onToggle, isMobile = false }: { isOpen: boolean; on
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setTimeout(() => setIsFocused(false), 200)}
-          placeholder="Поиск товаров..."
+          placeholder="Пошук товарів..."
           className={cn(
             'w-full pl-12 pr-4 py-3 border border-stone-300 bg-stone-50 rounded-lg',
             'focus:outline-none focus:ring-2 focus:ring-stone-900 focus:border-transparent focus:bg-white',
@@ -235,16 +218,16 @@ function SearchBar({ isOpen, onToggle, isMobile = false }: { isOpen: boolean; on
           {query ? (
             <div className="p-4">
               <div className="text-sm text-stone-500 mb-3">
-                Результаты для "{query}"
+                Результати для "{query}"
               </div>
               <div className="text-sm text-stone-400">
-                Поиск в процессе разработки...
+                Пошук в процесі розробки...
               </div>
             </div>
           ) : (
             <div className="p-4">
               <div className="text-sm font-medium text-stone-900 mb-3">
-                Популярные запросы
+                Популярні запити
               </div>
               <div className="space-y-2">
                 {popularSearches.map((item, index) => (

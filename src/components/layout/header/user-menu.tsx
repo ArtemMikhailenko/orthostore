@@ -23,27 +23,27 @@ export function UserMenu() {
               // Авторизованный пользователь
               <>
                 <a href="/profile" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                  Профиль
+                  Профіль
                 </a>
                 <a href="/orders" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                  Мои заказы
+                  Мої замовлення
                 </a>
                 <a href="/settings" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                  Настройки
+                  Налаштування
                 </a>
                 <hr className="my-2 border-gray-200" />
                 <button className="block w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                  Выйти
+                  Вийти
                 </button>
               </>
             ) : (
               // Неавторизованный пользователь
               <>
                 <a href="/login" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                  Войти
+                  Увійти
                 </a>
                 <a href="/register" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                  Регистрация
+                  Реєстрація
                 </a>
               </>
             )}

@@ -1,141 +1,170 @@
-'use client';
-
-import React from 'react';
-import { Truck, CreditCard, Shield, Clock, Globe, MapPin, Package, ArrowRight, Phone } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import Link from 'next/link';
+import { Truck, CreditCard, Package, MapPin, Clock } from 'lucide-react';
 
 export default function DeliveryPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-stone-50 to-white">
-      {/* Hero */}
-      <section className="bg-white border-b border-stone-200/60">
-        <div className="max-w-7xl mx-auto px-6 py-12 lg:py-16">
-          <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-12">
-            <div className="flex-1">
-              <div className="text-sm text-stone-500 mb-2 font-medium">Главная / Доставка</div>
-              <h1 className="text-4xl lg:text-5xl font-light text-stone-900 tracking-tight">Доставка и оплата</h1>
-              <p className="text-stone-600 mt-3 max-w-2xl">
-                Быстрая и надёжная доставка по всей Украине. Выбирайте удобный способ получения и оплаты — мы позаботимся об остальном.
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <section className="bg-stone-50 border-b border-stone-200">
+        <div className="max-w-5xl mx-auto px-6 py-16 lg:py-24">
+          <div className="text-center space-y-6">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-stone-900 rounded-full mb-4">
+              <Truck className="w-8 h-8 text-white" />
+            </div>
+            <h1 className="text-4xl lg:text-5xl font-light text-stone-900">
+              Доставка та оплата
+            </h1>
+            <p className="text-lg text-stone-600 max-w-2xl mx-auto leading-relaxed">
+              Продумана до дрібниць логістика, дає можливість швидко та ефективно доставити Вам придбану продукцію ! ! !
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Main Content */}
+      <section className="max-w-5xl mx-auto px-6 py-16 lg:py-20">
+        
+        {/* Delivery Information */}
+        <div className="mb-16">
+          <div className="flex items-center gap-3 mb-8">
+            <Package className="w-6 h-6 text-stone-900" />
+            <h2 className="text-2xl lg:text-3xl font-light text-stone-900">
+              Доставка
+            </h2>
+          </div>
+
+          <div className="space-y-8">
+            {/* Manager Note */}
+            <div className="bg-stone-50 p-6 lg:p-8 rounded-lg border-l-4 border-stone-900">
+              <p className="text-base lg:text-lg text-stone-700 leading-relaxed">
+                Наші менеджери заздалегіть погодять з Вами зручний час доставки!
               </p>
             </div>
-            <div className="grid grid-cols-2 gap-3 w-full lg:w-auto">
-              <div className="p-4 rounded-xl border border-stone-200 bg-stone-50 flex items-center gap-3"><Truck className="w-5 h-5"/>Новая Почта</div>
-              <div className="p-4 rounded-xl border border-stone-200 bg-stone-50 flex items-center gap-3"><MapPin className="w-5 h-5"/>Самовывоз Киев</div>
-              <div className="p-4 rounded-xl border border-stone-200 bg-stone-50 flex items-center gap-3"><Clock className="w-5 h-5"/>Отправка в день заказа</div>
-              <div className="p-4 rounded-xl border border-stone-200 bg-stone-50 flex items-center gap-3"><Shield className="w-5 h-5"/>Гарантия сохранности</div>
+
+            {/* Kyiv Delivery */}
+            <div className="bg-white border-2 border-stone-200 p-6 lg:p-8">
+              <div className="flex items-start gap-4 mb-4">
+                <MapPin className="w-5 h-5 text-stone-900 flex-shrink-0 mt-1" />
+                <div className="space-y-3 w-full">
+                  <h3 className="text-xl font-medium text-stone-900">
+                    Доставка по Києву та Київській області
+                  </h3>
+                  
+                  <div className="flex items-center gap-2 text-stone-600">
+                    <Clock className="w-4 h-4" />
+                    <span className="text-sm">Здійснюється з понеділка по п'ятницю з 9.00 до 18.00</span>
+                  </div>
+
+                  <div className="space-y-2 pt-4 border-t border-stone-200">
+                    <div className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-stone-700">
+                        <span className="font-medium">Доставка по Києву до 2500 грн оплачується!</span> Вартість доставки 100 грн.
+                      </p>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-stone-700">
+                        <span className="font-medium">Доставка по Києву від 2500 грн - БЕЗКОШТОВНА !</span>
+                      </p>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-stone-700">
+                        <span className="font-medium">Доставка по Київській області оплачується!</span> Вартість доставки 150 грн.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Ukraine Delivery */}
+            <div className="bg-white border-2 border-stone-200 p-6 lg:p-8">
+              <div className="flex items-start gap-4">
+                <Truck className="w-5 h-5 text-stone-900 flex-shrink-0 mt-1" />
+                <div className="space-y-3 w-full">
+                  <h3 className="text-xl font-medium text-stone-900">
+                    Відправлення по Україні
+                  </h3>
+                  
+                  <div className="space-y-2">
+                    <div className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-stone-700">
+                        Здійснюється кур'єрськими службами: <span className="font-medium">НОВА ПОШТА, УКРПОШТА</span> або іншою службою, погодженою з замовником.
+                      </p>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-stone-700">
+                        Відправлення по Україні <span className="font-medium">здійснюється після повної оплати.</span>
+                      </p>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-stone-700">
+                        Відправлення по Україні <span className="font-medium">до 3000 грн</span> відправляється за рахунок замовника.
+                      </p>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-stone-700">
+                        Відправлення по Україні <span className="font-medium">від 3000 грн</span> відправляється за рахунок відправника.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Shipping Terms */}
+            <div className="bg-stone-900 text-white p-6 lg:p-8 rounded-lg">
+              <div className="space-y-3">
+                <p className="text-stone-200 leading-relaxed">
+                  Відвантаження здійснюється в день надходження замовлення, на наступний робочий день або за графіком домовленості, погодженим із замовником.
+                </p>
+                <p className="text-white font-medium pt-2 border-t border-stone-700">
+                  Мінімальна сума замовлення – 300 грн
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </section>
 
-      {/* Methods */}
-      <section className="max-w-7xl mx-auto px-6 py-12 lg:py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-          {/* Новая Почта */}
-          <div className="rounded-2xl border border-stone-200 bg-white p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <Truck className="w-5 h-5 text-stone-700"/>
-              <h3 className="text-lg font-semibold text-stone-900">Доставка Новой Почтой</h3>
-            </div>
-            <ul className="space-y-2 text-stone-600 text-sm">
-              <li>• Отправка в отделение или на адрес (курьер)</li>
-              <li>• Срок доставки: 1–2 рабочих дня</li>
-              <li>• Стоимость по тарифам Новой Почты</li>
-              <li>• Наложенный платёж — по тарифам перевозчика</li>
-            </ul>
+        {/* Payment Information */}
+        <div>
+          <div className="flex items-center gap-3 mb-8">
+            <CreditCard className="w-6 h-6 text-stone-900" />
+            <h2 className="text-2xl lg:text-3xl font-light text-stone-900">
+              Варіанти оплати
+            </h2>
           </div>
 
-          {/* Самовывоз */}
-          <div className="rounded-2xl border border-stone-200 bg-white p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <MapPin className="w-5 h-5 text-stone-700"/>
-              <h3 className="text-lg font-semibold text-stone-900">Самовывоз в Киеве</h3>
-            </div>
-            <ul className="space-y-2 text-stone-600 text-sm">
-              <li>• График: Пн–Пт 09:00–18:00</li>
-              <li>• Подтвердите наличие перед визитом</li>
-              <li>• Оплата на месте: наличные/карта</li>
-              <li>• Удобно забрать в тот же день</li>
-            </ul>
-          </div>
-
-          {/* Отправка и сроки */}
-          <div className="rounded-2xl border border-stone-200 bg-white p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <Clock className="w-5 h-5 text-stone-700"/>
-              <h3 className="text-lg font-semibold text-stone-900">Сроки и условия</h3>
-            </div>
-            <ul className="space-y-2 text-stone-600 text-sm">
-              <li>• Заказы, оформленные до 15:00 — отправляем в день заказа</li>
-              <li>• В период повышенной нагрузки возможны задержки перевозчика</li>
-              <li>• Мы аккуратно упаковываем товары для безопасной доставки</li>
-              <li>• При получении проверяйте целостность упаковки</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* Payment */}
-      <section className="bg-white border-y border-stone-200/60">
-        <div className="max-w-7xl mx-auto px-6 py-12 lg:py-16">
-          <div className="flex items-center gap-3 mb-6">
-            <CreditCard className="w-5 h-5 text-stone-700"/>
-            <h2 className="text-2xl font-semibold text-stone-900">Оплата</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="rounded-2xl border border-stone-200 p-6">
-              <h3 className="font-medium text-stone-900 mb-2">Онлайн оплата картой</h3>
-              <p className="text-sm text-stone-600">Visa/Mastercard через защищённые платежные шлюзы.</p>
-            </div>
-            <div className="rounded-2xl border border-stone-200 p-6">
-              <h3 className="font-medium text-stone-900 mb-2">Оплата при получении</h3>
-              <p className="text-sm text-stone-600">Наложенный платёж по тарифам Новой Почты.</p>
-            </div>
-            <div className="rounded-2xl border border-stone-200 p-6">
-              <h3 className="font-medium text-stone-900 mb-2">Безналичный расчёт</h3>
-              <p className="text-sm text-stone-600">Для клиник и организаций — по реквизитам.</p>
+          <div className="bg-stone-50 p-6 lg:p-8">
+            <p className="text-lg text-stone-700 mb-6">
+              Оплату товару можна здійснити наступними способами:
+            </p>
+            
+            <div className="space-y-4">
+              <div className="flex items-center gap-4 p-4 bg-white border border-stone-200">
+                <div className="w-10 h-10 bg-stone-900 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-white font-medium">1</span>
+                </div>
+                <p className="text-stone-900 font-medium">
+                  Оплата при доставці кур'єру
+                </p>
+              </div>
+              
+              <div className="flex items-center gap-4 p-4 bg-white border border-stone-200">
+                <div className="w-10 h-10 bg-stone-900 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-white font-medium">2</span>
+                </div>
+                <p className="text-stone-900 font-medium">
+                  Оплата на розрахунковий рахунок
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="max-w-7xl mx-auto px-6 py-12 lg:py-16">
-        <div className="flex items-center gap-3 mb-6">
-          <Package className="w-5 h-5 text-stone-700"/>
-          <h2 className="text-2xl font-semibold text-stone-900">Частые вопросы</h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="rounded-2xl border border-stone-200 bg-white p-6">
-            <div className="font-medium text-stone-900 mb-2">Можно ли вернуть товар?</div>
-            <div className="text-sm text-stone-600">Да, в соответствии с Законом Украины о защите прав потребителей и условиями возврата медицинских товаров, при сохранении целостности упаковки.</div>
-          </div>
-          <div className="rounded-2xl border border-stone-200 bg-white p-6">
-            <div className="font-medium text-stone-900 mb-2">Как отследить посылку?</div>
-            <div className="text-sm text-stone-600">После отправки вы получите ТТН Новой Почты. Отслеживание доступно на сайте перевозчика.</div>
-          </div>
-          <div className="rounded-2xl border border-stone-200 bg-white p-6">
-            <div className="font-medium text-stone-900 mb-2">Есть ли бесплатная доставка?</div>
-            <div className="text-sm text-stone-600">Периодически проводим акции. Следите за баннерами на сайте и в соцсетях.</div>
-          </div>
-          <div className="rounded-2xl border border-stone-200 bg-white p-6">
-            <div className="font-medium text-stone-900 mb-2">Работаете с клиниками?</div>
-            <div className="text-sm text-stone-600">Да. Предоставляем счета и закрывающие документы. Свяжитесь с нами — подберём оптимальные условия.</div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="bg-stone-900 text-white">
-        <div className="max-w-7xl mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div>
-            <h3 className="text-xl font-semibold">Нужна помощь с заказом?</h3>
-            <p className="text-stone-300">Позвоните — подскажем удобный способ доставки и оплаты</p>
-          </div>
-          <a href="tel:+380503039494" className="inline-flex items-center gap-2 bg-white text-stone-900 px-5 py-3 rounded-xl hover:bg-stone-100 transition-colors">
-            <Phone className="w-4 h-4"/> +38 (050) 303-94-94
-          </a>
         </div>
       </section>
     </div>

@@ -4,7 +4,7 @@ const nextConfig = {
       appDir: true,
     },
     images: {
-      domains: ['localhost', 'res.cloudinary.com', 'backend-dentistry.onrender.com'],
+      domains: ['localhost', 'res.cloudinary.com', 'backend-dentistry.onrender.com', 'images.unsplash.com'],
     },
   };
   

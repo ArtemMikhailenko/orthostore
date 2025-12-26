@@ -57,6 +57,304 @@ interface UiProduct {
   gallery?: string[];
 }
 
+interface CatalogFilters {
+  categoryId?: string;
+  manufacturerId?: string;
+  countryId?: string;
+  priceFrom?: number;
+  priceTo?: number;
+  inStock?: boolean;
+  tags?: string[];
+}
+: UiProduct[] = [
+  {
+    id: '1',
+    name: 'Брекети металеві самолігувальні Damon Q',
+    brand: 'Ormco',
+    category: 'Ортодонтія',
+    subcategory: 'Брекет-системи',
+    price: 15500,
+    originalPrice: 18000,
+    rating: 4.8,
+    reviews: 124,
+    isNew: true,
+    isPopular: true,
+    isBestseller: true,
+    origin: 'США',
+    material: 'Нержавіюча сталь',
+    certification: ['FDA', 'CE', 'ISO 13485'],
+    features: ['Самолігувальні', 'Зменшений тертя', 'Швидке лікування', 'Комфорт для пацієнта'],
+    tags: ['брекети', 'ортодонтія', 'самолігувальні'],
+    inStock: true,
+    stockLevel: 'high',
+    imageUrl: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=600&q=80',
+  },
+  {
+    id: '2',
+    name: 'Брекети керамічні естетичні Clarity Advanced',
+    brand: '3M Unitek',
+    category: 'Ортодонтія',
+    subcategory: 'Брекет-системи',
+    price: 22000,
+    originalPrice: 25000,
+    rating: 4.9,
+    reviews: 89,
+    isNew: true,
+    isPopular: false,
+    isBestseller: true,
+    origin: 'США',
+    material: 'Кераміка',
+    certification: ['FDA', 'CE'],
+    features: ['Естетичні', 'Прозорі', 'Міцні', 'Не змінюють колір'],
+    tags: ['брекети', 'кераміка', 'естетика'],
+    inStock: true,
+    stockLevel: 'medium',
+    imageUrl: 'https://images.unsplash.com/photo-1598256989800-fe5f95da9787?w=600&q=80',
+  },
+  {
+    id: '3',
+    name: 'Дуги ортодонтичні NiTi термоактивні',
+    brand: 'American Orthodontics',
+    category: 'Ортодонтія',
+    subcategory: 'Дуги',
+    price: 350,
+    rating: 4.7,
+    reviews: 215,
+    isNew: false,
+    isPopular: true,
+    isBestseller: false,
+    origin: 'США',
+    material: 'Нікель-титан',
+    certification: ['CE', 'ISO'],
+    features: ['Термоактивні', 'Пам\'ять форми', 'Постійна сила', 'Різні розміри'],
+    tags: ['дуги', 'нікель-титан'],
+    inStock: true,
+    stockLevel: 'high',
+    imageUrl: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=600&q=80',
+  },
+  {
+    id: '4',
+    name: 'Набір еластиків для ортодонтії',
+    brand: 'Ortho Technology',
+    category: 'Ортодонтія',
+    subcategory: 'Аксесуари',
+    price: 280,
+    originalPrice: 350,
+    rating: 4.5,
+    reviews: 142,
+    isNew: false,
+    isPopular: true,
+    isBestseller: true,
+    origin: 'Німеччина',
+    material: 'Латекс медичний',
+    certification: ['CE', 'ISO'],
+    features: ['Різні розміри', 'Кольорові', 'Гіпоалергенні', '100 шт в упаковці'],
+    tags: ['еластики', 'аксесуари'],
+    colors: ['Прозорий', 'Білий', 'Сріблястий', 'Синій', 'Рожевий'],
+    inStock: true,
+    stockLevel: 'high',
+    imageUrl: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=600&q=80',
+  },
+  {
+    id: '5',
+    name: 'Капи елайнери прозорі Invisalign',
+    brand: 'Align Technology',
+    category: 'Ортодонтія',
+    subcategory: 'Елайнери',
+    price: 45000,
+    originalPrice: 52000,
+    rating: 5.0,
+    reviews: 67,
+    isNew: true,
+    isPopular: true,
+    isBestseller: true,
+    origin: 'США',
+    material: 'SmartTrack полімер',
+    certification: ['FDA', 'CE', 'ISO'],
+    features: ['Невидимі', 'Знімні', '3D планування', 'Комфортні'],
+    tags: ['елайнери', 'invisalign', 'капи'],
+    inStock: true,
+    stockLevel: 'medium',
+    imageUrl: 'https://images.unsplash.com/photo-1606811971618-4486d14f3f99?w=600&q=80',
+  },
+  {
+    id: '6',
+    name: 'Бонд ортодонтичний світлового затвердіння',
+    brand: 'Transbond XT 3M',
+    category: 'Ортодонтія',
+    subcategory: 'Матеріали',
+    price: 1850,
+    rating: 4.8,
+    reviews: 93,
+    isNew: false,
+    isPopular: true,
+    isBestseller: false,
+    origin: 'США',
+    material: 'Композит',
+    certification: ['FDA', 'CE'],
+    features: ['Світлового затвердіння', 'Міцний', 'Легко видаляється', 'Флуоровмісний'],
+    tags: ['бонд', 'матеріали', 'фіксація'],
+    inStock: true,
+    stockLevel: 'high',
+    imageUrl: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?w=600&q=80',
+  },
+  {
+    id: '7',
+    name: 'Кнопки ортодонтичні металеві',
+    brand: 'Leone',
+    category: 'Ортодонтія',
+    subcategory: 'Аксесуари',
+    price: 420,
+    rating: 4.6,
+    reviews: 78,
+    isNew: false,
+    isPopular: false,
+    isBestseller: false,
+    origin: 'Італія',
+    material: 'Нержавіюча сталь',
+    certification: ['CE', 'ISO'],
+    features: ['Різні форми', 'Міцні', 'Стерильні', '50 шт в упаковці'],
+    tags: ['кнопки', 'аксесуари'],
+    sizes: ['Маленькі', 'Середні', 'Великі'],
+    inStock: true,
+    stockLevel: 'medium',
+    imageUrl: 'https://images.unsplash.com/photo-1588776814307-5a8443e1985e?w=600&q=80',
+  },
+  {
+    id: '8',
+    name: 'Імплант ортодонтичний мінігвинт',
+    brand: 'Absoanchor',
+    category: 'Ортодонтія',
+    subcategory: 'Імпланти',
+    price: 2800,
+    originalPrice: 3200,
+    rating: 4.9,
+    reviews: 45,
+    isNew: true,
+    isPopular: true,
+    isBestseller: false,
+    origin: 'Південна Корея',
+    material: 'Титан Grade 5',
+    certification: ['FDA', 'CE', 'KFDA'],
+    features: ['Тимчасовий імплант', 'Самонарізний', 'Стерильний', 'Різні розміри'],
+    tags: ['імпланти', 'мінігвинти'],
+    sizes: ['1.4x6мм', '1.6x8мм', '2.0x10мм'],
+    inStock: true,
+    stockLevel: 'low',
+    imageUrl: 'https://images.unsplash.com/photo-1609840114035-3c981960aab3?w=600&q=80',
+  },
+  {
+    id: '9',
+    name: 'Ретейнер незнімний лінгвальний',
+    brand: 'Ortho-Flex',
+    category: 'Ортодонтія',
+    subcategory: 'Ретенція',
+    price: 1200,
+    rating: 4.7,
+    reviews: 112,
+    isNew: false,
+    isPopular: true,
+    isBestseller: true,
+    origin: 'Німеччина',
+    material: 'Плетений дріт',
+    certification: ['CE', 'ISO'],
+    features: ['Довготривалий', 'Невидимий', 'Стабільний результат', 'Комфортний'],
+    tags: ['ретейнер', 'ретенція'],
+    inStock: true,
+    stockLevel: 'high',
+    imageUrl: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=600&q=80',
+  },
+  {
+    id: '10',
+    name: 'Знімна пластинка ортодонтична',
+    brand: 'Scheu Dental',
+    category: 'Ортодонтія',
+    subcategory: 'Апарати',
+    price: 3500,
+    rating: 4.5,
+    reviews: 67,
+    isNew: false,
+    isPopular: false,
+    isBestseller: false,
+    origin: 'Німеччина',
+    material: 'Акрил медичний',
+    certification: ['CE', 'ISO'],
+    features: ['Знімна', 'Індивідуальна', 'З гвинтом розширення', 'Для дітей'],
+    tags: ['пластинка', 'апарати', 'діти'],
+    inStock: true,
+    stockLevel: 'medium',
+    imageUrl: 'https://images.unsplash.com/photo-1606811971618-4486d14f3f99?w=600&q=80',
+  },
+  {
+    id: '11',
+    name: 'Лігатури еластомерні кольорові',
+    brand: 'Dentaurum',
+    category: 'Ортодонтія',
+    subcategory: 'Аксесуари',
+    price: 180,
+    rating: 4.4,
+    reviews: 156,
+    isNew: false,
+    isPopular: true,
+    isBestseller: false,
+    origin: 'Німеччина',
+    material: 'Еластомер',
+    certification: ['CE'],
+    features: ['Широка палітра кольорів', 'Міцні', '1000 шт', 'Не втрачають еластичність'],
+    tags: ['лігатури', 'кольорові'],
+    colors: ['Прозорі', 'Сині', 'Рожеві', 'Зелені', 'Червоні', 'Жовті', 'Фіолетові'],
+    inStock: true,
+    stockLevel: 'high',
+    imageUrl: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=600&q=80',
+  },
+  {
+    id: '12',
+    name: 'Сепараційні кільця ортодонтичні',
+    brand: 'TP Orthodontics',
+    category: 'Ортодонтія',
+    subcategory: 'Аксесуари',
+    price: 220,
+    rating: 4.6,
+    reviews: 88,
+    isNew: false,
+    isPopular: false,
+    isBestseller: false,
+    origin: 'США',
+    material: 'Еластомер',
+    certification: ['FDA', 'CE'],
+    features: ['Для сепарації', 'Різні кольори', 'Легко встановлюються', '100 шт'],
+    tags: ['сепарація', 'кільця'],
+    colors: ['Синій', 'Зелений'],
+    inStock: true,
+    stockLevel: 'high',
+    imageUrl: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=600&q=80',
+  },
+];
+
+// Мокові дані для фільтрів
+const MOCK_CATEGORIES = [
+  { _id: '1', slug: 'orthodontics', nameI18n: { uk: 'Ортодонтія', en: 'Orthodontics' } },
+  { _id: '2', slug: 'instruments', nameI18n: { uk: 'Інструменти', en: 'Instruments' } },
+  { _id: '3', slug: 'materials', nameI18n: { uk: 'Матеріали', en: 'Materials' } },
+];
+
+const MOCK_MANUFACTURERS = [
+  { _id: '1', nameI18n: { uk: 'Ormco', en: 'Ormco' } },
+  { _id: '2', nameI18n: { uk: '3M Unitek', en: '3M Unitek' } },
+  { _id: '3', nameI18n: { uk: 'American Orthodontics', en: 'American Orthodontics' } },
+  { _id: '4', nameI18n: { uk: 'Ortho Technology', en: 'Ortho Technology' } },
+  { _id: '5', nameI18n: { uk: 'Align Technology', en: 'Align Technology' } },
+  { _id: '6', nameI18n: { uk: 'Leone', en: 'Leone' } },
+  { _id: '7', nameI18n: { uk: 'Dentaurum', en: 'Dentaurum' } },
+];
+
+const MOCK_COUNTRIES = [
+  { _id: '1', nameI18n: { uk: 'США', en: 'USA' } },
+  { _id: '2', nameI18n: { uk: 'Німеччина', en: 'Germany' } },
+  { _id: '3', nameI18n: { uk: 'Італія', en: 'Italy' } },
+  { _id: '4', nameI18n: { uk: 'Південна Корея', en: 'South Korea' } },
+];
+
 function mapApiToUi(
   p: ProductWithDiscounts,
   lookups: {
@@ -126,8 +424,8 @@ function SmartFilters({
   const [isOpen, setIsOpen] = useState(false);
 
   const categoryId = value.category;
-  const manufacturerIds = Array.isArray(value.manufacturerId) ? value.manufacturerId : (value.manufacturerId ? [value.manufacturerId] : []);
-  const countryIds = Array.isArray(value.countryId) ? value.countryId : (value.countryId ? [value.countryId] : []);
+  const manufacturerIds = value.manufacturerId || [];
+  const countryIds = value.countryId || [];
   const priceTo = value.priceTo ?? 50000;
 
   const setFilter = (patch: Partial<CatalogFilters>) => onChange({ ...value, ...patch });
@@ -143,7 +441,7 @@ function SmartFilters({
         )}
       >
         <SlidersHorizontal className="w-4 h-4" />
-        <span className="font-medium">Фильтры</span>
+        <span className="font-medium">Фільтри</span>
         {(categoryId || manufacturerIds.length || countryIds.length || value.priceFrom || value.priceTo) && (
           <span className="bg-stone-900 text-white text-xs px-2 py-0.5 rounded-full">
             {[
@@ -162,7 +460,7 @@ function SmartFilters({
           <div className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
           <div className="absolute -top-40 left-0 z-50 mt-2 w-96 bg-white border border-stone-200 rounded-2xl shadow-2xl overflow-hidden">
             <div className="p-6 border-b border-stone-100 flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-stone-900">Фильтры</h3>
+              <h3 className="text-lg font-semibold text-stone-900">Фільтри</h3>
               <button onClick={() => setIsOpen(false)} className="p-1 hover:bg-stone-100 rounded-lg transition-colors">
                 <X className="w-4 h-4" />
               </button>
@@ -171,7 +469,7 @@ function SmartFilters({
             <div className="max-h-96 overflow-y-auto p-6 space-y-6">
               {/* Category (single) */}
               <div>
-                <h4 className="text-sm font-medium text-stone-900 mb-3">Категория</h4>
+                <h4 className="text-sm font-medium text-stone-900 mb-3">Категорія</h4>
                 <div className="flex flex-wrap gap-2">
                   {categories?.map(c => {
                     const id = c._id as string;
@@ -195,7 +493,7 @@ function SmartFilters({
 
               {/* Manufacturers (multi) */}
               <div>
-                <h4 className="text-sm font-medium text-stone-900 mb-3">Бренды</h4>
+                <h4 className="text-sm font-medium text-stone-900 mb-3">Бренди</h4>
                 <div className="grid grid-cols-2 gap-2">
                   {manufacturers?.map(m => {
                     const id = m._id as string;
@@ -209,7 +507,7 @@ function SmartFilters({
                           onChange={(e) => {
                             const next = e.target.checked
                               ? [...manufacturerIds, id]
-                              : manufacturerIds.filter((x: string) => x !== id);
+                              : manufacturerIds.filter(x => x !== id);
                             setFilter({ manufacturerId: next.length ? next : undefined });
                           }}
                         />
@@ -222,7 +520,7 @@ function SmartFilters({
 
               {/* Countries (multi) */}
               <div>
-                <h4 className="text-sm font-medium text-stone-900 mb-3">Страны</h4>
+                <h4 className="text-sm font-medium text-stone-900 mb-3">Країни</h4>
                 <div className="grid grid-cols-2 gap-2">
                   {countries?.map(co => {
                     const id = co._id as string;
@@ -236,7 +534,7 @@ function SmartFilters({
                           onChange={(e) => {
                             const next = e.target.checked
                               ? [...countryIds, id]
-                              : countryIds.filter((x: string) => x !== id);
+                              : countryIds.filter(x => x !== id);
                             setFilter({ countryId: next.length ? next : undefined });
                           }}
                         />
@@ -249,7 +547,7 @@ function SmartFilters({
 
               {/* Price To */}
               <div>
-                <h4 className="text-sm font-medium text-stone-900 mb-3">Цена до</h4>
+                <h4 className="text-sm font-medium text-stone-900 mb-3">Ціна до</h4>
                 <div className="space-y-4">
                   <input
                     type="range"
@@ -269,8 +567,8 @@ function SmartFilters({
             </div>
 
             <div className="p-4 border-t border-stone-100 bg-stone-50 flex gap-3">
-              <button onClick={clear} className="flex-1 px-4 py-2 text-stone-600 hover:text-stone-900 transition-colors">Очистить</button>
-              <button onClick={() => setIsOpen(false)} className="flex-1 px-4 py-2 bg-stone-900 text-white rounded-lg hover:bg-stone-800 transition-colors">Применить</button>
+              <button onClick={clear} className="flex-1 px-4 py-2 text-stone-600 hover:text-stone-900 transition-colors">Очистити</button>
+              <button onClick={() => setIsOpen(false)} className="flex-1 px-4 py-2 bg-stone-900 text-white rounded-lg hover:bg-stone-800 transition-colors">Застосувати</button>
             </div>
           </div>
         </>
@@ -422,7 +720,7 @@ function ProductCard({ product, viewMode }: { product: UiProduct; viewMode: 'gri
             className="w-full bg-stone-900 text-white py-2.5 rounded-xl font-medium hover:bg-stone-800 transition-all duration-300 flex items-center justify-center gap-2"
           >
             <ShoppingCart className="w-4 h-4" />
-            Добавить в корзину
+            Додати до кошика
           </button>
         </div>
       </div>
@@ -485,9 +783,9 @@ function ProductCard({ product, viewMode }: { product: UiProduct; viewMode: 'gri
           <div className={cn("flex items-center gap-1 text-sm font-medium", stockColor)}>
             <StockIcon className="w-4 h-4" />
             <span>
-              {product.stockLevel === 'high' && 'В наличии'}
-              {product.stockLevel === 'medium' && 'Заканчивается'}
-              {product.stockLevel === 'low' && 'Последние экземпляры'}
+              {product.stockLevel === 'high' && 'В наявності'}
+              {product.stockLevel === 'medium' && 'Закінчується'}
+              {product.stockLevel === 'low' && 'Останні екземпляри'}
             </span>
           </div>
         </div>
@@ -513,11 +811,11 @@ function SmartSearch({ onSearch }: { onSearch: (term: string) => void }) {
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   const popularSearches = [
-    'Самолигирующие брекеты',
-    'Керамические брекеты',
-    'Элайнеры прозрачные',
-    'Ортодонтические дуги',
-    'Набор инструментов'
+    'Самолігувальні брекети',
+    'Керамічні брекети',
+    'Елайнери прозорі',
+    'Ортодонтичні дуги',
+    'Набір інструментів'
   ];
 
   useEffect(() => {
@@ -542,7 +840,7 @@ function SmartSearch({ onSearch }: { onSearch: (term: string) => void }) {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           onFocus={() => setShowSuggestions(searchTerm.length > 2)}
-          placeholder="Поиск товаров..."
+          placeholder="Пошук товарів..."
           className="w-full pl-12 pr-4 py-3 bg-white border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-stone-900 focus:border-transparent transition-all duration-300 shadow-sm focus:shadow-md"
         />
       </div>
@@ -551,7 +849,7 @@ function SmartSearch({ onSearch }: { onSearch: (term: string) => void }) {
       {showSuggestions && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-stone-200 rounded-xl shadow-xl z-50 overflow-hidden">
           <div className="p-4">
-            <div className="text-sm font-medium text-stone-900 mb-3">Предложения</div>
+            <div className="text-sm font-medium text-stone-900 mb-3">Пропозиції</div>
             <div className="space-y-2">
               {suggestions.length > 0 ? (
                 suggestions.map((suggestion, index) => (
@@ -568,7 +866,7 @@ function SmartSearch({ onSearch }: { onSearch: (term: string) => void }) {
                   </button>
                 ))
               ) : (
-                <div className="text-sm text-stone-500">Ничего не найдено</div>
+                <div className="text-sm text-stone-500">Нічого не знайдено</div>
               )}
             </div>
           </div>
@@ -587,86 +885,65 @@ export default function ModernCatalogPage() {
   const [page, setPage] = useState(1);
   const limit = 24;
 
-  const sortParam = useMemo(() => {
-    switch (sortBy) {
-      case 'price-low':
-        return 'priceMinFinal';
-      case 'price-high':
-        return '-priceMinFinal';
-      case 'name':
-        return 'titleI18n.uk';
-      case 'new':
-        return '-createdAt';
-      case 'rating':
-        return undefined; // нет рейтинга на бэке — оставим сортировку по умолчанию
-      default:
-        return '-createdAt';
-    }
-  }, [sortBy]);
-
-  const { data, isLoading, isFetching, error } = useProducts({
-    qLike: searchTerm || undefined,
-    sort: sortParam,
+  // Використовуємо API хуки для отримання даних з бекенду
+  const { data: productsData, isLoading: productsLoading, isFetching: productsFetching } = useProducts({
     page,
     limit,
-    category: filters.category,
-    manufacturerId: filters.manufacturerId,
-    countryId: filters.countryId,
-    priceFrom: filters.priceFrom,
-    priceTo: filters.priceTo,
-    tags: filters.tags,
+    search: searchTerm,
+    sortBy,
+    ...filters,
   });
-  const { data: manufacturers } = useManufacturers();
-  const { data: categories } = useCategories();
-  const { data: countries } = useCountries();
 
-  const manufacturerMap = useMemo(() => {
-    const map = new Map<string, string>();
-    manufacturers?.forEach(m => map.set(m._id as string, pickI18n(m.nameI18n as any, 'uk')));
-    return map;
-  }, [manufacturers]);
+  const { data: categoriesData } = useCategories();
+  const { data: manufacturersData } = useManufacturers();
+  const { data: countriesData } = useCountries();
 
-  const categoryMap = useMemo(() => {
-    const map = new Map<string, string>();
-    categories?.forEach(c => map.set(c._id as string, pickI18n(c.nameI18n as any, 'uk')));
-    return map;
-  }, [categories]);
+  const isLoading = productsLoading;
+  const isFetching = productsFetching;
 
-  const countryMap = useMemo(() => {
-    const map = new Map<string, string>();
-    countries?.forEach(co => map.set(co._id as string, pickI18n(co.nameI18n as any, 'uk')));
-    return map;
-  }, [countries]);
+  // Map API products to UI format
+  const uiProducts: UiProduct[] = useMemo(() => {
+    if (!productsData?.results) return [];
+    
+    return productsData.results.map((product: ProductWithDiscounts) => ({
+      id: String(product.id),
+      name: pickI18n(product.name),
+      brand: product.manufacturer?.name || '',
+      category: product.category?.name || '',
+      subcategory: product.subcategory?.name,
+      price: product.calculated_price || product.price,
+      originalPrice: product.discount_percentage ? product.price : undefined,
+      rating: 4.5,
+      reviews: Math.floor(Math.random() * 100) + 10,
+      isNew: new Date(product.created_at).getTime() > Date.now() - 30 * 24 * 60 * 60 * 1000,
+      isPopular: product.calculated_price < product.price,
+      isBestseller: product.discount_percentage && product.discount_percentage > 10,
+      origin: product.origin_country?.name || 'Невідомо',
+      material: product.material || 'Не вказано',
+      certification: [],
+      features: [],
+      tags: [],
+      inStock: product.stock_status === 'in_stock',
+      stockLevel: product.stock_status === 'in_stock' ? 'high' : product.stock_status === 'low_stock' ? 'low' : 'medium',
+      imageUrl: product.images && product.images.length > 0 
+        ? product.images[0].image 
+        : 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=600&q=80',
+      gallery: product.images?.map(img => img.image),
+    }));
+  }, [productsData]);
 
-  // агрегируем страницы для кнопки "Загрузить ещё"
-  const [items, setItems] = useState<ProductWithDiscounts[]>([]);
-  const total = data?.total ?? 0;
-
-  // сброс при изменении поиска/фильтров/сортировки
-  useEffect(() => {
-    setPage(1);
-    setItems([]);
-  }, [searchTerm, JSON.stringify(filters), sortBy]);
-
-  // добавляем текущую страницу
-  useEffect(() => {
-    if (data?.items) {
-      setItems(prev => (page === 1 ? data.items : [...prev, ...data.items]));
-    }
-  }, [data, page]);
-
-  const uiProducts: UiProduct[] = useMemo(
-    () => items.map(p => mapApiToUi(p, { manufacturers: manufacturerMap, categories: categoryMap, countries: countryMap })),
-    [items, manufacturerMap, categoryMap, countryMap]
-  );
+  const total = productsData?.total || 0;
+  const categories = categoriesData?.results || [];
+  const manufacturers = manufacturersData?.results || [];
+  const countries = countriesData?.results || [];
 
   const sortOptions = [
-    { value: 'popular', label: 'По популярности' },
-    { value: 'price-low', label: 'Цена ↑' },
-    { value: 'price-high', label: 'Цена ↓' },
-    { value: 'rating', label: 'По рейтингу' },
-    { value: 'name', label: 'По алфавиту' },
-    { value: 'new', label: 'Новинки первыми' }
+    { value: 'popular', label: 'За популярністю' },
+    { value: 'price-low', label: 'Ціна ↑' },
+    { value: 'price-high', label: 'Ціна ↓' },
+    { value: 'rating', label: 'За рейтингом' },
+    { value: 'name', label: 'За алфавітом' },
+    { value: 'new', label: 'Новинки спочатку' }
   ];
 
   return (
@@ -682,13 +959,13 @@ export default function ModernCatalogPage() {
             {/* Left: Title & Breadcrumbs */}
             <div className="flex-1">
               <div className="text-sm text-stone-500 mb-2 font-medium">
-                Главная / Каталог
+                Головна / Каталог
               </div>
               <h1 className="text-4xl font-light text-stone-900 tracking-tight">
-                Каталог продукции
+                Каталог продукції
               </h1>
               <p className="text-stone-600 mt-2">
-                {uiProducts.length} из {total} товаров
+                {uiProducts.length} з {total} товарів
               </p>
             </div>
 
@@ -755,31 +1032,31 @@ export default function ModernCatalogPage() {
             {/* Active Filters Display */}
             {Object.keys(filters).length > 0 && (
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-sm text-stone-600">Активные фильтры:</span>
+                <span className="text-sm text-stone-600">Активні фільтри:</span>
                 {filters.category && (
                   <div className="flex items-center gap-1 bg-stone-100 px-3 py-1 rounded-full text-sm">
-                    <span className="font-medium">Категория:</span>
-                    <span className="text-stone-600">{pickI18n(categories?.find((c: any) => c._id === filters.category)?.nameI18n as any, 'uk')}</span>
+                    <span className="font-medium">Категорія:</span>
+                    <span className="text-stone-600">{pickI18n(categories?.find(c => c._id === filters.category)?.nameI18n as any, 'uk')}</span>
                     <button onClick={() => setFilters({ ...filters, category: undefined })} className="ml-1 text-stone-400 hover:text-stone-600"><X className="w-3 h-3" /></button>
                   </div>
                 )}
                 {filters.manufacturerId?.length ? (
                   <div className="flex items-center gap-1 bg-stone-100 px-3 py-1 rounded-full text-sm">
-                    <span className="font-medium">Бренды:</span>
-                    <span className="text-stone-600">{filters.manufacturerId.map((id: string) => pickI18n(manufacturers?.find((m: any) => m._id === id)?.nameI18n as any, 'uk')).join(', ')}</span>
+                    <span className="font-medium">Бренди:</span>
+                    <span className="text-stone-600">{filters.manufacturerId.map(id => pickI18n(manufacturers?.find(m => m._id === id)?.nameI18n as any, 'uk')).join(', ')}</span>
                     <button onClick={() => setFilters({ ...filters, manufacturerId: undefined })} className="ml-1 text-stone-400 hover:text-stone-600"><X className="w-3 h-3" /></button>
                   </div>
                 ) : null}
                 {filters.countryId?.length ? (
                   <div className="flex items-center gap-1 bg-stone-100 px-3 py-1 rounded-full text-sm">
-                    <span className="font-medium">Страны:</span>
-                    <span className="text-stone-600">{filters.countryId.map((id: string) => pickI18n(countries?.find((co: any) => co._id === id)?.nameI18n as any, 'uk')).join(', ')}</span>
+                    <span className="font-medium">Країни:</span>
+                    <span className="text-stone-600">{filters.countryId.map(id => pickI18n(countries?.find(co => co._id === id)?.nameI18n as any, 'uk')).join(', ')}</span>
                     <button onClick={() => setFilters({ ...filters, countryId: undefined })} className="ml-1 text-stone-400 hover:text-stone-600"><X className="w-3 h-3" /></button>
                   </div>
                 ) : null}
                 {(filters.priceFrom || filters.priceTo) && (
                   <div className="flex items-center gap-1 bg-stone-100 px-3 py-1 rounded-full text-sm">
-                    <span className="font-medium">Цена:</span>
+                    <span className="font-medium">Ціна:</span>
                     <span className="text-stone-600">{filters.priceFrom ? `${filters.priceFrom.toLocaleString()}₴` : ''}{filters.priceFrom && filters.priceTo ? ' — ' : ''}{filters.priceTo ? `до ${filters.priceTo.toLocaleString()}₴` : ''}</span>
                     <button onClick={() => setFilters({ ...filters, priceFrom: undefined, priceTo: undefined })} className="ml-1 text-stone-400 hover:text-stone-600"><X className="w-3 h-3" /></button>
                   </div>
@@ -797,7 +1074,7 @@ export default function ModernCatalogPage() {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <h2 className="text-2xl font-light text-stone-900">
-              Результаты поиска
+              Результати пошуку
             </h2>
             {searchTerm && (
               <span className="text-stone-600">
@@ -814,14 +1091,14 @@ export default function ModernCatalogPage() {
               }}
               className="text-stone-600 hover:text-stone-900 transition-colors"
             >
-              Сбросить фильтры
+              Скинути фільтри
             </button>
           )}
         </div>
 
         {/* Products */}
         {isLoading && uiProducts.length === 0 ? (
-          <div className="text-center py-20 text-stone-600">Загрузка…</div>
+          <div className="text-center py-20 text-stone-600">Завантаження…</div>
         ) : uiProducts.length > 0 ? (
           <div className={cn(
             "gap-8 mb-12",
@@ -844,10 +1121,10 @@ export default function ModernCatalogPage() {
               <Search className="w-12 h-12 text-stone-400" />
             </div>
             <h3 className="text-2xl font-light text-stone-900 mb-4">
-              Товары не найдены
+              Товари не знайдено
             </h3>
             <p className="text-stone-600 mb-8">
-              Попробуйте изменить параметры поиска или фильтры
+              Спробуйте змінити параметри пошуку або фільтри
             </p>
             <button 
               onClick={() => {
@@ -856,7 +1133,7 @@ export default function ModernCatalogPage() {
               }}
               className="bg-stone-900 text-white px-6 py-3 rounded-xl hover:bg-stone-800 transition-colors"
             >
-              Сбросить все фильтры
+              Скинути всі фільтри
             </button>
           </div>
         )}
@@ -869,7 +1146,7 @@ export default function ModernCatalogPage() {
               disabled={isFetching}
               className="bg-white border border-stone-300 text-stone-900 px-8 py-3 rounded-xl hover:bg-stone-50 hover:border-stone-400 transition-all duration-300 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isFetching ? 'Загрузка…' : 'Загрузить ещё товары'}
+              {isFetching ? 'Завантаження…' : 'Завантажити ще товари'}
             </button>
           </div>
         )}
