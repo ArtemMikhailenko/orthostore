@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Bot, User, Sparkles } from 'lucide-react';
+import { MessageCircle, X, Send, Bot, User, Sparkles, Phone, Send as TelegramIcon, MessageSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface Message {
@@ -20,6 +20,8 @@ const INITIAL_MESSAGE: Message = {
 
 export function AIChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showChat, setShowChat] = useState(false);
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -31,11 +33,24 @@ export function AIChatWidget() {
   };
 
   useEffect(() => {
-    if (isOpen) {
+    if (showChat) {
       scrollToBottom();
       inputRef.current?.focus();
     }
-  }, [isOpen, messages]);
+  }, [showChat, messages]);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+    setIsOpen(!isOpen);
+    if (showChat) {
+      setShowChat(false);
+    }
+  };
+
+  const openChat = () => {
+    setShowChat(true);
+    setIsMenuOpen(false);
+  };
 
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
@@ -102,27 +117,100 @@ export function AIChatWidget() {
 
   return (
     <>
-      {/* Chat Button */}
+      {/* Main Button */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={toggleMenu}
         className={cn(
-          'fixed bottom-6 right-6 z-50 p-4 rounded-full shadow-2xl transition-all duration-300',
+          'fixed bottom-6 right-6 z-50 p-3.5 rounded-full shadow-xl transition-all duration-300',
           'bg-gradient-to-br from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700',
           'text-white hover:scale-110 active:scale-95',
           'flex items-center gap-2',
-          isOpen && 'scale-0'
+          (isMenuOpen || showChat) && 'scale-0'
         )}
-        aria-label="AI Консультант"
+        aria-label="Контакти"
       >
-        <MessageCircle className="w-6 h-6" />
-        <Sparkles className="w-4 h-4 absolute -top-1 -right-1 text-yellow-300 animate-pulse" />
-        {!isOpen && (
-          <div className="absolute -top-2 -left-2 w-4 h-4 bg-red-500 rounded-full animate-ping" />
-        )}
+        <MessageCircle className="w-5 h-5" />
+        <Sparkles className="w-3.5 h-3.5 absolute -top-0.5 -right-0.5 text-yellow-300 animate-pulse" />
+        {/* Pulse Ring */}
+        <span className="absolute inset-0 rounded-full bg-emerald-500 animate-ping opacity-75"></span>
       </button>
 
+      {/* Contact Menu */}
+      {isMenuOpen && !showChat && (
+        <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2 animate-in slide-in-from-bottom-4">
+          {/* Close Button */}
+          <button
+            onClick={toggleMenu}
+            className="ml-auto p-2 bg-stone-900 text-white rounded-full shadow-lg hover:bg-stone-800 transition-all"
+          >
+            <X className="w-4 h-4" />
+          </button>
+
+          {/* Phone */}
+          <a
+            href="tel:+380XXXXXXXXX"
+            className="flex items-center gap-2.5 bg-white p-3 rounded-xl shadow-md border border-stone-200 hover:border-emerald-500 hover:shadow-lg transition-all group w-[280px]"
+          >
+            <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+              <Phone className="w-5 h-5 text-white" />
+            </div>
+            <div className="text-left">
+              <div className="font-medium text-stone-900 text-sm">Зателефонувати</div>
+              <div className="text-xs text-stone-500">Дзвінок менеджеру</div>
+            </div>
+          </a>
+
+          {/* Telegram */}
+          <a
+            href="https://t.me/orthodentpro"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2.5 bg-white p-3 rounded-xl shadow-md border border-stone-200 hover:border-[#0088cc] hover:shadow-lg transition-all group w-[280px]"
+          >
+            <div className="w-10 h-10 bg-[#0088cc] rounded-full flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+              <TelegramIcon className="w-5 h-5 text-white" />
+            </div>
+            <div className="text-left">
+              <div className="font-medium text-stone-900 text-sm">Telegram</div>
+              <div className="text-xs text-stone-500">Написати в месенджер</div>
+            </div>
+          </a>
+
+          {/* Viber */}
+          <a
+            href="viber://chat?number=380XXXXXXXXX"
+            className="flex items-center gap-2.5 bg-white p-3 rounded-xl shadow-md border border-stone-200 hover:border-[#7360f2] hover:shadow-lg transition-all group w-[280px]"
+          >
+            <div className="w-10 h-10 bg-[#7360f2] rounded-full flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+              <MessageSquare className="w-5 h-5 text-white" />
+            </div>
+            <div className="text-left">
+              <div className="font-medium text-stone-900 text-sm">Viber</div>
+              <div className="text-xs text-stone-500">Чат у Viber</div>
+            </div>
+          </a>
+
+          {/* AI Assistant */}
+          <button
+            onClick={openChat}
+            className="flex items-center gap-2.5 bg-gradient-to-br from-emerald-500 to-emerald-600 p-3 rounded-xl shadow-md hover:shadow-lg hover:scale-[1.02] transition-all group w-[280px]"
+          >
+            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform flex-shrink-0">
+              <Bot className="w-5 h-5 text-white" />
+            </div>
+            <div className="text-left text-white">
+              <div className="font-medium flex items-center gap-1.5 text-sm">
+                AI Асистент
+                <Sparkles className="w-3.5 h-3.5" />
+              </div>
+              <div className="text-xs text-emerald-100">Розумний помічник 24/7</div>
+            </div>
+          </button>
+        </div>
+      )}
+
       {/* Chat Window */}
-      {isOpen && (
+      {showChat && (
         <div className="fixed bottom-6 right-6 z-50 w-[400px] h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-stone-200">
           {/* Header */}
           <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 p-4 text-white flex items-center justify-between">
@@ -139,7 +227,7 @@ export function AIChatWidget() {
               </div>
             </div>
             <button
-              onClick={() => setIsOpen(false)}
+              onClick={() => setShowChat(false)}
               className="p-2 hover:bg-white/20 rounded-lg transition-colors"
             >
               <X className="w-5 h-5" />

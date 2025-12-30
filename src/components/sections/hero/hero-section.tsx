@@ -15,7 +15,7 @@ export function HeroSection({ className }: HeroSectionProps) {
     <section className={cn('relative bg-white overflow-hidden', className)}>
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center min-h-[75vh] py-12 lg:py-16">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items- min-h-[65vh] py-12 lg:py-15 max-h-[95vh]">
           
           {/* Left Content */}
           <div className="space-y-8 lg:space-y-10">
