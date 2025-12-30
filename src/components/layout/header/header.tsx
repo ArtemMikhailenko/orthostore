@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import Image from 'next/image';
 import { 
   Menu, 
   X, 
@@ -52,17 +53,7 @@ const navigationItems = [
       }
     ]
   },
-  {
-    title: 'Бренди',
-    href: '/brands',
-    hasDropdown: true,
-    items: [
-      { title: '3M Unitek', href: '/brands/3m-unitek', description: 'Преміум системи США' },
-      { title: 'Ormco', href: '/brands/ormco', description: 'Інноваційні рішення' },
-      { title: 'American Orthodontics', href: '/brands/american-orthodontics', description: 'Повний спектр продукції' },
-      { title: 'Всі бренди', href: '/brands', description: 'Повний список партнерів' }
-    ]
-  },
+ 
   {
     title: 'Про компанію',
     href: '/about'
@@ -104,17 +95,15 @@ function TopBar() {
 // Logo Component
 function Logo() {
   return (
-    <Link href="/" className="flex items-center space-x-3 group cursor-pointer" aria-label="На головну">
-      <div className="w-10 h-10 bg-stone-900 rounded-sm flex items-center justify-center group-hover:bg-stone-800 transition-all duration-300">
-        <div className="text-white text-lg font-bold tracking-wide">O</div>
-      </div>
-      <div className="hidden sm:block">
-        <div className="font-bold text-stone-900 text-lg tracking-wide group-hover:text-stone-700 transition-colors">
-          OrthoDent
-        </div>
-        <div className="text-xs text-stone-500 uppercase tracking-widest -mt-1">
-          Professional
-        </div>
+    <Link href="/" className="flex items-center group cursor-pointer" aria-label="На головну">
+      <div className="relative w-[160px] h-12">
+        <Image
+          src="/images/logo.png"
+          alt="OrthoDent Professional"
+          fill
+          className="object-contain"
+          priority
+        />
       </div>
     </Link>
   );
