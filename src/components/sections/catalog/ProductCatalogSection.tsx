@@ -121,7 +121,7 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
       <div className="container mx-auto px-6">
         
         {/* Header */}
-        <div className="grid lg:grid-cols-2 gap-20 mb-32">
+        {/* <div className="grid lg:grid-cols-2 gap-20 mb-32">
           <div>
             <h2 className="text-5xl lg:text-6xl font-light text-gray-900 leading-tight mb-8">
               Ваш надежный
@@ -151,10 +151,10 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Metrics */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-16 mb-32">
+        {/* <div className="grid grid-cols-2 lg:grid-cols-4 gap-16 mb-32">
           {achievements.map((metric, index) => (
             <div key={index} className="text-center">
               <div className="text-5xl font-light text-gray-900 mb-4">
@@ -165,10 +165,10 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
 
         {/* Expertise Grid */}
-        <div className="grid lg:grid-cols-2 gap-20 mb-32">
+        {/* <div className="grid lg:grid-cols-2 gap-20 mb-32">
           {expertise.map((item, index) => (
             <div key={index} className="space-y-6">
               <h3 className="text-2xl font-light text-gray-900">
@@ -180,7 +180,7 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
               </p>
             </div>
           ))}
-        </div>
+        </div> */}
 
         {/* Recommendations Section */}
         <div className="grid lg:grid-cols-2 gap-8">
