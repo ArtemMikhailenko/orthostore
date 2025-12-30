@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
@@ -86,43 +87,18 @@ export function HeroSection({ className }: HeroSectionProps) {
 
           {/* Right Content - Braces Banner */}
           <div className="relative">
-            <div className="relative bg-stone-50 rounded-2xl overflow-hidden aspect-[4/5] lg:aspect-[3/4]">
+            <div className="relative w-full h-[600px] lg:h-[700px]">
               
-              {/* Background decorative element */}
-              <div className="absolute inset-0 bg-gradient-to-br from-stone-100 to-stone-50"></div>
+              {/* Banner Image */}
+              <Image
+                src="/images/banner.png"
+                alt="Ортодонтичне обладнання"
+                fill
+                className="object-contain scale-x-[-1]"
+                priority
+              />
               
-              {/* Content Card */}
-              <div className="relative h-full flex flex-col justify-center items-center p-8 lg:p-12">
-                
-                {/* Red Label */}
-                <div className="mb-8 lg:mb-12">
-                  <span className="text-red-600 font-medium text-sm lg:text-base uppercase tracking-wide">
-                    Банер з Брекетами
-                  </span>
-                </div>
-
-                {/* Icon/Image placeholder - dark box */}
-                <div className="w-32 h-32 lg:w-40 lg:h-40 bg-stone-900 mb-8 lg:mb-12 flex items-center justify-center">
-                  <div className="text-white text-4xl lg:text-5xl font-light">□</div>
-                </div>
-
-                {/* Quality Badge */}
-                <div className="text-center space-y-4 max-w-xs">
-                  <h3 className="text-xl lg:text-2xl font-light text-stone-900">
-                    Експертне якість
-                  </h3>
-                  <p className="text-sm lg:text-base text-stone-600 leading-relaxed">
-                    Кожний продукт проходить строгий контроль якості
-                  </p>
-                </div>
-              </div>
-
-              {/* ISO Badge */}
-              <div className="absolute top-6 right-6 bg-white px-4 py-2 shadow-sm">
-                <span className="text-xs lg:text-sm font-semibold text-stone-900 tracking-wider">
-                  ISO 13485
-                </span>
-              </div>
+             
             </div>
           </div>
         </div>

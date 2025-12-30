@@ -2,77 +2,16 @@
 
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { Quote, Star, Mail, Phone, MessageCircle, Bot, ChevronUp } from 'lucide-react';
+import { Quote, Star, Mail, Phone } from 'lucide-react';
 
 interface ServicesModernSectionProps {
   className?: string;
 }
 
-const testimonials = [
-  {
-    id: 1,
-    quote: "OrthoDent Pro повністю змінив наш підхід до роботи. Якість обладнання бездоганна.",
-    author: "Др. Олена Кравченко",
-    position: "Головний лікар",
-    clinic: "Smile Clinic",
-    rating: 5,
-    image: "1"
-  },
-  {
-    id: 2,
-    quote: "ORTHOSTORE рекомендує - тут ми розміщуємо фото та невеликий опис праці з нами лікарів або клінік. Професійний підхід та швидка доставка.",
-    author: "Др. Андрій Петренко",
-    position: "Ортодонт",
-    clinic: "DentPro",
-    rating: 5,
-    image: "2",
-    featured: true
-  },
-  {
-    id: 3,
-    quote: "Тут фото лікаря або стоматології які співпрацюють з нами та ми їх рекомендуємо для пацієнтів. Відмінний сервіс та підтримка!",
-    author: "Др. Марія Іваненко",
-    position: "Стоматолог",
-    clinic: "Perfect Smile",
-    rating: 5,
-    image: "3"
-  }
-];
+
 
 export function ServicesModernSection({ className }: ServicesModernSectionProps) {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
-  const [isContactMenuOpen, setIsContactMenuOpen] = useState(false);
-
-  const contactOptions = [
-    {
-      id: 'phone',
-      label: 'Зателефонувати',
-      icon: Phone,
-      action: () => window.location.href = 'tel:+380441234567',
-      color: 'bg-green-600 hover:bg-green-700'
-    },
-    {
-      id: 'telegram',
-      label: 'Telegram',
-      icon: MessageCircle,
-      action: () => window.open('https://t.me/orthodent', '_blank'),
-      color: 'bg-blue-500 hover:bg-blue-600'
-    },
-    {
-      id: 'viber',
-      label: 'Viber',
-      icon: MessageCircle,
-      action: () => window.open('viber://chat?number=+380441234567', '_blank'),
-      color: 'bg-purple-600 hover:bg-purple-700'
-    },
-    {
-      id: 'ai',
-      label: 'AI Асистент',
-      icon: Bot,
-      action: () => console.log('Open AI chat'),
-      color: 'bg-stone-900 hover:bg-stone-800'
-    }
-  ];
 
   return (
     <section className={cn('py-32 bg-stone-50', className)}>
@@ -80,13 +19,7 @@ export function ServicesModernSection({ className }: ServicesModernSectionProps)
         
         {/* Header */}
         <div className="text-center mb-20">
-          <div className="inline-flex items-center gap-3 mb-6">
-            <Quote className="w-6 h-6 text-stone-900" />
-            <span className="text-stone-600 uppercase tracking-wider text-sm font-medium">
-              Відгуки клієнтів
-            </span>
-          </div>
-          
+         
           <h2 className="text-4xl md:text-5xl font-light text-stone-900 mb-6">
             Готові почати співпрацю?
           </h2>
@@ -96,57 +29,7 @@ export function ServicesModernSection({ className }: ServicesModernSectionProps)
           </p>
         </div>
 
-        {/* Testimonials Grid */}
-        <div className="grid lg:grid-cols-3 gap-8 mb-20">
-          {testimonials.map((testimonial, index) => (
-            <div
-              key={testimonial.id}
-              onClick={() => setActiveTestimonial(index)}
-              className={cn(
-                'relative border-2 bg-white p-8 cursor-pointer transition-all duration-300 group',
-                activeTestimonial === index 
-                  ? 'border-stone-900 shadow-lg' 
-                  : 'border-stone-200 hover:border-stone-400',
-                testimonial.featured && 'lg:col-span-1'
-              )}
-            >
-              {/* Quote Icon */}
-              <div className="absolute top-8 right-8 opacity-10 group-hover:opacity-20 transition-opacity">
-                <Quote className="w-16 h-16 text-stone-900" />
-              </div>
-
-              {/* Content */}
-              <div className="relative z-10 space-y-6">
-                {/* Stars */}
-                <div className="flex gap-1">
-                  {Array.from({ length: testimonial.rating }).map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-stone-900 text-stone-900" />
-                  ))}
-                </div>
-
-                {/* Quote Text */}
-                <blockquote className="text-stone-700 leading-relaxed min-h-[120px]">
-                  "{testimonial.quote}"
-                </blockquote>
-
-                {/* Author Info */}
-                <div className="pt-6 border-t-2 border-stone-200">
-                  <div className="font-medium text-stone-900 mb-1">
-                    {testimonial.author}
-                  </div>
-                  <div className="text-sm text-stone-600">
-                    {testimonial.position}, "{testimonial.clinic}"
-                  </div>
-                </div>
-              </div>
-
-              {/* Active Indicator */}
-              {activeTestimonial === index && (
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-stone-900" />
-              )}
-            </div>
-          ))}
-        </div>
+ 
 
         {/* CTA Section */}
         <div className="grid lg:grid-cols-2 gap-12">
@@ -201,48 +84,9 @@ export function ServicesModernSection({ className }: ServicesModernSectionProps)
               </div>
               
               <div className="pt-6 border-t border-white/10">
-                {/* Contact Options Menu */}
-                <div className="relative">
-                  {/* Dropdown Options */}
-                  {isContactMenuOpen && (
-                    <div className="absolute bottom-full left-0 right-0 mb-3 space-y-2">
-                      {contactOptions.map((option) => {
-                        const Icon = option.icon;
-                        return (
-                          <button
-                            key={option.id}
-                            onClick={() => {
-                              option.action();
-                              setIsContactMenuOpen(false);
-                            }}
-                            className={cn(
-                              'w-full text-white px-6 py-3 font-medium transition-all duration-300 flex items-center justify-center gap-3',
-                              option.color
-                            )}
-                          >
-                            <Icon className="w-5 h-5" />
-                            <span className="uppercase tracking-wider text-sm">{option.label}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-
-                  {/* Main Toggle Button */}
-                  <button 
-                    onClick={() => setIsContactMenuOpen(!isContactMenuOpen)}
-                    className="w-full border-2 border-white text-white px-8 py-4 font-medium hover:bg-white hover:text-stone-900 transition-all duration-300 uppercase tracking-wider text-sm flex items-center justify-center gap-3"
-                  >
-                    <Phone className="w-5 h-5" />
-                    <span>Зв'язатися з нами</span>
-                    <ChevronUp 
-                      className={cn(
-                        'w-4 h-4 transition-transform duration-300',
-                        isContactMenuOpen ? 'rotate-0' : 'rotate-180'
-                      )} 
-                    />
-                  </button>
-                </div>
+                <button className="w-full border-2 border-white text-white px-8 py-4 font-medium hover:bg-white hover:text-stone-900 transition-all duration-300 uppercase tracking-wider text-sm">
+                  Замовити дзвінок
+                </button>
                 
                 <div className="mt-6 flex items-center justify-center gap-6">
                   <div className="text-center">

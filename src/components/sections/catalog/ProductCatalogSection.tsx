@@ -1,12 +1,60 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Quote, Star, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
 
 interface AboutExpertiseSectionProps {
   className?: string;
 }
+
+const testimonials = [
+  {
+    id: 1,
+    // Left side - ORTHOSTORE recommends doctors
+    doctorName: "Др. Олена Кравченко",
+    doctorPosition: "Головний лікар, ортодонт",
+    doctorClinic: "Smile Clinic, Київ",
+    doctorDescription: "Працюємо з ORTHOSTORE більше 5 років. Завжди якісна продукція, швидка доставка та професійна підтримка. Рекомендуємо як надійного партнера.",
+    doctorImage: "1",
+    
+    // Right side - Recommended for patients
+    clinicName: "Smile Clinic",
+    clinicLocation: "вул. Хрещатик, 25, Київ",
+    clinicDescription: "Сучасна стоматологічна клініка з повним циклом ортодонтичного лікування. Використовують найсучасніше обладнання та матеріали.",
+    clinicServices: ["Брекет-системи", "Елайнери", "Дитяча ортодонтія"],
+    clinicImage: "1"
+  },
+  {
+    id: 2,
+    doctorName: "Др. Андрій Петренко",
+    doctorPosition: "Ортодонт-практик",
+    doctorClinic: "DentPro, Львів",
+    doctorDescription: "ORTHOSTORE - це гарантія якості. Замовляю у них всі матеріали для своєї практики. Особливо вражає асортимент преміум-брендів.",
+    doctorImage: "2",
+    
+    clinicName: "DentPro",
+    clinicLocation: "пр. Свободи, 12, Львів",
+    clinicDescription: "Клініка європейського рівня з фокусом на естетичній стоматології та ортодонтії. Індивідуальний підхід до кожного пацієнта.",
+    clinicServices: ["Естетична ортодонтія", "Invisalign", "3D-діагностика"],
+    clinicImage: "2"
+  },
+  {
+    id: 3,
+    doctorName: "Др. Марія Іваненко",
+    doctorPosition: "Стоматолог-ортодонт",
+    doctorClinic: "Perfect Smile, Одеса",
+    doctorDescription: "Співпраця з ORTHOSTORE дозволила нам вийти на новий рівень обслуговування. Завжди актуальні новинки ринку та конкурентні ціни.",
+    doctorImage: "3",
+    
+    clinicName: "Perfect Smile",
+    clinicLocation: "Дерибасівська, 8, Одеса",
+    clinicDescription: "Провідний центр ортодонтичного лікування на півдні України. Застосовуємо інноваційні методики та сучасні технології.",
+    clinicServices: ["Лінгвальні брекети", "Швидка ортодонтія", "Консультації онлайн"],
+    clinicImage: "3"
+  }
+];
 
 const achievements = [
   { value: '500+', label: 'Клиник-партнеров' },
@@ -35,6 +83,39 @@ const expertise = [
 ];
 
 export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps) {
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const [direction, setDirection] = useState(0);
+
+  const nextTestimonial = () => {
+    setDirection(1);
+    setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const prevTestimonial = () => {
+    setDirection(-1);
+    setActiveTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
+
+  const currentTestimonial = testimonials[activeTestimonial];
+
+  const slideVariants = {
+    enter: {
+      opacity: 0,
+      scale: 0.95,
+      y: 20
+    },
+    center: {
+      opacity: 1,
+      scale: 1,
+      y: 0
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.95,
+      y: -20
+    }
+  };
+
   return (
     <section className={cn('py-32 bg-white', className)}>
       <div className="container mx-auto px-6">
@@ -101,44 +182,203 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
           ))}
         </div>
 
-        {/* Testimonial + CTA */}
-        <div className="grid lg:grid-cols-2 gap-20 items-center">
-          <div className="bg-gray-50 p-16">
-            <blockquote className="text-3xl font-light text-gray-900 leading-relaxed mb-12">
-              "OrthoDent Pro полностью изменил наш подход к работе. 
-              Качество оборудования безупречно."
-            </blockquote>
-            
-            <div className="space-y-2">
-              <div className="font-medium text-gray-900">Др. Елена Кравченко</div>
-              <div className="text-gray-600">Главный врач, "Smile Clinic"</div>
-            </div>
-          </div>
+        {/* Recommendations Section */}
+        <div className="grid lg:grid-cols-2 gap-8">
           
-          <div className="space-y-12">
-            <div>
-              <h3 className="text-3xl font-light text-gray-900 mb-8">
-                Готовы начать сотрудничество?
-              </h3>
-              <p className="text-gray-600 leading-relaxed font-light text-lg">
-                Получите персональную консультацию и узнайте, как мы можем 
-                улучшить эффективность вашей ортодонтической практики.
+          {/* Left: ORTHOSTORE рекомендує - Doctors */}
+          <div className="border-2 border-stone-200 bg-white h-full flex flex-col">
+            {/* Header */}
+            <div className="bg-stone-900 text-white px-6 py-5 flex-shrink-0">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-medium uppercase tracking-wider">
+                  ORTHOSTORE рекомендує
+                </h3>
+                <Quote className="w-5 h-5 opacity-50" />
+              </div>
+              <p className="text-stone-400 text-xs mt-1">
+                Лікарі та клініки, які працюють з нами
               </p>
             </div>
-            
-            <div className="space-y-4">
-              <button className="w-full bg-gray-900 text-white px-12 py-4 font-medium hover:bg-gray-800 transition-colors uppercase tracking-wider text-sm">
-                Получить консультацию
-              </button>
-              
-              <button className="w-full border-2 border-gray-900 text-gray-900 px-12 py-4 font-medium hover:bg-gray-900 hover:text-white transition-colors uppercase tracking-wider text-sm">
-                Скачать презентацию
-              </button>
+
+            {/* Doctor Card - with fixed height */}
+            <div className="p-6 flex-1 flex flex-col min-h-[420px]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTestimonial}
+                  variants={slideVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{
+                    duration: 0.3,
+                    ease: "easeInOut"
+                  }}
+                  className="flex-1 flex flex-col"
+                >
+                  {/* Doctor Photo */}
+                  <div className="aspect-[4/3] border-2 border-stone-200 bg-stone-50 flex items-center justify-center relative overflow-hidden mb-6">
+                    <div className="absolute inset-0 bg-gradient-to-br from-stone-100 to-stone-200"></div>
+                    <div className="relative z-10 text-center">
+                      <div className="w-20 h-20 border-2 border-stone-900 bg-white mx-auto flex items-center justify-center">
+                        <span className="text-2xl font-bold text-stone-900">
+                          {currentTestimonial.doctorName.split(' ')[1]?.[0] || 'О'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Doctor Info */}
+                  <div className="space-y-4 flex-1">
+                    <div>
+                      <h4 className="text-xl font-medium text-stone-900 mb-1">
+                        {currentTestimonial.doctorName}
+                      </h4>
+                      <p className="text-stone-600 text-sm">
+                        {currentTestimonial.doctorPosition}
+                      </p>
+                      <p className="text-stone-500 text-xs mt-1">
+                        {currentTestimonial.doctorClinic}
+                      </p>
+                    </div>
+
+                    <div className="w-8 h-px bg-stone-300"></div>
+
+                    <p className="text-stone-700 leading-relaxed text-sm">
+                      {currentTestimonial.doctorDescription}
+                    </p>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Navigation */}
+              <div className="flex items-center justify-between pt-6 mt-auto border-t-2 border-stone-200">
+                <div className="flex gap-2">
+                  {testimonials.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => {
+                        setDirection(index > activeTestimonial ? 1 : -1);
+                        setActiveTestimonial(index);
+                      }}
+                      className={cn(
+                        'h-1 transition-all duration-300',
+                        activeTestimonial === index 
+                          ? 'w-8 bg-stone-900' 
+                          : 'w-1 bg-stone-300 hover:bg-stone-500'
+                      )}
+                      aria-label={`Перейти до лікаря ${index + 1}`}
+                    />
+                  ))}
+                </div>
+
+                <div className="flex gap-2">
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={prevTestimonial}
+                    className="w-9 h-9 border-2 border-stone-900 flex items-center justify-center hover:bg-stone-900 hover:text-white transition-all"
+                    aria-label="Попередній"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={nextTestimonial}
+                    className="w-9 h-9 border-2 border-stone-900 flex items-center justify-center hover:bg-stone-900 hover:text-white transition-all"
+                    aria-label="Наступний"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </motion.button>
+                </div>
+              </div>
             </div>
-            
-            <div className="pt-8 border-t border-gray-200 space-y-2 text-gray-500">
-              <div>+38 (044) 123-45-67</div>
-              <div>info@orthodent.pro</div>
+          </div>
+
+          {/* Right: Рекомендовані клініки */}
+          <div className="border-2 border-stone-200 bg-white h-full flex flex-col">
+            {/* Header */}
+            <div className="bg-stone-50 border-b-2 border-stone-200 px-6 py-5 flex-shrink-0">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-medium text-stone-900 uppercase tracking-wider">
+                  Рекомендовані клініки
+                </h3>
+                <Star className="w-5 h-5 fill-stone-900 text-stone-900" />
+              </div>
+              <p className="text-stone-600 text-xs mt-1">
+                Для найкращого лікування наших пацієнтів
+              </p>
+            </div>
+
+            {/* Clinic Card - with fixed height */}
+            <div className="p-6 flex-1 flex flex-col min-h-[420px]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTestimonial}
+                  variants={slideVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{
+                    duration: 0.3,
+                    ease: "easeInOut"
+                  }}
+                  className="flex-1 flex flex-col"
+                >
+                  {/* Clinic Photo */}
+                  <div className="aspect-[4/3] border-2 border-stone-900 bg-stone-900 flex items-center justify-center relative overflow-hidden mb-6">
+                    <div className="absolute inset-0 bg-gradient-to-br from-stone-800 to-stone-900"></div>
+                    <div className="relative z-10 text-center text-white">
+                      <div className="text-2xl font-light mb-1">
+                        {currentTestimonial.clinicName}
+                      </div>
+                      <div className="text-xs text-stone-400">
+                        Стоматологічна клініка
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Clinic Info */}
+                  <div className="space-y-4 flex-1">
+                    <div>
+                      <h4 className="text-xl font-medium text-stone-900 mb-2">
+                        {currentTestimonial.clinicName}
+                      </h4>
+                      <p className="text-stone-600 text-sm flex items-center gap-2">
+                        <MapPin className="w-4 h-4 flex-shrink-0" />
+                        <span>{currentTestimonial.clinicLocation}</span>
+                      </p>
+                    </div>
+
+                    <div className="w-8 h-px bg-stone-300"></div>
+
+                    <p className="text-stone-700 leading-relaxed text-sm">
+                      {currentTestimonial.clinicDescription}
+                    </p>
+
+                    {/* Services */}
+                    <div className="flex flex-wrap gap-2 pt-2">
+                      {currentTestimonial.clinicServices.map((service, idx) => (
+                        <span
+                          key={idx}
+                          className="px-2 py-1 border border-stone-300 text-stone-700 text-xs"
+                        >
+                          {service}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* CTA Button */}
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full border-2 border-stone-900 bg-stone-900 text-white px-6 py-3 hover:bg-transparent hover:text-stone-900 transition-all duration-300 font-medium uppercase tracking-wider text-sm mt-6"
+                  >
+                    Записатися на прийом
+                  </motion.button>
+                </motion.div>
+              </AnimatePresence>
             </div>
           </div>
         </div>
