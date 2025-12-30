@@ -36,11 +36,15 @@ export function buildQuery(params?: QueryParams): string {
 }
 
 function getBaseUrl(): string {
+  // NEXT_PUBLIC_* variables are replaced at build time by Next.js
   const url = process.env.NEXT_PUBLIC_API_URL;
+  
   if (!url) {
-    // Fallback for local development; adjust if needed
-    return 'http://localhost:4000';
+    console.warn('⚠️ NEXT_PUBLIC_API_URL not set, using fallback');
+    return 'https://backend-dentistry.onrender.com';
   }
+  
+  console.log('🔗 Using API URL:', url);
   return url.replace(/\/?$/, '');
 }
 
