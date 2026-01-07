@@ -31,38 +31,61 @@ const navigationItems = [
     href: '/catalog',
     hasDropdown: true,
     items: [
+      { title: 'ПРОПИШИ БРЕКЕТІВ', href: '/catalog?category=propysy-breketiv', count: 5 },
       { 
-        title: 'Брекет-системи', 
-        href: '/catalog/braces',
-        description: 'Металеві, керамічні, сапфірові'
+        title: 'БРЕКЕТИ', 
+        href: '/catalog?category=brekety',
+        count: 5,
+        subcategories: [
+          { title: 'самолігуючі', href: '/catalog?category=samolihuyuchi', count: 5 },
+          { title: 'естетичні', href: '/catalog?category=estetychni', count: 5 },
+          { title: 'металеві', href: '/catalog?category=metalevi', count: 5 },
+        ]
       },
+      { title: 'ЩІЧНІ ТРУБКИ', href: '/catalog?category=shchichni-trubky', count: 5 },
+      { title: 'МОЛЯРНІ КІЛЬЦЯ', href: '/catalog?category=molyarni-kiltsya', count: 5 },
       { 
-        title: 'Інструменти', 
-        href: '/catalog/instruments',
-        description: 'Професійні ортодонтичні інструменти'
+        title: 'АТАЧМЕНТИ', 
+        href: '/catalog?category=atachments',
+        count: 5,
+        subcategories: [
+          { title: 'стопи', href: '/catalog?category=stopy', count: 5 },
+          { title: 'кнопки', href: '/catalog?category=knopky', count: 5 },
+          { title: 'накусочні майданчики', href: '/catalog?category=nakusochni', count: 5 },
+          { title: 'пружини', href: '/catalog?category=pruzhyny', count: 5 },
+        ]
       },
+      { title: 'ДУГИ', href: '/catalog?category=duhy', count: 5 },
+      { title: 'ЕЛАСТИЧНИЙ МАТЕРІАЛ', href: '/catalog?category=elastychnyi', count: 5 },
+      { title: 'ФІКСАЦІЙНИЙ МАТЕРІАЛ', href: '/catalog?category=fiksatsiinyi', count: 5 },
+      { title: 'РЕТРАКТОРИ', href: '/catalog?category=retraktory', count: 5 },
+      { title: 'ДЗЕРКАЛА ТА КОНТРАСТЕРИ', href: '/catalog?category=dzerkala', count: 5 },
+      { title: 'ЗОВНІШНЬОРОТОВІ ПРИСТОСУВАННЯ', href: '/catalog?category=zovnishnorotovi', count: 5 },
+      { title: 'АКСЕСУАРИ ДЛЯ ПАЦІЄНТА', href: '/catalog?category=aksesuari', count: 5 },
       { 
-        title: 'Аксесуари', 
-        href: '/catalog/accessories',
-        description: 'Дуги, лігатури, еластики'
+        title: 'МАТЕРІАЛ ДЛЯ ТЕХНІКІВ', 
+        href: '/catalog?category=material-tehnikiv',
+        count: 5,
+        subcategories: [
+          { title: 'гвинти', href: '/catalog?category=hvynty', count: 5 },
+          { title: 'пластини', href: '/catalog?category=plastyny', count: 5 },
+          { title: 'пластмаса', href: '/catalog?category=plastmasa', count: 5 },
+          { title: 'відбиткові ложки', href: '/catalog?category=vidbytkovi', count: 5 },
+        ]
       },
-      { 
-        title: 'Матеріали', 
-        href: '/catalog/materials',
-        description: 'Витратні матеріали для ортодонтії'
-      }
+      { title: 'СЕПАРЦІЙНІ ПРИЛАДИ', href: '/catalog?category=separatsiyni', count: 5 },
+      { title: 'МІКРОІМПЛАНТИ', href: '/catalog?category=mikroimplanty', count: 5 },
+      { title: 'ІНСТРУМЕНТ', href: '/catalog?category=instrument', count: 5 },
     ]
   },
- 
   {
-    title: 'Про компанію',
+    title: 'Про нас',
     href: '/about'
   },
   {
     title: 'Контакти',
     href: '/contacts'
-  }
-  ,
+  },
   {
     title: 'Доставка',
     href: '/delivery'
@@ -112,6 +135,37 @@ function Logo() {
 // Navigation Component
 function Navigation() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [closeTimeout, setCloseTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [expandedCategories, setExpandedCategories] = useState<Set<number>>(new Set());
+  
+  const handleMouseEnter = (title: string) => {
+    if (closeTimeout) {
+      clearTimeout(closeTimeout);
+      setCloseTimeout(null);
+    }
+    setActiveDropdown(title);
+  };
+
+  const handleMouseLeave = () => {
+    const timeout = setTimeout(() => {
+      setActiveDropdown(null);
+    }, 200);
+    setCloseTimeout(timeout);
+  };
+
+  const toggleCategory = (index: number, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setExpandedCategories(prev => {
+      const next = new Set(prev);
+      if (next.has(index)) {
+        next.delete(index);
+      } else {
+        next.add(index);
+      }
+      return next;
+    });
+  };
   
   return (
     <nav className="flex items-center space-x-1">
@@ -119,8 +173,8 @@ function Navigation() {
         <div
           key={item.title}
           className="relative group"
-          onMouseEnter={() => item.hasDropdown && setActiveDropdown(item.title)}
-          onMouseLeave={() => setActiveDropdown(null)}
+          onMouseEnter={() => item.hasDropdown && handleMouseEnter(item.title)}
+          onMouseLeave={handleMouseLeave}
         >
           <a
             href={item.href}
@@ -137,27 +191,48 @@ function Navigation() {
 
           {/* Dropdown Menu */}
           {item.hasDropdown && activeDropdown === item.title && (
-            <div className="absolute top-full left-0 mt-2 w-80 bg-white border border-stone-200 shadow-xl z-50 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-              <div className="p-6">
-                <div className="space-y-4">
+            <div className="absolute top-full left-0 mt-2 w-64 bg-white border border-stone-200 shadow-xl z-50 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 rounded-xl overflow-hidden">
+              <div className="max-h-[500px] overflow-y-auto p-3">
+                <div className="space-y-0.5">
                   {item.items?.map((subItem, index) => (
-                    <a
-                      key={index}
-                      href={subItem.href}
-                      className="block group/item"
-                    >
-                      <div className="flex items-center justify-between p-3 rounded-lg hover:bg-stone-50 transition-colors">
-                        <div className="flex-1">
-                          <div className="font-medium text-stone-900 group-hover/item:text-stone-700 transition-colors">
-                            {subItem.title}
-                          </div>
-                          <div className="text-sm text-stone-500 mt-1">
-                            {subItem.description}
-                          </div>
+                    <div key={index}>
+                      <div className="block group/item">
+                        <div 
+                          onClick={subItem.subcategories ? (e) => toggleCategory(index, e) : undefined}
+                          className={cn(
+                            "flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-stone-50 transition-colors",
+                            subItem.subcategories ? "cursor-pointer" : ""
+                          )}
+                        >
+                          <a href={subItem.href} className="flex-1">
+                            <span className="text-xs font-medium text-stone-900 group-hover/item:text-stone-700 transition-colors">
+                              {subItem.title}
+                            </span>
+                          </a>
+                          {subItem.subcategories && (
+                            <ChevronDown className={cn(
+                              "w-3 h-3 text-stone-400 ml-1 flex-shrink-0 transition-transform duration-200",
+                              expandedCategories.has(index) && "rotate-180"
+                            )} />
+                          )}
                         </div>
-                        <ArrowRight className="w-4 h-4 text-stone-400 group-hover/item:text-stone-600 group-hover/item:translate-x-1 transition-all duration-300" />
                       </div>
-                    </a>
+                      
+                      {/* Subcategories */}
+                      {subItem.subcategories && expandedCategories.has(index) && (
+                        <div className="ml-3 mt-0.5 space-y-0.5 border-l border-stone-100 pl-2">
+                          {subItem.subcategories.map((sub, subIdx) => (
+                            <a
+                              key={subIdx}
+                              href={sub.href}
+                              className="block px-2 py-1 text-[11px] text-stone-600 hover:text-stone-900 hover:bg-stone-50 rounded transition-colors italic"
+                            >
+                              {sub.title}
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   ))}
                 </div>
               </div>

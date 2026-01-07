@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useMemo } from 'react';
 import { cn } from '@/lib/utils';
+import { CatalogStructure } from '@/components/sections/catalog/CatalogStructure';
 import { useProducts, useManufacturers, useCategories, useCountries } from '@/lib/api/hooks';
 import type { ProductWithDiscounts } from '@/lib/api/public.types';
 import { pickI18n } from '@/snippets/i18n';
@@ -124,6 +125,7 @@ function SmartFilters({
   onChange: (filters: CatalogFilters) => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [expandedCategories, setExpandedCategories] = useState<Set<number>>(new Set());
 
   const categoryId = value.category;
   const manufacturerIds = Array.isArray(value.manufacturerId) ? value.manufacturerId : (value.manufacturerId ? [value.manufacturerId] : []);
@@ -132,6 +134,18 @@ function SmartFilters({
 
   const setFilter = (patch: Partial<CatalogFilters>) => onChange({ ...value, ...patch });
   const clear = () => onChange({});
+
+  const toggleCategory = (idx: number) => {
+    setExpandedCategories(prev => {
+      const next = new Set(prev);
+      if (next.has(idx)) {
+        next.delete(idx);
+      } else {
+        next.add(idx);
+      }
+      return next;
+    });
+  };
 
   return (
     <div className="relative">
@@ -159,16 +173,74 @@ function SmartFilters({
 
       {isOpen && (
         <>
-          <div className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
-          <div className="absolute -top-40 left-0 z-50 mt-2 w-96 bg-white border border-stone-200 rounded-2xl shadow-2xl overflow-hidden">
-            <div className="p-6 border-b border-stone-100 flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-stone-900">Фильтры</h3>
-              <button onClick={() => setIsOpen(false)} className="p-1 hover:bg-stone-100 rounded-lg transition-colors">
-                <X className="w-4 h-4" />
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 h-screen min-h-screen w-screen z-[100] bg-black/50 backdrop-blur-sm" 
+            onClick={() => setIsOpen(false)} 
+          />
+          
+          {/* Sidebar */}
+          <div className="fixed top-0 left-0 z-[101] h-screen w-96 bg-white shadow-2xl flex flex-col">
+            {/* Header */}
+            <div className="flex-shrink-0 p-6 border-b border-stone-200 flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-stone-900">Фільтри</h3>
+              <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-stone-100 rounded-lg transition-colors">
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="max-h-96 overflow-y-auto p-6 space-y-6">
+            {/* Scrollable Content */}
+            <div className="flex-1 overflow-y-auto min-h-0">
+              <div className="p-6 space-y-6">
+              {/* Catalog Categories */}
+              <div>
+                <h4 className="text-sm font-medium text-stone-900 mb-3">Категорії</h4>
+                <div className="space-y-1">
+                  {[
+                    { name: 'ПРОПИШИ БРЕКЕТІВ' },
+                    { name: 'БРЕКЕТИ', sub: ['самолігуючі', 'естетичні', 'металеві'] },
+                    { name: 'ЩІЧНІ ТРУБКИ' },
+                    { name: 'МОЛЯРНІ КІЛЬЦЯ' },
+                    { name: 'АТАЧМЕНТИ', sub: ['стопи', 'кнопки', 'накусочні майданчики', 'пружини'] },
+                    { name: 'ДУГИ' },
+                    { name: 'ЕЛАСТИЧНИЙ МАТЕРІАЛ' },
+                    { name: 'ФІКСАЦІЙНИЙ МАТЕРІАЛ' },
+                    { name: 'РЕТРАКТОРИ' },
+                    { name: 'ДЗЕРКАЛА ТА КОНТРАСТЕРИ' },
+                    { name: 'ЗОВНІШНЬОРОТОВІ ПРИСТОСУВАННЯ' },
+                    { name: 'АКСЕСУАРИ ДЛЯ ПАЦІЄНТА' },
+                    { name: 'МАТЕРІАЛ ДЛЯ ТЕХНІКІВ', sub: ['гвинти', 'пластини', 'пластмаса', 'відбиткові ложки'] },
+                    { name: 'СЕПАРЦІЙНІ ПРИЛАДИ' },
+                    { name: 'МІКРОІМПЛАНТИ' },
+                    { name: 'ІНСТРУМЕНТ' },
+                  ].map((cat, idx) => (
+                    <div key={idx}>
+                      <button 
+                        onClick={() => cat.sub && toggleCategory(idx)}
+                        className="w-full text-left px-3 py-2 text-sm text-stone-700 hover:bg-stone-50 rounded-lg transition-colors flex items-center justify-between group"
+                      >
+                        <span className="font-medium">{cat.name}</span>
+                        {cat.sub && (
+                          <ChevronDown className={cn(
+                            "w-4 h-4 text-stone-400 transition-transform duration-200",
+                            expandedCategories.has(idx) && "rotate-180"
+                          )} />
+                        )}
+                      </button>
+                      {cat.sub && expandedCategories.has(idx) && (
+                        <div className="ml-4 mt-1 space-y-1">
+                          {cat.sub.map((subcat, subIdx) => (
+                            <button key={subIdx} className="w-full text-left px-3 py-1.5 text-xs text-stone-600 hover:bg-stone-50 rounded-lg transition-colors italic">
+                              {subcat}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               {/* Category (single) */}
               <div>
                 <h4 className="text-sm font-medium text-stone-900 mb-3">Категория</h4>
@@ -266,11 +338,13 @@ function SmartFilters({
                   </div>
                 </div>
               </div>
+              </div>
             </div>
 
-            <div className="p-4 border-t border-stone-100 bg-stone-50 flex gap-3">
-              <button onClick={clear} className="flex-1 px-4 py-2 text-stone-600 hover:text-stone-900 transition-colors">Очистить</button>
-              <button onClick={() => setIsOpen(false)} className="flex-1 px-4 py-2 bg-stone-900 text-white rounded-lg hover:bg-stone-800 transition-colors">Применить</button>
+            {/* Footer */}
+            <div className="flex-shrink-0 p-4 border-t border-stone-200 bg-stone-50 flex gap-3">
+              <button onClick={clear} className="flex-1 px-4 py-2 text-stone-600 hover:text-stone-900 transition-colors font-medium">Очистити</button>
+              <button onClick={() => setIsOpen(false)} className="flex-1 px-4 py-2 bg-stone-900 text-white rounded-lg hover:bg-stone-800 transition-colors font-medium">Застосувати</button>
             </div>
           </div>
         </>
