@@ -11,10 +11,7 @@ interface CategoryItem {
 }
 
 const catalogData: CategoryItem[] = [
-  {
-    name: 'ПРОПИШИ БРЕКЕТІВ',
-    count: 5,
-  },
+  
   {
     name: 'БРЕКЕТИ',
     count: 5,

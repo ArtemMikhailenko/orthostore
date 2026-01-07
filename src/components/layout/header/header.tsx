@@ -31,7 +31,7 @@ const navigationItems = [
     href: '/catalog',
     hasDropdown: true,
     items: [
-      { title: 'ПРОПИШИ БРЕКЕТІВ', href: '/catalog?category=propysy-breketiv', count: 5 },
+      
       { 
         title: 'БРЕКЕТИ', 
         href: '/catalog?category=brekety',
@@ -137,6 +137,8 @@ function Navigation() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [closeTimeout, setCloseTimeout] = useState<NodeJS.Timeout | null>(null);
   const [expandedCategories, setExpandedCategories] = useState<Set<number>>(new Set());
+  const [hoveredSubItem, setHoveredSubItem] = useState<number | null>(null);
+  const [subItemTimeout, setSubItemTimeout] = useState<NodeJS.Timeout | null>(null);
   
   const handleMouseEnter = (title: string) => {
     if (closeTimeout) {
@@ -149,8 +151,24 @@ function Navigation() {
   const handleMouseLeave = () => {
     const timeout = setTimeout(() => {
       setActiveDropdown(null);
+      setHoveredSubItem(null);
     }, 200);
     setCloseTimeout(timeout);
+  };
+
+  const handleSubItemEnter = (index: number) => {
+    if (subItemTimeout) {
+      clearTimeout(subItemTimeout);
+      setSubItemTimeout(null);
+    }
+    setHoveredSubItem(index);
+  };
+
+  const handleSubItemLeave = () => {
+    const timeout = setTimeout(() => {
+      setHoveredSubItem(null);
+    }, 300);
+    setSubItemTimeout(timeout);
   };
 
   const toggleCategory = (index: number, e: React.MouseEvent) => {
@@ -191,51 +209,79 @@ function Navigation() {
 
           {/* Dropdown Menu */}
           {item.hasDropdown && activeDropdown === item.title && (
-            <div className="absolute top-full left-0 mt-2 w-64 bg-white border border-stone-200 shadow-xl z-50 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 rounded-xl overflow-hidden">
+            <div className="absolute top-full left-0 mt-2 w-64 bg-white border border-stone-200 shadow-xl z-50 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 rounded-xl">
               <div className="max-h-[500px] overflow-y-auto p-3">
                 <div className="space-y-0.5">
                   {item.items?.map((subItem, index) => (
-                    <div key={index}>
-                      <div className="block group/item">
-                        <div 
-                          onClick={subItem.subcategories ? (e) => toggleCategory(index, e) : undefined}
-                          className={cn(
-                            "flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-stone-50 transition-colors",
-                            subItem.subcategories ? "cursor-pointer" : ""
-                          )}
-                        >
-                          <a href={subItem.href} className="flex-1">
-                            <span className="text-xs font-medium text-stone-900 group-hover/item:text-stone-700 transition-colors">
-                              {subItem.title}
-                            </span>
-                          </a>
-                          {subItem.subcategories && (
-                            <ChevronDown className={cn(
-                              "w-3 h-3 text-stone-400 ml-1 flex-shrink-0 transition-transform duration-200",
-                              expandedCategories.has(index) && "rotate-180"
-                            )} />
-                          )}
-                        </div>
-                      </div>
-                      
-                      {/* Subcategories */}
-                      {subItem.subcategories && expandedCategories.has(index) && (
-                        <div className="ml-3 mt-0.5 space-y-0.5 border-l border-stone-100 pl-2">
-                          {subItem.subcategories.map((sub, subIdx) => (
-                            <a
-                              key={subIdx}
-                              href={sub.href}
-                              className="block px-2 py-1 text-[11px] text-stone-600 hover:text-stone-900 hover:bg-stone-50 rounded transition-colors italic"
-                            >
-                              {sub.title}
-                            </a>
-                          ))}
-                        </div>
-                      )}
+                    <div 
+                      key={index} 
+                      className="relative"
+                      onMouseEnter={() => {
+                        if (subItemTimeout) {
+                          clearTimeout(subItemTimeout);
+                          setSubItemTimeout(null);
+                        }
+                        if (subItem.subcategories) {
+                          setHoveredSubItem(index);
+                        }
+                      }}
+                      onMouseLeave={() => {
+                        if (subItem.subcategories) {
+                          handleSubItemLeave();
+                        }
+                      }}
+                    >
+                      <a
+                        href={subItem.href}
+                        className={cn(
+                          "flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-stone-50 transition-colors"
+                        )}
+                      >
+                        <span className="text-xs font-medium text-stone-900 hover:text-stone-700 transition-colors">
+                          {subItem.title}
+                        </span>
+                        {subItem.subcategories && (
+                          <ArrowRight className="w-3 h-3 text-stone-400 ml-1 flex-shrink-0" />
+                        )}
+                      </a>
                     </div>
                   ))}
                 </div>
               </div>
+              
+              {/* Subcategories rendered outside scroll container */}
+              {item.items?.map((subItem, index) => (
+                subItem.subcategories && hoveredSubItem === index && (
+                  <div 
+                    key={`sub-${index}`}
+                    className="absolute left-full top-0 w-48 bg-white border border-stone-200 shadow-xl rounded-lg p-2 z-[100]"
+                    style={{ 
+                      marginTop: `${(index * 28) + 12}px`,
+                      marginLeft: '0px'
+                    }}
+                    onMouseEnter={() => {
+                      if (subItemTimeout) {
+                        clearTimeout(subItemTimeout);
+                        setSubItemTimeout(null);
+                      }
+                      setHoveredSubItem(index);
+                    }}
+                    onMouseLeave={handleSubItemLeave}
+                  >
+                    <div className="space-y-0.5">
+                      {subItem.subcategories.map((sub, subIdx) => (
+                        <a
+                          key={subIdx}
+                          href={sub.href}
+                          className="block px-2 py-1.5 text-xs text-stone-600 hover:text-stone-900 hover:bg-stone-50 rounded-lg transition-colors"
+                        >
+                          {sub.title}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )
+              ))}
             </div>
           )}
         </div>
