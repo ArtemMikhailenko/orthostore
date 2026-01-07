@@ -471,7 +471,6 @@ function MobileMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
                       onClick={onClose}
                     >
                       <div className="font-medium">{subItem.title}</div>
-                      <div className="text-xs text-stone-500">{subItem.description}</div>
                     </a>
                   ))}
                 </div>
