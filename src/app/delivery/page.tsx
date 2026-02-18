@@ -1,4 +1,4 @@
-import { Truck, CreditCard, Package, MapPin, Clock } from 'lucide-react';
+import { Truck, CreditCard, Package, MapPin, Clock, RefreshCw, ShieldCheck } from 'lucide-react';
 
 export default function DeliveryPage() {
   return (
@@ -36,7 +36,7 @@ export default function DeliveryPage() {
             {/* Manager Note */}
             <div className="bg-stone-50 p-6 lg:p-8 rounded-lg border-l-4 border-stone-900">
               <p className="text-base lg:text-lg text-stone-700 leading-relaxed">
-                Наші менеджери заздалегіть погодять з Вами зручний час доставки!
+                Наші менеджери заздалегідь погодять з Вами зручний час доставки!
               </p>
             </div>
 
@@ -58,13 +58,13 @@ export default function DeliveryPage() {
                     <div className="flex items-start gap-3">
                       <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
                       <p className="text-stone-700">
-                        <span className="font-medium">Доставка по Києву до 2500 грн оплачується!</span> Вартість доставки 100 грн.
+                        <span className="font-medium">Доставка по Києву до 3000 грн оплачується!</span> Вартість доставки 100 грн.
                       </p>
                     </div>
                     <div className="flex items-start gap-3">
                       <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
                       <p className="text-stone-700">
-                        <span className="font-medium">Доставка по Києву від 2500 грн - БЕЗКОШТОВНА !</span>
+                        <span className="font-medium">Доставка по Києву від 3000 грн – БЕЗКОШТОВНА !</span>
                       </p>
                     </div>
                     <div className="flex items-start gap-3">
@@ -103,13 +103,13 @@ export default function DeliveryPage() {
                     <div className="flex items-start gap-3">
                       <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
                       <p className="text-stone-700">
-                        Відправлення по Україні <span className="font-medium">до 3000 грн</span> відправляється за рахунок замовника.
+                        Відправлення по Україні <span className="font-medium">до 3500 грн</span> відправляється за рахунок замовника.
                       </p>
                     </div>
                     <div className="flex items-start gap-3">
                       <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
                       <p className="text-stone-700">
-                        Відправлення по Україні <span className="font-medium">від 3000 грн</span> відправляється за рахунок відправника.
+                        Відправлення по Україні <span className="font-medium">від 3500 грн</span> відправляється за рахунок відправника.
                       </p>
                     </div>
                   </div>
@@ -163,6 +163,69 @@ export default function DeliveryPage() {
                   Оплата на розрахунковий рахунок
                 </p>
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Return & Exchange */}
+        <div className="mb-16">
+          <div className="flex items-center gap-3 mb-8">
+            <RefreshCw className="w-6 h-6 text-stone-900" />
+            <h2 className="text-2xl lg:text-3xl font-light text-stone-900">
+              Повернення та обмін
+            </h2>
+          </div>
+
+          <div className="space-y-6">
+            <div className="bg-white border-2 border-stone-200 p-6 lg:p-8">
+              <div className="space-y-6">
+                <div className="flex items-start gap-3">
+                  <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="text-stone-700">
+                    <span className="font-medium">ПОВЕРНЕННЯ АБО ОБМІН</span> можливі протягом 14 днів з моменту отримання замовлення
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white border-2 border-stone-200 p-6 lg:p-8">
+              <div className="flex items-start gap-3">
+                <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
+                <p className="text-stone-700">
+                  Зв&apos;яжіться з нашим менеджером за телефоном <span className="font-medium">+380503039494</span> та повідомити про намір повернення, компанія залишає за собою право індивідуального розгляду звернення та погодження повернення
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-white border-2 border-stone-200 p-6 lg:p-8">
+              <div className="flex items-start gap-3">
+                <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
+                <p className="text-stone-700">
+                  <span className="font-medium">Наявність рахунку</span>, що підтверджує замовлення в ORTHOSTORE
+                </p>
+              </div>
+            </div>
+
+            {/* Defective Product */}
+            <div className="bg-stone-900 text-white p-6 lg:p-8 rounded-lg">
+              <div className="flex items-center gap-3 mb-6">
+                <ShieldCheck className="w-6 h-6" />
+                <h3 className="text-xl font-medium">Заміна товару з браком?</h3>
+              </div>
+              <ol className="space-y-4">
+                <li className="flex items-start gap-4">
+                  <span className="text-lg font-bold text-stone-400 shrink-0">1.</span>
+                  <span className="text-stone-200">Зв&apos;яжіться з нами протягом 3 днів з моменту отримання замовлення</span>
+                </li>
+                <li className="flex items-start gap-4">
+                  <span className="text-lg font-bold text-stone-400 shrink-0">2.</span>
+                  <span className="text-stone-200">Надішліть фото або відео, що підтверджують дефект</span>
+                </li>
+                <li className="flex items-start gap-4">
+                  <span className="text-lg font-bold text-stone-400 shrink-0">3.</span>
+                  <span className="text-stone-200">Ми зробимо заміщення товару протягом 3-5 робочих днів</span>
+                </li>
+              </ol>
             </div>
           </div>
         </div>

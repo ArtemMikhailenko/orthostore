@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight, Package, Star, ShoppingBag, Award } from 'lucide-react';
@@ -14,7 +14,7 @@ const products = [
   {
     id: 1,
     title: 'Преміум брекети зі знижкою',
-    category: 'АКЦІЯ',
+    category: '',
     description: 'Спеціальна пропозиція на самолігуючі брекет-системи преміум класу. Обмежена кількість!',
     discount: '-15%',
     oldPrice: '2 940 грн',
@@ -84,6 +84,28 @@ const products = [
 export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [[page, direction], setPage] = useState([0, 0]);
+
+  // Countdown timer - end of month
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const now = new Date();
+      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+      const diff = endOfMonth.getTime() - now.getTime();
+      if (diff > 0) {
+        setTimeLeft({
+          days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((diff / (1000 * 60)) % 60),
+          seconds: Math.floor((diff / 1000) % 60),
+        });
+      }
+    };
+    calculateTimeLeft();
+    const timer = setInterval(calculateTimeLeft, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const paginate = (newDirection: number) => {
     const newIndex = currentIndex + newDirection;
@@ -209,13 +231,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                     />
 
                     {/* Top Badge */}
-                    <div className="absolute top-8 left-8 flex items-center gap-2 bg-stone-900 text-white px-4 py-2">
-                      <Package className="w-4 h-4" />
-                      <span className="font-medium text-xs uppercase tracking-wider">
-                        {currentProduct.category}
-                      </span>
-                    </div>
-
+                    
                     {/* Discount Badge */}
                     <div className="absolute top-8 right-8 bg-white border-2 border-stone-900 px-6 py-3">
                       <div className="text-3xl font-bold text-stone-900">{currentProduct.discount}</div>
@@ -244,9 +260,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
               className="space-y-6"
             >
               <motion.div custom={0} variants={cardVariants}>
-                <span className="text-sm text-stone-500 uppercase tracking-wider">
-                  {currentProduct.category}
-                </span>
+                
                 <h3 className="text-3xl font-light text-stone-900 mb-3 mt-2">
                   {currentProduct.title}
                 </h3>
@@ -271,22 +285,59 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                 ))}
               </motion.div>
 
+              {/* Countdown Timer */}
+              <motion.div
+                custom={1.5}
+                variants={cardVariants}
+                className="border-2 border-stone-900 bg-stone-900 p-4"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-xs text-stone-400 uppercase tracking-wider mb-1">До кінця акції</div>
+                    <div className="text-[10px] text-stone-500">Встигніть замовити!</div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {[
+                      { value: timeLeft.days, label: 'дні' },
+                      { value: timeLeft.hours, label: 'год' },
+                      { value: timeLeft.minutes, label: 'хв' },
+                      { value: timeLeft.seconds, label: 'сек' },
+                    ].map((unit, i) => (
+                      <React.Fragment key={i}>
+                        <div className="text-center">
+                          <motion.div
+                            key={unit.value}
+                            initial={{ y: -8, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            className="text-2xl font-bold text-white tabular-nums min-w-[2ch]"
+                          >
+                            {String(unit.value).padStart(2, '0')}
+                          </motion.div>
+                          <div className="text-[9px] text-stone-500 uppercase">{unit.label}</div>
+                        </div>
+                        {i < 3 && <span className="text-white/40 text-xl font-light -mt-3">:</span>}
+                      </React.Fragment>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+
               {/* Price & CTA */}
               <motion.div 
                 custom={2} 
                 variants={cardVariants}
                 className="pt-4 border-t-2 border-stone-200"
               >
-                <div className="flex items-end gap-4 mb-4">
+                <div className="flex items-baseline gap-4 mb-4">
                   <div>
                     <span className="text-sm text-stone-500 block mb-1">Акційна ціна</span>
-                    <span className="text-3xl font-light text-stone-900">
+                    <span className="text-3xl font-semibold text-red-700">
                       {currentProduct.price}
                     </span>
                   </div>
                   {currentProduct.oldPrice && (
-                    <div className="pb-1">
-                      <span className="text-lg text-stone-400 line-through">
+                    <div className="-translate-y-1">
+                      <span className="text-base text-stone-400 line-through">
                         {currentProduct.oldPrice}
                       </span>
                     </div>
@@ -319,6 +370,8 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
+              animate={currentIndex > 0 ? { boxShadow: ['0 0 0px rgba(28,25,23,0)', '0 0 12px rgba(28,25,23,0.3)', '0 0 0px rgba(28,25,23,0)'] } : {}}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
               onClick={() => paginate(-1)}
               disabled={currentIndex === 0}
               className={cn(
@@ -329,7 +382,9 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
               )}
               aria-label="Попередній товар"
             >
-              <ChevronLeft className="w-6 h-6" />
+              <motion.div animate={{ x: [0, -3, 0] }} transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}>
+                <ChevronLeft className="w-6 h-6" />
+              </motion.div>
             </motion.button>
 
             {/* Dots Navigation */}
@@ -354,6 +409,8 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
+              animate={currentIndex < products.length - 1 ? { boxShadow: ['0 0 0px rgba(28,25,23,0)', '0 0 12px rgba(28,25,23,0.3)', '0 0 0px rgba(28,25,23,0)'] } : {}}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
               onClick={() => paginate(1)}
               disabled={currentIndex === products.length - 1}
               className={cn(
@@ -364,7 +421,9 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
               )}
               aria-label="Наступний товар"
             >
-              <ChevronRight className="w-6 h-6" />
+              <motion.div animate={{ x: [0, 3, 0] }} transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}>
+                <ChevronRight className="w-6 h-6" />
+              </motion.div>
             </motion.button>
           </div>
         </div>
@@ -419,22 +478,17 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
               
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-stone-500 uppercase tracking-wider">
-                    {product.category}
-                  </span>
-                  <span className="text-xs font-bold text-stone-900 bg-yellow-300 px-2 py-1">
-                    {product.discount}
-                  </span>
+                  
                 </div>
                 <h4 className="font-medium text-stone-900 group-hover:text-stone-700 transition-colors">
                   {product.title}
                 </h4>
-                <div className="flex items-center gap-2">
-                  <p className="text-sm font-medium text-stone-900">
+                <div className="flex items-baseline gap-2">
+                  <p className="text-base font-semibold text-red-700">
                     {product.price}
                   </p>
                   {product.oldPrice && (
-                    <p className="text-xs text-stone-400 line-through">
+                    <p className="text-[11px] text-stone-400 line-through -translate-y-1">
                       {product.oldPrice}
                     </p>
                   )}

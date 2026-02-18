@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import Image from 'next/image';
 import { 
   Menu, 
   X, 
@@ -31,51 +30,66 @@ const navigationItems = [
     href: '/catalog',
     hasDropdown: true,
     items: [
-      
+      { title: 'ПРОПИСИ БРЕКЕТІВ', href: '/catalog?category=propysy-breketiv' },
+      { title: 'МІКРОІМПЛАНТИ', href: '/catalog?category=mikroimplanty' },
+      { 
+        title: 'МІНІ ПЛАСТИНИ', 
+        href: '/catalog?category=mini-plastyny',
+        subcategories: [
+          { title: 'міні пластини', href: '/catalog?category=mini-plastyny-mini' },
+          { title: 'щелепно-лицьова хірургія', href: '/catalog?category=shchelepno-lytsova' },
+        ]
+      },
       { 
         title: 'БРЕКЕТИ', 
         href: '/catalog?category=brekety',
-        count: 5,
         subcategories: [
-          { title: 'самолігуючі', href: '/catalog?category=samolihuyuchi', count: 5 },
-          { title: 'естетичні', href: '/catalog?category=estetychni', count: 5 },
-          { title: 'металеві', href: '/catalog?category=metalevi', count: 5 },
+          { title: 'самолігуючі', href: '/catalog?category=samolihuyuchi' },
+          { title: 'естетичні', href: '/catalog?category=estetychni' },
+          { title: 'лігатурні', href: '/catalog?category=lihaturni' },
         ]
       },
-      { title: 'ЩІЧНІ ТРУБКИ', href: '/catalog?category=shchichni-trubky', count: 5 },
-      { title: 'МОЛЯРНІ КІЛЬЦЯ', href: '/catalog?category=molyarni-kiltsya', count: 5 },
+      { title: 'ЩІЧНІ ТРУБКИ ТА МОЛЯРНІ КІЛЬЦЯ', href: '/catalog?category=shchichni-molyarni' },
       { 
         title: 'АТАЧМЕНТИ', 
         href: '/catalog?category=atachments',
-        count: 5,
         subcategories: [
-          { title: 'стопи', href: '/catalog?category=stopy', count: 5 },
-          { title: 'кнопки', href: '/catalog?category=knopky', count: 5 },
-          { title: 'накусочні майданчики', href: '/catalog?category=nakusochni', count: 5 },
-          { title: 'пружини', href: '/catalog?category=pruzhyny', count: 5 },
+          { title: 'стопори', href: '/catalog?category=stopory' },
+          { title: 'кнопки', href: '/catalog?category=knopky' },
+          { title: 'накусочні майданчики', href: '/catalog?category=nakusochni' },
+          { title: 'пружини', href: '/catalog?category=pruzhyny' },
+          { title: 'металеві лігатури', href: '/catalog?category=metalevi-lihatury' },
         ]
       },
-      { title: 'ДУГИ', href: '/catalog?category=duhy', count: 5 },
-      { title: 'ЕЛАСТИЧНИЙ МАТЕРІАЛ', href: '/catalog?category=elastychnyi', count: 5 },
-      { title: 'ФІКСАЦІЙНИЙ МАТЕРІАЛ', href: '/catalog?category=fiksatsiinyi', count: 5 },
-      { title: 'РЕТРАКТОРИ', href: '/catalog?category=retraktory', count: 5 },
-      { title: 'ДЗЕРКАЛА ТА КОНТРАСТЕРИ', href: '/catalog?category=dzerkala', count: 5 },
-      { title: 'ЗОВНІШНЬОРОТОВІ ПРИСТОСУВАННЯ', href: '/catalog?category=zovnishnorotovi', count: 5 },
-      { title: 'АКСЕСУАРИ ДЛЯ ПАЦІЄНТА', href: '/catalog?category=aksesuari', count: 5 },
+      { title: 'ДУГИ', href: '/catalog?category=duhy' },
+      { title: 'ЕЛАСТИЧНІ МАТЕРІАЛИ', href: '/catalog?category=elastychni' },
+      { title: 'ФІКСАЦІЙНІ МАТІРІАЛИ', href: '/catalog?category=fiksatsiini' },
+      { title: 'РЕТРАКТОРИ', href: '/catalog?category=retraktory' },
+      { title: 'ДЗЕРКАЛА ТА ФОТОКОНТРАСТЕРИ', href: '/catalog?category=dzerkala-foto' },
+      { title: 'ЗОВНІШНЬОРОТОВІ ПРИСТОСУВАННЯ', href: '/catalog?category=zovnishnorotovi' },
+      { title: 'ТРЕЙНЕРА ТА МИОБРЕЙСИ', href: '/catalog?category=treynera-myobreysy' },
       { 
-        title: 'МАТЕРІАЛ ДЛЯ ТЕХНІКІВ', 
-        href: '/catalog?category=material-tehnikiv',
-        count: 5,
+        title: 'МАТЕРІАЛИ ДЛЯ ТЕХНІКІВ', 
+        href: '/catalog?category=materialy-tehnikiv',
         subcategories: [
-          { title: 'гвинти', href: '/catalog?category=hvynty', count: 5 },
-          { title: 'пластини', href: '/catalog?category=plastyny', count: 5 },
-          { title: 'пластмаса', href: '/catalog?category=plastmasa', count: 5 },
-          { title: 'відбиткові ложки', href: '/catalog?category=vidbytkovi', count: 5 },
+          { title: 'гвинти', href: '/catalog?category=hvynty' },
+          { title: 'гвинти MSE', href: '/catalog?category=hvynty-mse' },
+          { title: 'пластини для ретенційних кап', href: '/catalog?category=plastyny-retentsiyni' },
+          { title: 'пластини для елайнерів', href: '/catalog?category=plastyny-elayneriv' },
+          { title: 'пластмасса', href: '/catalog?category=plastmassa' },
+          { title: 'відбиткові ложки', href: '/catalog?category=vidbytkovi' },
         ]
       },
-      { title: 'СЕПАРЦІЙНІ ПРИЛАДИ', href: '/catalog?category=separatsiyni', count: 5 },
-      { title: 'МІКРОІМПЛАНТИ', href: '/catalog?category=mikroimplanty', count: 5 },
-      { title: 'ІНСТРУМЕНТ', href: '/catalog?category=instrument', count: 5 },
+      { title: 'СЕПАРАЦІЙНІ ІНСТРУМЕНТИ', href: '/catalog?category=separatsiyni-instrumenty' },
+      { title: 'АКСЕСУАРИ', href: '/catalog?category=aksesuari' },
+      { 
+        title: 'ІНСТРУМЕНТИ', 
+        href: '/catalog?category=instrumenty',
+        subcategories: [
+          { title: 'ORTHOSTORE', href: '/catalog?category=orthostore' },
+          { title: 'LE MED', href: '/catalog?category=le-med' },
+        ]
+      },
     ]
   },
   {
@@ -119,15 +133,9 @@ function TopBar() {
 function Logo() {
   return (
     <Link href="/" className="flex items-center group cursor-pointer" aria-label="На головну">
-      <div className="relative w-[160px] h-12">
-        <Image
-          src="/images/logo.png"
-          alt="OrthoDent Professional"
-          fill
-          className="object-contain"
-          priority
-        />
-      </div>
+      <span className="text-2xl font-bold tracking-tight text-stone-900 group-hover:text-stone-700 transition-colors">
+        ORTHOSTORE
+      </span>
     </Link>
   );
 }
@@ -586,26 +594,25 @@ export function Header({ className }: HeaderProps) {
         )}
       >
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-center justify-between h-16 lg:h-20">
+          <div className="flex items-center justify-between h-14 lg:h-16">
             
             {/* Logo */}
             <Logo />
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:block">
+            <div className="hidden lg:block ml-auto mr-6">
               <Navigation />
             </div>
 
-            {/* Search Bar */}
-            <div className="hidden md:block flex-1 max-w-md mx-8">
-              <SearchBar 
-                isOpen={isSearchOpen}
-                onToggle={() => setIsSearchOpen(!isSearchOpen)}
-              />
-            </div>
-
             {/* Right Actions */}
-            <div className="flex items-center space-x-2 lg:space-x-4">
+            <div className="flex items-center space-x-2 lg:space-x-3">
+              {/* Search Bar */}
+              <div className="hidden md:block w-64 lg:w-80">
+                <SearchBar 
+                  isOpen={isSearchOpen}
+                  onToggle={() => setIsSearchOpen(!isSearchOpen)}
+                />
+              </div>
               {/* Mobile Search */}
               <button
                 className="md:hidden p-2 text-stone-600 hover:text-stone-900 hover:bg-stone-50 rounded-lg transition-all duration-300"

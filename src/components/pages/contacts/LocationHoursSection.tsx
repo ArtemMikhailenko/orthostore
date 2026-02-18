@@ -3,7 +3,10 @@ import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { 
   MapPin, 
-  Clock, 
+  Clock,
+  TrainFront,
+  Bus,
+  Car,
 } from 'lucide-react';
 
 
@@ -17,8 +20,8 @@ export function LocationHoursSection({ className }: LocationHoursSectionProps) {
   const [isMapLoaded, setIsMapLoaded] = useState(false);
 
   const workingHours = [
-    { day: 'Понедельник - Пятница', hours: '9:00 - 18:00', isToday: true },
-    { day: 'Суббота - Воскресенье', hours: 'Приём заказов онлайн 24/7', isToday: false }
+    { day: 'Понеділок-П\'ятниця', hours: '9:00 - 18:00', isToday: true },
+    { day: 'Субота-Неділя', hours: 'Замовлення онлайн', isToday: false }
   ];
 
   return (
@@ -30,17 +33,14 @@ export function LocationHoursSection({ className }: LocationHoursSectionProps) {
           <div className="space-y-8">
             <div>
               <h2 className="text-3xl font-light text-stone-900 mb-6">
-                Наше расположение
+                Наша локація
               </h2>
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
                   <MapPin className="w-6 h-6 text-stone-600 mt-1 flex-shrink-0" />
                   <div>
                     <div className="font-medium text-stone-900">
-                      Киев, ул. Саксаганского 54/56
-                    </div>
-                    <div className="text-stone-600 text-sm">
-                      Центральный офис и склад
+                      м. Київ, вул. Саксаганського, 54/56 офс. 124
                     </div>
                   </div>
                 </div>
@@ -50,7 +50,7 @@ export function LocationHoursSection({ className }: LocationHoursSectionProps) {
             {/* Working Hours */}
             <div>
               <h3 className="text-xl font-medium text-stone-900 mb-4">
-                Режим работы
+                Години роботи
               </h3>
               <div className="space-y-3">
                 {workingHours.map((schedule, index) => (
@@ -79,12 +79,12 @@ export function LocationHoursSection({ className }: LocationHoursSectionProps) {
             {/* Additional Info */}
             <div className="p-6 bg-stone-50 rounded-lg">
               <h4 className="font-medium text-stone-900 mb-3">
-                Как добраться
+                Як добратись
               </h4>
               <div className="space-y-2 text-sm text-stone-600">
-                <div>🚇 Метро: Университет (5 минут пешком)</div>
-                <div>🚌 Автобусы: 24, 38, 55 (остановка "Саксаганского")</div>
-                <div>🚗 Парковка: доступна возле здания</div>
+                <div className="flex items-center gap-2"><TrainFront className="w-4 h-4 text-stone-500 flex-shrink-0" /> Метро: Університет (10 хв. пішки)</div>
+                <div className="flex items-center gap-2"><Bus className="w-4 h-4 text-stone-500 flex-shrink-0" /> Громадський транспорт: 3, 69, 14, 171 (зупинка - готель Кооператор)</div>
+                <div className="flex items-center gap-2"><Car className="w-4 h-4 text-stone-500 flex-shrink-0" /> Парковка: доступна біля офісу</div>
               </div>
             </div>
           </div>
@@ -92,7 +92,7 @@ export function LocationHoursSection({ className }: LocationHoursSectionProps) {
           {/* Interactive Map */}
           <div className="space-y-6">
             <h3 className="text-xl font-medium text-stone-900">
-              Интерактивная карта
+              Мапа
             </h3>
             
             {/* Map Container */}
@@ -110,7 +110,7 @@ export function LocationHoursSection({ className }: LocationHoursSectionProps) {
                       className="bg-stone-900 text-white px-6 py-3 rounded-lg hover:bg-stone-800 transition-colors flex items-center gap-2"
                     >
                       <MapPin className="w-5 h-5" />
-                      Загрузить карту
+                      Завантажити карту
                     </button>
                   </div>
                 ) : (
@@ -134,7 +134,7 @@ export function LocationHoursSection({ className }: LocationHoursSectionProps) {
                     <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
                     <div>
                       <div className="font-medium text-stone-900 text-sm">OrthoDent Pro</div>
-                      <div className="text-xs text-stone-600">ул. Саксаганского 54/56</div>
+                      <div className="text-xs text-stone-600">вул. Саксаганського 54/56</div>
                     </div>
                   </div>
                 </div>
@@ -144,10 +144,10 @@ export function LocationHoursSection({ className }: LocationHoursSectionProps) {
             {/* Map Actions */}
             <div className="flex gap-3">
               <button className="flex-1 border border-stone-300 text-stone-700 py-3 px-4 rounded-lg hover:border-stone-400 transition-colors text-sm">
-                Проложить маршрут
+                Прокласти маршрут
               </button>
               <button className="flex-1 bg-stone-900 text-white py-3 px-4 rounded-lg hover:bg-stone-800 transition-colors text-sm">
-                Открыть в картах
+                Відкрити в картах
               </button>
             </div>
           </div>

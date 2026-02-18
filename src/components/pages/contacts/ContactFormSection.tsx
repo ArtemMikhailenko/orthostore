@@ -51,10 +51,10 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
         
         <div className="text-center mb-12">
           <h2 className="text-4xl font-light text-stone-900 mb-4">
-            Отправьте нам сообщение
+            Надішліть нам повідомлення
           </h2>
           <p className="text-stone-600">
-            Заполните форму ниже, и мы свяжемся с вами в течение 2 часов
+            Заповніть форму нижче, і ми зв&apos;яжемося з вами протягом 2 годин
           </p>
         </div>
 
@@ -64,7 +64,7 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-stone-900">
-                    Ваше имя *
+                    Ваше ім&apos;я *
                   </label>
                   <input
                     type="text"
@@ -73,7 +73,7 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
                     onChange={handleChange}
                     required
                     className="w-full p-4 border border-stone-300 rounded-lg focus:ring-2 focus:ring-stone-900 focus:border-transparent transition-all"
-                    placeholder="Введите ваше имя"
+                    placeholder="Введіть ваше ім'я"
                   />
                 </div>
                 
@@ -110,7 +110,7 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
                 
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-stone-900">
-                    Тема обращения
+                    Тема звернення
                   </label>
                   <select
                     name="subject"
@@ -118,19 +118,19 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
                     onChange={handleChange}
                     className="w-full p-4 border border-stone-300 rounded-lg focus:ring-2 focus:ring-stone-900 focus:border-transparent transition-all"
                   >
-                    <option value="">Выберите тему</option>
-                    <option value="consultation">Консультация по продукции</option>
-                    <option value="order">Заказ оборудования</option>
-                    <option value="support">Техническая поддержка</option>
-                    <option value="partnership">Партнёрство</option>
-                    <option value="other">Другое</option>
+                    <option value="">Оберіть тему</option>
+                    <option value="consultation">Консультація з продукції</option>
+                    <option value="order">Замовлення обладнання</option>
+                    <option value="support">Технічна підтримка</option>
+                    <option value="partnership">Партнерство</option>
+                    <option value="other">Інше</option>
                   </select>
                 </div>
               </div>
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-stone-900">
-                  Сообщение *
+                  Повідомлення *
                 </label>
                 <textarea
                   name="message"
@@ -139,13 +139,13 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
                   required
                   rows={6}
                   className="w-full p-4 border border-stone-300 rounded-lg focus:ring-2 focus:ring-stone-900 focus:border-transparent transition-all resize-none"
-                  placeholder="Расскажите подробнее о ваших потребностях..."
+                  placeholder="Розкажіть детальніше про ваші потреби..."
                 />
               </div>
 
               <div className="flex items-center justify-between pt-4">
                 <p className="text-sm text-stone-600">
-                  * Обязательные поля
+                  * Обов&apos;язкові поля
                 </p>
                 
                 <button
@@ -161,11 +161,11 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
                   {isSubmitting ? (
                     <>
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      Отправляем...
+                      Надсилаємо...
                     </>
                   ) : (
                     <>
-                      Отправить сообщение
+                      Надіслати повідомлення
                       <Send className="w-4 h-4" />
                     </>
                   )}
@@ -178,10 +178,10 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
                 <CheckCircle className="w-8 h-8 text-green-600" />
               </div>
               <h3 className="text-2xl font-light text-stone-900 mb-4">
-                Сообщение отправлено!
+                Повідомлення надіслано!
               </h3>
               <p className="text-stone-600">
-                Спасибо за обращение. Мы свяжемся с вами в ближайшее время.
+                Дякуємо за звернення. Ми зв&apos;яжемося з вами найближчим часом.
               </p>
             </div>
           )}

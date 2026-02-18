@@ -21,36 +21,36 @@ const contactMethods = [
     icon: Phone,
     title: 'Телефон',
     primary: '+38 050 303 94 94',
-    secondary: '+38 066 210 00 95',
-    description: 'Звоните в рабочее время для консультаций',
-    action: 'Позвонить',
+    secondary: 'Пн-Пт 9:00-18:00',
+    description: 'Дзвонити в робочий час для отримання консультацій',
+    action: 'Дзвонити',
     href: 'tel:+380503039494'
   },
   {
     icon: Mail,
     title: 'Email',
-    primary: 'info@orthodent.pro',
-    secondary: 'orthostore.com.ua@gmail.com',
-    description: 'Отправьте запрос — ответим в течение 2 часов',
-    action: 'Написать',
-    href: 'mailto:info@orthodent.pro'
+    primary: 'orthostore.com.ua@gmail.com',
+    secondary: '',
+    description: 'Відправте запрос - в найближчий час ми з вами зв\'яжемось',
+    action: 'Написати',
+    href: 'mailto:orthostore.com.ua@gmail.com'
   },
   {
     icon: MessageCircle,
     title: 'Онлайн-чат',
-    primary: 'Мгновенная поддержка',
-    secondary: 'Рабочие часы',
-    description: 'Быстрые ответы на ваши вопросы',
-    action: 'Открыть чат',
+    primary: 'Миттєва підтримка',
+    secondary: 'Пн-Пт 9:00-18:00',
+    description: 'Швидкі відповіді на ваші питання',
+    action: 'Відкрити чат',
     href: '#'
   },
   {
     icon: Calendar,
-    title: 'Встреча',
-    primary: 'Личная консультация',
-    secondary: 'По предварительной записи',
-    description: 'Обсудим ваши потребности лично',
-    action: 'Записаться',
+    title: 'Зустріч',
+    primary: 'Особистий візит',
+    secondary: 'За особистим записом',
+    description: 'Огляд продукції та тест інструментів',
+    action: 'Домовитись',
     href: '#'
   }
 ];

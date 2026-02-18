@@ -14,18 +14,18 @@ export function ServicesModernSection({ className }: ServicesModernSectionProps)
   const [activeTestimonial, setActiveTestimonial] = useState(0);
 
   return (
-    <section className={cn('py-32 bg-stone-50', className)}>
+    <section className={cn('py-16 bg-stone-50', className)}>
       <div className="container mx-auto px-6">
         
         {/* Header */}
         <div className="text-center mb-20">
          
           <h2 className="text-4xl md:text-5xl font-light text-stone-900 mb-6">
-            Готові почати співпрацю?
+            Бажаєте почати співпрацювати?
           </h2>
           
           <p className="text-stone-600 max-w-2xl mx-auto text-lg">
-            Отримайте персональну консультацію та дізнайтеся, як ми можемо покращити ефективність вашої ортодонтичної практики.
+            Отримайте персональну консультацію та дізнайтесь за новинки в нашому інтернет магазині.
           </p>
         </div>
 
@@ -42,12 +42,7 @@ export function ServicesModernSection({ className }: ServicesModernSectionProps)
             
             <div className="relative z-10 space-y-10">
               <div>
-                <div className="inline-block mb-6">
-                  <div className="flex items-center gap-3 bg-white/10 px-4 py-2 backdrop-blur-sm">
-                    <Phone className="w-4 h-4" />
-                    <span className="text-xs uppercase tracking-wider">Консультація</span>
-                  </div>
-                </div>
+                
                 
                 <h3 className="text-4xl font-light mb-6 leading-tight">
                   Потрібна<br />
@@ -57,7 +52,7 @@ export function ServicesModernSection({ className }: ServicesModernSectionProps)
                 <div className="w-16 h-px bg-white/30 mb-6"></div>
                 
                 <p className="text-stone-300 leading-relaxed text-lg">
-                  Наші експерти допоможуть вибрати оптимальне рішення для вашої ортодонтичної практики
+                  Ми з задоволенням допоможемо відібрати більш привабливі пропозиції та товари для вашої практики
                 </p>
               </div>
               
@@ -67,8 +62,8 @@ export function ServicesModernSection({ className }: ServicesModernSectionProps)
                     <Phone className="w-5 h-5" />
                   </div>
                   <div>
-                    <div className="text-xl font-medium mb-1">+38 (044) 123-45-67</div>
-                    <div className="text-sm text-stone-400">Щодня з 9:00 до 18:00</div>
+                    <div className="text-xl font-medium mb-1">+38 (050) 303 94 94</div>
+                    <div className="text-sm text-stone-400">ПН-ПТ: 9:00-18:00</div>
                   </div>
                 </div>
 
@@ -77,8 +72,7 @@ export function ServicesModernSection({ className }: ServicesModernSectionProps)
                     <Mail className="w-5 h-5" />
                   </div>
                   <div>
-                    <div className="text-lg mb-1">info@orthodent.com</div>
-                    <div className="text-sm text-stone-400">Відповімо протягом години</div>
+                    <div className="text-lg mb-1">orthostore.com.ua@gmail.com</div>
                   </div>
                 </div>
               </div>
@@ -87,23 +81,6 @@ export function ServicesModernSection({ className }: ServicesModernSectionProps)
                 <button className="w-full border-2 border-white text-white px-8 py-4 font-medium hover:bg-white hover:text-stone-900 transition-all duration-300 uppercase tracking-wider text-sm">
                   Замовити дзвінок
                 </button>
-                
-                <div className="mt-6 flex items-center justify-center gap-6">
-                  <div className="text-center">
-                    <div className="text-2xl font-light mb-1">2 год</div>
-                    <div className="text-xs text-stone-400">Час відповіді</div>
-                  </div>
-                  <div className="h-12 w-px bg-white/20"></div>
-                  <div className="text-center">
-                    <div className="text-2xl font-light mb-1">24/7</div>
-                    <div className="text-xs text-stone-400">Підтримка</div>
-                  </div>
-                  <div className="h-12 w-px bg-white/20"></div>
-                  <div className="text-center">
-                    <div className="text-2xl font-light mb-1">500+</div>
-                    <div className="text-xs text-stone-400">Клієнтів</div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -202,27 +179,11 @@ export function ServicesModernSection({ className }: ServicesModernSectionProps)
 
               <div className="pt-6 border-t-2 border-stone-200">
                 <p className="text-sm text-stone-500 text-center">
-                  Або зателефонуйте нам: <span className="text-stone-900 font-medium">+38 (044) 123-45-67</span>
+                  Або зателефонуйте нам: <span className="text-stone-900 font-medium">+38 (050) 303-94-94</span>
                 </p>
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Bottom CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-16">
-          <button className="border-2 border-stone-900 bg-stone-900 text-white px-12 py-4 font-medium hover:bg-transparent hover:text-stone-900 transition-all duration-300 uppercase tracking-wider text-sm">
-            Отримати консультацію
-          </button>
-          <button className="border-2 border-stone-900 text-stone-900 px-12 py-4 font-medium hover:bg-stone-900 hover:text-white transition-all duration-300 uppercase tracking-wider text-sm">
-            Скачати презентацію
-          </button>
-        </div>
-
-        {/* Bottom Contact Info */}
-        <div className="text-center mt-12 space-y-2">
-          <div className="text-stone-900 font-medium text-lg">+38 (044) 123-45-67</div>
-          <div className="text-stone-600">info@orthodent.pro</div>
         </div>
       </div>
     </section>

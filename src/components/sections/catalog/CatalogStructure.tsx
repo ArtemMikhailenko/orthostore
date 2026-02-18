@@ -11,74 +11,8 @@ interface CategoryItem {
 }
 
 const catalogData: CategoryItem[] = [
-  
   {
-    name: 'БРЕКЕТИ',
-    count: 5,
-    subcategories: [
-      { name: 'самолігуючі', count: 5 },
-      { name: 'естетичні', count: 5 },
-      { name: 'металеві', count: 5 },
-    ],
-  },
-  {
-    name: 'ЩІЧНІ ТРУБКИ',
-    count: 5,
-  },
-  {
-    name: 'МОЛЯРНІ КІЛЬЦЯ',
-    count: 5,
-  },
-  {
-    name: 'АТАЧМЕНТИ',
-    count: 5,
-    subcategories: [
-      { name: 'стопи', count: 5 },
-      { name: 'кнопки', count: 5 },
-      { name: 'накусочні майданчики', count: 5 },
-      { name: 'пружини', count: 5 },
-    ],
-  },
-  {
-    name: 'ДУГИ',
-    count: 5,
-  },
-  {
-    name: 'ЕЛАСТИЧНИЙ МАТЕРІАЛ',
-    count: 5,
-  },
-  {
-    name: 'ФІКСАЦІЙНИЙ МАТЕРІАЛ',
-    count: 5,
-  },
-  {
-    name: 'РЕТРАКТОРИ',
-    count: 5,
-  },
-  {
-    name: 'ДЗЕРКАЛА ТА КОНТРАСТЕРИ',
-    count: 5,
-  },
-  {
-    name: 'ЗОВНІШНЬОРОТОВІ ПРИСТОСУВАННЯ(МАСКИ)',
-    count: 5,
-  },
-  {
-    name: 'АКСЕСУАРИ ДЛЯ ПАЦІЄНТА',
-    count: 5,
-  },
-  {
-    name: 'МАТЕРІАЛ ДЛЯ ТЕХНІКІВ',
-    count: 5,
-    subcategories: [
-      { name: 'гвинти', count: 5 },
-      { name: 'пластини для ретенційних кап та елайнерів', count: 5 },
-      { name: 'пластмаса', count: 5 },
-      { name: 'відбиткові ложки', count: 5 },
-    ],
-  },
-  {
-    name: 'СЕПАРЦІЙНІ ПРИЛАДИ',
+    name: 'ПРОПИСИ БРЕКЕТІВ',
     count: 5,
   },
   {
@@ -86,8 +20,92 @@ const catalogData: CategoryItem[] = [
     count: 5,
   },
   {
-    name: 'ІНСТРУМЕНТ',
+    name: 'МІНІ ПЛАСТИНИ',
     count: 5,
+    subcategories: [
+      { name: 'міні пластини', count: 5 },
+      { name: 'щелепно-лицьова хірургія', count: 5 },
+    ],
+  },
+  {
+    name: 'БРЕКЕТИ',
+    count: 5,
+    subcategories: [
+      { name: 'самолігуючі', count: 5 },
+      { name: 'естетичні', count: 5 },
+      { name: 'лігатурні', count: 5 },
+    ],
+  },
+  {
+    name: 'ЩІЧНІ ТРУБКИ ТА МОЛЯРНІ КІЛЬЦЯ',
+    count: 5,
+  },
+  {
+    name: 'АТАЧМЕНТИ',
+    count: 5,
+    subcategories: [
+      { name: 'стопори', count: 5 },
+      { name: 'кнопки', count: 5 },
+      { name: 'накусочні майданчики', count: 5 },
+      { name: 'пружини', count: 5 },
+      { name: 'металеві лігатури', count: 5 },
+    ],
+  },
+  {
+    name: 'ДУГИ',
+    count: 5,
+  },
+  {
+    name: 'ЕЛАСТИЧНІ МАТЕРІАЛИ',
+    count: 5,
+  },
+  {
+    name: 'ФІКСАЦІЙНІ МАТІРІАЛИ',
+    count: 5,
+  },
+  {
+    name: 'РЕТРАКТОРИ',
+    count: 5,
+  },
+  {
+    name: 'ДЗЕРКАЛА ТА ФОТОКОНТРАСТЕРИ',
+    count: 5,
+  },
+  {
+    name: 'ЗОВНІШНЬОРОТОВІ ПРИСТОСУВАННЯ',
+    count: 5,
+  },
+  {
+    name: 'ТРЕЙНЕРА ТА МИОБРЕЙСИ',
+    count: 5,
+  },
+  {
+    name: 'МАТЕРІАЛИ ДЛЯ ТЕХНІКІВ',
+    count: 5,
+    subcategories: [
+      { name: 'гвинти', count: 5 },
+      { name: 'гвинти MSE', count: 5 },
+      { name: 'пластини для ретенційних кап', count: 5 },
+      { name: 'пластини для елайнерів', count: 5 },
+      { name: 'пластмасса', count: 5 },
+      { name: 'відбиткові ложки', count: 5 },
+    ],
+  },
+  {
+    name: 'СЕПАРАЦІЙНІ ІНСТРУМЕНТИ',
+    count: 5,
+  },
+  {
+    name: 'АКСЕСУАРИ',
+    count: 5,
+  },
+  {
+    name: 'ІНСТРУМЕНТИ',
+    count: 5,
+    subcategories: [
+      { name: 'ORTHOSTORE', count: 5 },
+      { name: 'LE MED', count: 5 },
+    ],
   },
 ];
 

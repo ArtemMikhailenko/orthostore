@@ -4,6 +4,7 @@ import React from 'react';
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react';
 import { useCartStore } from '@/lib/cart-store';
 import Image from 'next/image';
+import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 export function CartDrawer() {
@@ -32,7 +33,7 @@ export function CartDrawer() {
         <div className="p-5 border-b border-stone-200 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <ShoppingBag className="w-5 h-5 text-stone-700" />
-            <h2 className="text-lg font-semibold text-stone-900">Корзина</h2>
+            <h2 className="text-lg font-semibold text-stone-900">Кошик</h2>
             <span className="text-sm text-stone-500">{totalItems()} шт.</span>
           </div>
           <button onClick={close} className="p-2 rounded-lg hover:bg-stone-100">
@@ -45,13 +46,13 @@ export function CartDrawer() {
           {items.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-stone-500">
               <ShoppingBag className="w-12 h-12 mb-3" />
-              <p className="text-sm">Ваша корзина пуста</p>
+              <p className="text-sm">Ваш кошик порожній</p>
             </div>
           ) : (
             <div className="space-y-4">
               {items.map((it) => (
-                <div key={it.id} className="flex gap-3 p-3 bg-white border border-stone-200 rounded-xl">
-                  <div className="relative w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden bg-stone-50 border border-stone-200">
+                <div key={it.id} className="flex gap-3 p-3 bg-white border border-stone-200">
+                  <div className="relative w-16 h-16 flex-shrink-0 overflow-hidden bg-stone-50 border border-stone-200">
                     {it.imageUrl ? (
                       <Image src={it.imageUrl} alt={it.name} fill className="object-contain" />
                     ) : null}
@@ -64,17 +65,17 @@ export function CartDrawer() {
                           <div className="text-xs text-stone-500 mt-0.5">{it.brand}</div>
                         ) : null}
                       </div>
-                      <button onClick={() => removeItem(it.id)} className="p-2 text-stone-400 hover:text-red-600 hover:bg-red-50 rounded-lg">
+                      <button onClick={() => removeItem(it.id)} className="p-2 text-stone-400 hover:text-red-600 hover:bg-red-50">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                     <div className="mt-3 flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <button onClick={() => decrease(it.id)} className="p-1.5 rounded-md border border-stone-300 text-stone-700 hover:bg-stone-50">
+                        <button onClick={() => decrease(it.id)} className="p-1.5 border border-stone-300 text-stone-700 hover:bg-stone-50">
                           <Minus className="w-4 h-4" />
                         </button>
                         <span className="w-8 text-center text-sm font-medium">{it.quantity}</span>
-                        <button onClick={() => increase(it.id)} className="p-1.5 rounded-md border border-stone-300 text-stone-700 hover:bg-stone-50">
+                        <button onClick={() => increase(it.id)} className="p-1.5 border border-stone-300 text-stone-700 hover:bg-stone-50">
                           <Plus className="w-4 h-4" />
                         </button>
                       </div>
@@ -90,20 +91,24 @@ export function CartDrawer() {
         {/* Footer */}
         <div className="border-t border-stone-200 p-4 bg-stone-50">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-sm text-stone-600">Итого</span>
+            <span className="text-sm text-stone-600">Разом</span>
             <span className="text-lg font-semibold text-stone-900">{totalPrice().toLocaleString()} ₴</span>
           </div>
           <div className="flex items-center justify-between mb-4">
-            <button onClick={clear} className="text-sm text-stone-500 hover:text-stone-700 underline">Очистить</button>
-            <span className="text-xs text-stone-400">Налоги и доставка рассчитываются при оформлении</span>
+            <button onClick={clear} className="text-sm text-stone-500 hover:text-stone-700 underline">Очистити</button>
+            <span className="text-xs text-stone-400">Доставка розраховується при оформленні</span>
           </div>
-          <button
-            disabled={items.length === 0}
-            className="w-full inline-flex items-center justify-center gap-2 bg-stone-900 text-white py-3 rounded-xl hover:bg-stone-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          <Link
+            href="/checkout"
+            onClick={close}
+            className={cn(
+              'w-full inline-flex items-center justify-center gap-2 bg-stone-900 text-white py-3 hover:bg-stone-800 transition-colors',
+              items.length === 0 && 'opacity-50 pointer-events-none'
+            )}
           >
-            Перейти к оформлению
+            Перейти до оформлення
             <ArrowRight className="w-4 h-4" />
-          </button>
+          </Link>
         </div>
       </aside>
     </>

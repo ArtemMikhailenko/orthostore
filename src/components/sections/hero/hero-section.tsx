@@ -18,7 +18,7 @@ export function HeroSection({ className }: HeroSectionProps) {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items- min-h-[65vh] py-12 lg:py-15 max-h-[95vh]">
           
           {/* Left Content */}
-          <div className="space-y-8 lg:space-y-10">
+          <div className="space-y-5 lg:space-y-6">
 
             {/* Main Headline */}
             <div className="space-y-4">
@@ -67,7 +67,7 @@ export function HeroSection({ className }: HeroSectionProps) {
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row gap-4 pt-2">
               <Link 
                 href="/catalog"
                 className="inline-flex items-center justify-center bg-stone-900 text-white px-8 lg:px-10 py-3.5 lg:py-4 font-medium hover:bg-stone-800 transition-all duration-300 text-sm lg:text-base"

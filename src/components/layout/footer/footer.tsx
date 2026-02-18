@@ -11,8 +11,7 @@ const footerLinks = {
   company: {
     title: 'КОМПАНІЯ',
     links: [
-      { name: 'О нас', href: '/about' },
-      { name: 'Наша команда', href: '/team' },
+      { name: 'Про нас', href: '/about' },
       { name: 'Контакти', href: '/contacts' },
       { name: 'CASH BACK', href: '/cashback' }
     ]
@@ -20,7 +19,6 @@ const footerLinks = {
   information: {
     title: 'ІНФОРМАЦІЯ',
     links: [
-      { name: 'Новинки', href: '/new' },
       { name: 'Каталог', href: '/catalog' },
       { name: 'Доставка та оплата', href: '/delivery' },
       { name: 'Повернення', href: '/returns' },
@@ -64,8 +62,8 @@ export function FooterSection({ className }: FooterSectionProps) {
               ВСЕ ДЛЯ СУЧАСНОЇ ОРТОДОНТІЇ
             </div>
             <p className="text-gray-400 font-light leading-relaxed text-sm max-w-sm">
-              Профессиональное ортодонтическое оборудование от мировых лидеров. 
-              Качество, которому доверяют.
+              Професійні ортодонтичні матеріали від світових виробників.
+              Якість, якій довіряют...
             </p>
           </div>
 
@@ -98,23 +96,23 @@ export function FooterSection({ className }: FooterSectionProps) {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div className="flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-12">
               <div>
-                <span className="text-white font-medium">+38 (044) 123-45-67</span>
+                <span className="text-white font-medium">+38 (050) 303 94 94</span>
                 
               </div>
               <div>
-                <span className="text-white font-medium">info@orthodent.pro</span>
+                <span className="text-white font-medium">orthostore.com.ua@gmail.com</span>
                
               </div>
               <div>
-                <span className="text-gray-400 text-sm">ул. Медицинская, 15, Киев</span>
+                <span className="text-gray-400 text-sm">м. Київ, вул. Саксаганського, 54/56 офіс, 124</span>
               </div>
               <div>
-                <span className="text-gray-400 text-sm">Пн-Пт: 9:00-18:00</span>
+                <span className="text-gray-400 text-sm">ПН-ПТ: 9:00-18:00</span>
               </div>
             </div>
             
             <a href="/contacts" className="bg-white text-gray-900 px-8 py-3 font-medium hover:bg-gray-100 transition-colors uppercase tracking-wider text-sm">
-              Связаться
+              Зв'язок
             </a>
           </div>
         </div>
@@ -127,12 +125,12 @@ export function FooterSection({ className }: FooterSectionProps) {
         <div className="container mx-auto px-6 py-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex flex-wrap items-center gap-6 text-sm text-gray-400">
-              <span>© 2024 OrthoDent Pro. Все права защищены.</span>
+              <span>© 2024 OrthoDent Pro. Всі права захищені.</span>
               <a href="/privacy" className="hover:text-white transition-colors">
-                Политика конфиденциальности
+                Політика конфіденційності
               </a>
               <a href="/terms" className="hover:text-white transition-colors">
-                Условия использования
+                Умови використання
               </a>
             </div>
             
@@ -143,7 +141,7 @@ export function FooterSection({ className }: FooterSectionProps) {
                   href="https://viber.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center hover:bg-purple-700 transition-colors"
+                  className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-600 transition-colors"
                   title="Viber"
                 >
                   <svg className="w-5 h-5" fill="white" viewBox="0 0 24 24">
@@ -154,7 +152,7 @@ export function FooterSection({ className }: FooterSectionProps) {
                   href="https://telegram.org"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors"
+                  className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-600 transition-colors"
                   title="Telegram"
                 >
                   <svg className="w-5 h-5" fill="white" viewBox="0 0 24 24">
@@ -163,7 +161,7 @@ export function FooterSection({ className }: FooterSectionProps) {
                 </a>
                 <a
                   href="tel:+380971979003"
-                  className="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors"
+                  className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-600 transition-colors"
                   title="Телефон"
                 >
                   <svg className="w-5 h-5" fill="white" viewBox="0 0 24 24">

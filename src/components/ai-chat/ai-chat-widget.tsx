@@ -122,7 +122,7 @@ export function AIChatWidget() {
         onClick={toggleMenu}
         className={cn(
           'fixed bottom-6 right-6 z-50 p-3.5 rounded-full shadow-xl transition-all duration-300',
-          'bg-gradient-to-br from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700',
+          'bg-gradient-to-br from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700',
           'text-white hover:scale-110 active:scale-95',
           'flex items-center gap-2',
           (isMenuOpen || showChat) && 'scale-0'
@@ -132,7 +132,7 @@ export function AIChatWidget() {
         <MessageCircle className="w-5 h-5" />
         <Sparkles className="w-3.5 h-3.5 absolute -top-0.5 -right-0.5 text-yellow-300 animate-pulse" />
         {/* Pulse Ring */}
-        <span className="absolute inset-0 rounded-full bg-emerald-500 animate-ping opacity-75"></span>
+        <span className="absolute inset-0 rounded-full bg-sky-500 animate-ping opacity-75"></span>
       </button>
 
       {/* Contact Menu */}
@@ -149,9 +149,9 @@ export function AIChatWidget() {
           {/* Phone */}
           <a
             href="tel:+380XXXXXXXXX"
-            className="flex items-center gap-2.5 bg-white p-3 rounded-xl shadow-md border border-stone-200 hover:border-emerald-500 hover:shadow-lg transition-all group w-[280px]"
+            className="flex items-center gap-2.5 bg-white p-3 rounded-xl shadow-md border border-stone-200 hover:border-sky-500 hover:shadow-lg transition-all group w-[280px]"
           >
-            <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+            <div className="w-10 h-10 bg-sky-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
               <Phone className="w-5 h-5 text-white" />
             </div>
             <div className="text-left">
@@ -193,7 +193,7 @@ export function AIChatWidget() {
           {/* AI Assistant */}
           <button
             onClick={openChat}
-            className="flex items-center gap-2.5 bg-gradient-to-br from-emerald-500 to-emerald-600 p-3 rounded-xl shadow-md hover:shadow-lg hover:scale-[1.02] transition-all group w-[280px]"
+            className="flex items-center gap-2.5 bg-gradient-to-br from-sky-500 to-sky-600 p-3 rounded-xl shadow-md hover:shadow-lg hover:scale-[1.02] transition-all group w-[280px]"
           >
             <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform flex-shrink-0">
               <Bot className="w-5 h-5 text-white" />
@@ -203,7 +203,7 @@ export function AIChatWidget() {
                 AI Асистент
                 <Sparkles className="w-3.5 h-3.5" />
               </div>
-              <div className="text-xs text-emerald-100">Розумний помічник 24/7</div>
+              <div className="text-xs text-sky-100">Розумний помічник 24/7</div>
             </div>
           </button>
         </div>
@@ -213,7 +213,7 @@ export function AIChatWidget() {
       {showChat && (
         <div className="fixed bottom-6 right-6 z-50 w-[400px] h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-stone-200">
           {/* Header */}
-          <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 p-4 text-white flex items-center justify-between">
+          <div className="bg-gradient-to-r from-sky-500 to-sky-600 p-4 text-white flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="relative">
                 <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
@@ -223,7 +223,7 @@ export function AIChatWidget() {
               </div>
               <div>
                 <div className="font-semibold">AI Асистент</div>
-                <div className="text-xs text-emerald-100">Завжди онлайн</div>
+                <div className="text-xs text-sky-100">Завжди онлайн</div>
               </div>
             </div>
             <button
@@ -245,7 +245,7 @@ export function AIChatWidget() {
                 )}
               >
                 {message.sender === 'ai' && (
-                  <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 bg-gradient-to-br from-sky-500 to-sky-600 rounded-full flex items-center justify-center flex-shrink-0">
                     <Bot className="w-5 h-5 text-white" />
                   </div>
                 )}
@@ -254,7 +254,7 @@ export function AIChatWidget() {
                   className={cn(
                     'max-w-[280px] rounded-2xl px-4 py-3 shadow-sm',
                     message.sender === 'user'
-                      ? 'bg-emerald-500 text-white rounded-br-sm'
+                      ? 'bg-sky-500 text-white rounded-br-sm'
                       : 'bg-white text-stone-800 rounded-bl-sm'
                   )}
                 >
@@ -264,7 +264,7 @@ export function AIChatWidget() {
                   <div
                     className={cn(
                       'text-xs mt-1',
-                      message.sender === 'user' ? 'text-emerald-100' : 'text-stone-400'
+                      message.sender === 'user' ? 'text-sky-100' : 'text-stone-400'
                     )}
                   >
                     {message.timestamp.toLocaleTimeString('uk-UA', {
@@ -284,7 +284,7 @@ export function AIChatWidget() {
 
             {isTyping && (
               <div className="flex gap-3 justify-start">
-                <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center flex-shrink-0">
+                <div className="w-8 h-8 bg-gradient-to-br from-sky-500 to-sky-600 rounded-full flex items-center justify-center flex-shrink-0">
                   <Bot className="w-5 h-5 text-white" />
                 </div>
                 <div className="bg-white rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm">
@@ -310,12 +310,12 @@ export function AIChatWidget() {
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Напишіть повідомлення..."
-                className="flex-1 px-4 py-3 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-stone-50"
+                className="flex-1 px-4 py-3 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent bg-stone-50"
               />
               <button
                 onClick={handleSendMessage}
                 disabled={!inputValue.trim()}
-                className="p-3 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="p-3 bg-sky-500 text-white rounded-xl hover:bg-sky-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send className="w-5 h-5" />
               </button>
