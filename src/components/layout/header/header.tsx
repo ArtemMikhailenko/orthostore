@@ -403,18 +403,35 @@ function CartButton() {
 // User Menu Component
 function UserMenu() {
   const [isOpen, setIsOpen] = useState(false);
+  const menuRef = React.useRef<HTMLDivElement>(null);
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn());
-  const phone = useAuthStore((s) => s.phone);
-  const name = useAuthStore((s) => s.name);
+  const customer = useAuthStore((s) => s.customer);
   const logout = useAuthStore((s) => s.logout);
 
+  // Close on click outside
+  React.useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
-    <div className="relative">
+    <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 p-2 text-stone-600 hover:text-stone-900 transition-colors group"
       >
-        <User className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
+        {isLoggedIn && customer ? (
+          <span className="w-7 h-7 bg-stone-900 text-white flex items-center justify-center text-xs font-medium">
+            {(customer.name || customer.phone)?.[0]?.toUpperCase() || 'U'}
+          </span>
+        ) : (
+          <User className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
+        )}
         <ChevronDown className={cn(
           "w-3 h-3 transition-transform duration-300",
           isOpen && "rotate-180"
@@ -422,35 +439,35 @@ function UserMenu() {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-stone-200 shadow-xl z-50 rounded-lg overflow-hidden">
+        <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-stone-200 shadow-xl z-50 overflow-hidden">
           <div className="p-2">
             {isLoggedIn ? (
               <>
                 <div className="px-4 py-3 text-stone-700">
-                  <div className="font-medium">{name || 'Профиль'}</div>
-                  {phone ? <div className="text-sm text-stone-500">{phone}</div> : null}
+                  <div className="font-medium">{customer?.name || 'Профіль'}</div>
+                  {customer?.phone ? <div className="text-sm text-stone-500">{customer.phone}</div> : null}
                 </div>
-                <a href="/orders" className="flex items-center gap-3 px-4 py-3 text-stone-700 hover:bg-stone-50 rounded-lg transition-colors">
+                <Link href="/profile" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-3 text-stone-700 hover:bg-stone-50 transition-colors">
                   <User className="w-4 h-4" />
-                  Мои заказы
-                </a>
-                <a href="/favorites" className="flex items-center gap-3 px-4 py-3 text-stone-700 hover:bg-stone-50 rounded-lg transition-colors">
-                  <Heart className="w-4 h-4" />
-                  Избранное
-                </a>
+                  Профіль
+                </Link>
+                <Link href="/profile/orders" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-3 text-stone-700 hover:bg-stone-50 transition-colors">
+                  <Package className="w-4 h-4" />
+                  Мої замовлення
+                </Link>
                 <hr className="my-2 border-stone-200" />
-                <button onClick={() => { logout(); setIsOpen(false); }} className="w-full text-left px-4 py-3 text-stone-700 hover:bg-stone-50 rounded-lg transition-colors">
-                  Выйти
+                <button onClick={() => { logout(); setIsOpen(false); }} className="w-full text-left px-4 py-3 text-stone-700 hover:bg-stone-50 transition-colors">
+                  Вийти
                 </button>
               </>
             ) : (
               <>
-                <a href="/login" className="block px-4 py-3 text-stone-700 hover:bg-stone-50 rounded-lg transition-colors">
-                  Войти
-                </a>
-                <a href="/register" className="block px-4 py-3 text-stone-700 hover:bg-stone-50 rounded-lg transition-colors">
-                  Регистрация
-                </a>
+                <Link href="/login" onClick={() => setIsOpen(false)} className="block px-4 py-3 text-stone-700 hover:bg-stone-50 transition-colors">
+                  Увійти
+                </Link>
+                <Link href="/register" onClick={() => setIsOpen(false)} className="block px-4 py-3 text-stone-700 hover:bg-stone-50 transition-colors">
+                  Реєстрація
+                </Link>
               </>
             )}
           </div>
@@ -600,12 +617,12 @@ export function Header({ className }: HeaderProps) {
             <Logo />
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:block ml-auto mr-6">
+            <div className="hidden lg:block ml-22">
               <Navigation />
             </div>
 
             {/* Right Actions */}
-            <div className="flex items-center space-x-2 lg:space-x-3">
+            <div className="flex items-center space-x-2 lg:space-x-3 ml-auto">
               {/* Search Bar */}
               <div className="hidden md:block w-64 lg:w-80">
                 <SearchBar 

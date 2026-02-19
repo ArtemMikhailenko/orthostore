@@ -3,26 +3,46 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/auth-store';
-import { Phone, User, ArrowRight, ShieldCheck, Mail } from 'lucide-react';
+import { Phone, User, ArrowRight, ShieldCheck, Mail, Lock, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 export default function RegisterPage() {
   const router = useRouter();
   const register = useAuthStore((s) => s.register);
+  const storeError = useAuthStore((s) => s.error);
+  const clearError = useAuthStore((s) => s.clearError);
   const [phone, setPhone] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [focused, setFocused] = useState<string | null>(null);
+  const [localError, setLocalError] = useState<string | null>(null);
+
+  const error = localError || storeError;
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!phone.trim() || !name.trim()) return;
+    if (!phone.trim() || !email.trim() || !password.trim()) return;
+    if (password.length < 6) {
+      setLocalError('Пароль має бути не менше 6 символів');
+      return;
+    }
+    setLocalError(null);
+    clearError();
     setLoading(true);
     try {
-      register(name.trim(), phone.trim());
+      await register({
+        phone: phone.trim(),
+        email: email.trim(),
+        password,
+        name: name.trim() || undefined,
+      });
       router.push('/');
+    } catch (err: any) {
+      const msg = err?.message || 'Помилка реєстрації';
+      setLocalError(typeof msg === 'string' ? msg : 'Помилка реєстрації');
     } finally {
       setLoading(false);
     }
@@ -85,21 +105,31 @@ export default function RegisterPage() {
       <div className="flex-1 flex items-center justify-center px-6 py-8 overflow-y-auto">
         <div className="w-full max-w-md">
           {/* Mobile logo */}
-          <div className="lg:hidden mb-12 text-center">
+          <div className="lg:hidden mb-8 text-center">
             <Link href="/" className="text-2xl font-bold text-stone-900 tracking-tight">
               ORTHOSTORE
             </Link>
           </div>
 
-          <div className="space-y-2 mb-8">
+          <div className="space-y-2 mb-6">
             <h1 className="text-3xl font-light text-stone-900">Реєстрація</h1>
             <p className="text-stone-500">Заповніть дані, щоб створити профіль</p>
           </div>
 
-          <form onSubmit={onSubmit} className="space-y-6">
+          {/* Error message */}
+          {error && (
+            <div className="mb-5 flex items-start gap-3 bg-red-50 border border-red-200 p-4">
+              <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+              <p className="text-sm text-red-700">{error}</p>
+            </div>
+          )}
+
+          <form onSubmit={onSubmit} className="space-y-4">
             {/* Name */}
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-stone-700">Ім&apos;я</label>
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-stone-700">
+                Ім&apos;я <span className="text-stone-400 font-normal">(необов&apos;язково)</span>
+              </label>
               <div className="relative">
                 <User className={cn(
                   'absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors',
@@ -113,14 +143,13 @@ export default function RegisterPage() {
                   onBlur={() => setFocused(null)}
                   placeholder="Ваше ім'я"
                   disabled={loading}
-                  required
-                  className="w-full pl-11 pr-4 py-3.5 bg-white border border-stone-300 text-stone-900 placeholder:text-stone-400 focus:border-stone-900 focus:ring-1 focus:ring-stone-900 outline-none transition-all disabled:opacity-50"
+                  className="w-full pl-11 pr-4 py-3 bg-white border border-stone-300 text-stone-900 placeholder:text-stone-400 focus:border-stone-900 focus:ring-1 focus:ring-stone-900 outline-none transition-all disabled:opacity-50"
                 />
               </div>
             </div>
 
             {/* Phone */}
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <label className="block text-sm font-medium text-stone-700">Телефон</label>
               <div className="relative">
                 <Phone className={cn(
@@ -137,16 +166,14 @@ export default function RegisterPage() {
                   inputMode="tel"
                   disabled={loading}
                   required
-                  className="w-full pl-11 pr-4 py-3.5 bg-white border border-stone-300 text-stone-900 placeholder:text-stone-400 focus:border-stone-900 focus:ring-1 focus:ring-stone-900 outline-none transition-all disabled:opacity-50"
+                  className="w-full pl-11 pr-4 py-3 bg-white border border-stone-300 text-stone-900 placeholder:text-stone-400 focus:border-stone-900 focus:ring-1 focus:ring-stone-900 outline-none transition-all disabled:opacity-50"
                 />
               </div>
             </div>
 
             {/* Email */}
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-stone-700">
-                Email <span className="text-stone-400 font-normal">(необов&apos;язково)</span>
-              </label>
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-stone-700">Email</label>
               <div className="relative">
                 <Mail className={cn(
                   'absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors',
@@ -160,7 +187,31 @@ export default function RegisterPage() {
                   onBlur={() => setFocused(null)}
                   placeholder="email@example.com"
                   disabled={loading}
-                  className="w-full pl-11 pr-4 py-3.5 bg-white border border-stone-300 text-stone-900 placeholder:text-stone-400 focus:border-stone-900 focus:ring-1 focus:ring-stone-900 outline-none transition-all disabled:opacity-50"
+                  required
+                  className="w-full pl-11 pr-4 py-3 bg-white border border-stone-300 text-stone-900 placeholder:text-stone-400 focus:border-stone-900 focus:ring-1 focus:ring-stone-900 outline-none transition-all disabled:opacity-50"
+                />
+              </div>
+            </div>
+
+            {/* Password */}
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-stone-700">Пароль</label>
+              <div className="relative">
+                <Lock className={cn(
+                  'absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors',
+                  focused === 'password' ? 'text-stone-900' : 'text-stone-400'
+                )} />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onFocus={() => setFocused('password')}
+                  onBlur={() => setFocused(null)}
+                  placeholder="Мінімум 6 символів"
+                  disabled={loading}
+                  required
+                  minLength={6}
+                  className="w-full pl-11 pr-4 py-3 bg-white border border-stone-300 text-stone-900 placeholder:text-stone-400 focus:border-stone-900 focus:ring-1 focus:ring-stone-900 outline-none transition-all disabled:opacity-50"
                 />
               </div>
             </div>
@@ -169,7 +220,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 bg-stone-900 text-white py-3.5 font-medium hover:bg-stone-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
+              className="w-full flex items-center justify-center gap-2 bg-stone-900 text-white py-3.5 font-medium hover:bg-stone-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed group mt-2"
             >
               {loading ? (
                 <>
@@ -186,7 +237,7 @@ export default function RegisterPage() {
           </form>
 
           {/* Divider */}
-          <div className="relative my-6">
+          <div className="relative my-5">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-stone-200" />
             </div>

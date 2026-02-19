@@ -1,55 +1,112 @@
 'use client';
 
-import React, { useState } from 'react';
-import { User, ChevronDown, LogIn, UserPlus, Settings, Package, LogOut } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { User, LogIn, UserPlus, Package, LogOut, ChevronDown } from 'lucide-react';
+import Link from 'next/link';
+import { useAuthStore } from '@/lib/auth-store';
 
 export function UserMenu() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoggedIn] = useState(false); // Заглушка для состояния авторизации
+  const menuRef = useRef<HTMLDivElement>(null);
+  const { customer, isAuthenticated, logout } = useAuthStore();
+
+  // Close on click outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleLogout = () => {
+    logout();
+    setIsOpen(false);
+  };
 
   return (
-    <div className="relative">
+    <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 text-gray-600 hover:text-gray-900 transition-colors"
+        className="p-2 text-stone-600 hover:text-stone-900 transition-colors flex items-center gap-1"
       >
-        <User className="w-5 h-5" />
+        {isAuthenticated && customer ? (
+          <span className="w-8 h-8 bg-stone-900 text-white flex items-center justify-center text-sm font-medium">
+            {(customer.name || customer.phone)?.[0]?.toUpperCase() || 'U'}
+          </span>
+        ) : (
+          <User className="w-5 h-5" />
+        )}
       </button>
 
       {isOpen && (
-        <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-gray-200 shadow-lg z-50">
-          <div className="py-2">
-            {isLoggedIn ? (
-              // Авторизованный пользователь
-              <>
-                <a href="/profile" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+        <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-stone-200 shadow-lg z-50">
+          {isAuthenticated && customer ? (
+            <>
+              {/* User info header */}
+              <div className="px-4 py-3 border-b border-stone-100">
+                <p className="text-sm font-medium text-stone-900 truncate">
+                  {customer.name || customer.phone}
+                </p>
+                {customer.email && (
+                  <p className="text-xs text-stone-500 truncate">{customer.email}</p>
+                )}
+              </div>
+
+              <div className="py-1">
+                <Link
+                  href="/profile"
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 transition-colors"
+                >
+                  <User className="w-4 h-4" />
                   Профіль
-                </a>
-                <a href="/orders" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                </Link>
+                <Link
+                  href="/profile/orders"
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 transition-colors"
+                >
+                  <Package className="w-4 h-4" />
                   Мої замовлення
-                </a>
-                <a href="/settings" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                  Налаштування
-                </a>
-                <hr className="my-2 border-gray-200" />
-                <button className="block w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                </Link>
+              </div>
+
+              <div className="border-t border-stone-100 py-1">
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-3 w-full text-left px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 transition-colors"
+                >
+                  <LogOut className="w-4 h-4" />
                   Вийти
                 </button>
-              </>
-            ) : (
-              // Неавторизованный пользователь
-              <>
-                <a href="/login" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                  Увійти
-                </a>
-                <a href="/register" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                  Реєстрація
-                </a>
-              </>
-            )}
-          </div>
+              </div>
+            </>
+          ) : (
+            <div className="py-1">
+              <Link
+                href="/login"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 transition-colors"
+              >
+                <LogIn className="w-4 h-4" />
+                Увійти
+              </Link>
+              <Link
+                href="/register"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 transition-colors"
+              >
+                <UserPlus className="w-4 h-4" />
+                Реєстрація
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </div>
-  )}
+  );
+}
   

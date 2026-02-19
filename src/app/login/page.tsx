@@ -3,25 +3,36 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/auth-store';
-import { Phone, User, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Phone, Lock, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 export default function LoginPage() {
   const router = useRouter();
   const login = useAuthStore((s) => s.login);
-  const [phone, setPhone] = useState('');
-  const [name, setName] = useState('');
+  const storeError = useAuthStore((s) => s.error);
+  const clearError = useAuthStore((s) => s.clearError);
+  const [loginValue, setLoginValue] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [focused, setFocused] = useState<string | null>(null);
+  const [localError, setLocalError] = useState<string | null>(null);
+
+  const error = localError || storeError;
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!phone.trim()) return;
+    if (!loginValue.trim() || !password.trim()) return;
+    setLocalError(null);
+    clearError();
     setLoading(true);
     try {
-      login(phone.trim(), name.trim() || undefined);
+      await login(loginValue.trim(), password);
       router.push('/');
+    } catch (err: any) {
+      // error is set in the store, but also set locally for immediate display
+      const msg = err?.message || 'Невірний логін або пароль';
+      setLocalError(typeof msg === 'string' ? msg : 'Невірний логін або пароль');
     } finally {
       setLoading(false);
     }
@@ -86,51 +97,63 @@ export default function LoginPage() {
 
           <div className="space-y-2 mb-8">
             <h1 className="text-3xl font-light text-stone-900">Вхід</h1>
-            <p className="text-stone-500">Введіть номер телефону, щоб продовжити</p>
+            <p className="text-stone-500">Введіть email або телефон та пароль</p>
           </div>
 
-          <form onSubmit={onSubmit} className="space-y-6">
-            {/* Name */}
+          {/* Error message */}
+          {error && (
+            <div className="mb-6 flex items-start gap-3 bg-red-50 border border-red-200 p-4">
+              <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+              <p className="text-sm text-red-700">{error}</p>
+            </div>
+          )}
+
+          <form onSubmit={onSubmit} className="space-y-5">
+            {/* Login (email or phone) */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-stone-700">
-                Ім&apos;я <span className="text-stone-400 font-normal">(необов&apos;язково)</span>
-              </label>
+              <label className="block text-sm font-medium text-stone-700">Email або телефон</label>
               <div className="relative">
-                <User className={cn(
+                <Phone className={cn(
                   'absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors',
-                  focused === 'name' ? 'text-stone-900' : 'text-stone-400'
+                  focused === 'login' ? 'text-stone-900' : 'text-stone-400'
                 )} />
                 <input
                   type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  onFocus={() => setFocused('name')}
+                  value={loginValue}
+                  onChange={(e) => setLoginValue(e.target.value)}
+                  onFocus={() => setFocused('login')}
                   onBlur={() => setFocused(null)}
-                  placeholder="Ваше ім'я"
+                  placeholder="email@example.com або +380..."
                   disabled={loading}
+                  required
                   className="w-full pl-11 pr-4 py-3.5 bg-white border border-stone-300 text-stone-900 placeholder:text-stone-400 focus:border-stone-900 focus:ring-1 focus:ring-stone-900 outline-none transition-all disabled:opacity-50"
                 />
               </div>
             </div>
 
-            {/* Phone */}
+            {/* Password */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-stone-700">Телефон</label>
+              <div className="flex items-center justify-between">
+                <label className="block text-sm font-medium text-stone-700">Пароль</label>
+                <Link href="/forgot-password" className="text-xs text-stone-500 hover:text-stone-900 transition-colors">
+                  Забули пароль?
+                </Link>
+              </div>
               <div className="relative">
-                <Phone className={cn(
+                <Lock className={cn(
                   'absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors',
-                  focused === 'phone' ? 'text-stone-900' : 'text-stone-400'
+                  focused === 'password' ? 'text-stone-900' : 'text-stone-400'
                 )} />
                 <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  onFocus={() => setFocused('phone')}
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onFocus={() => setFocused('password')}
                   onBlur={() => setFocused(null)}
-                  placeholder="+380 50 123 45 67"
-                  inputMode="tel"
+                  placeholder="Ваш пароль"
                   disabled={loading}
                   required
+                  minLength={6}
                   className="w-full pl-11 pr-4 py-3.5 bg-white border border-stone-300 text-stone-900 placeholder:text-stone-400 focus:border-stone-900 focus:ring-1 focus:ring-stone-900 outline-none transition-all disabled:opacity-50"
                 />
               </div>
