@@ -617,7 +617,7 @@ export function Header({ className }: HeaderProps) {
             <Logo />
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:block ml-22">
+            <div className="hidden lg:flex flex-1 justify-end mr-4">
               <Navigation />
             </div>
 
