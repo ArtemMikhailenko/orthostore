@@ -16,6 +16,7 @@ import {
   ShoppingCart,
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
 const STATUS_MAP: Record<string, { label: string; color: string; Icon: typeof Package }> = {
@@ -78,8 +79,14 @@ function OrderCard({ order }: { order: Order }) {
           <div className="space-y-3">
             {order.items.map((item, i) => (
               <div key={i} className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-stone-100 flex items-center justify-center shrink-0">
-                  <Package className="w-5 h-5 text-stone-400" />
+                <div className="w-10 h-10 bg-stone-100 shrink-0 overflow-hidden">
+                  {item.image ? (
+                    <Image src={item.image} alt={item.title || item.sku} width={40} height={40} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <Package className="w-5 h-5 text-stone-400" />
+                    </div>
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-sm font-medium text-stone-900 truncate">{item.title}</div>

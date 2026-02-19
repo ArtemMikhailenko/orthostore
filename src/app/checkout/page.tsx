@@ -602,13 +602,13 @@ export default function CheckoutPage() {
                         const clientId = getClientId() || crypto.randomUUID();
                         const idempotencyKey = crypto.randomUUID();
                         const fullName = [formData.firstName, formData.lastName].filter(Boolean).join(' ');
-                        await apiCreateOrder(
+                        const order = await apiCreateOrder(
                           {
                             phone: formData.phone,
                             clientId,
                             items: cartItems.map((item) => ({
                               productId: item.id,
-                              sku: item.id,
+                              sku: item.sku || item.id,
                               quantity: item.quantity,
                               price: item.price,
                               title: item.name,
@@ -620,6 +620,8 @@ export default function CheckoutPage() {
                           },
                           idempotencyKey
                         );
+                        // Save order for order-status page
+                        try { sessionStorage.setItem('lastOrder', JSON.stringify(order)); } catch {}
                         clearCart();
                         router.push('/order-status');
                       } catch (err: unknown) {

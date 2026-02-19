@@ -4,12 +4,12 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
 export type CartItem = {
-  id: string; // product id or sku
+  id: string; // product id
+  sku: string; // variant SKU (артикул)
   name: string;
   price: number;
   imageUrl?: string;
   quantity: number;
-  // Optional metadata for future use
   brand?: string;
 };
 

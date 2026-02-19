@@ -58,6 +58,7 @@ export interface OrderItem {
   manufacturerId?: string;
   countryId?: string;
   unit?: string;
+  image?: string;
   discountsApplied?: Array<{
     discountId: string;
     name: string;
