@@ -95,10 +95,10 @@ export function WhyChooseUsSection({ className }: WhyChooseUsSectionProps) {
               </div>
 
               <div className="space-y-3 pt-4">
-                <button className="w-full bg-white text-stone-900 py-3 px-6 hover:bg-stone-100 transition-colors">
+                <button className="w-full bg-white text-stone-900 py-3 px-6 hover:bg-stone-100 transition-colors rounded-lg">
                   Связаться с нами
                 </button>
-                <button className="w-full border border-white text-white py-3 px-6 hover:bg-white hover:text-stone-900 transition-colors">
+                <button className="w-full border border-white text-white py-3 px-6 hover:bg-white hover:text-stone-900 transition-colors rounded-lg">
                   Посмотреть каталог
                 </button>
               </div>

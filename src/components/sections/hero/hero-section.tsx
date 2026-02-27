@@ -23,11 +23,11 @@ export function HeroSection({ className }: HeroSectionProps) {
             {/* Main Headline */}
             <div className="space-y-4">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-light text-stone-900 leading-[1.1]">
-                Професійне
+                Професійі
                 <br />
-                <span className="font-normal text-stone-900">ортодонтичне</span>
+                <span className="font-normal text-stone-900">ортодонтичні</span>
                 <br />
-                <span className="font-light text-stone-900">обладнання</span>
+                <span className="font-light text-stone-900">матеріали</span>
               </h1>
             </div>
 
@@ -70,7 +70,7 @@ export function HeroSection({ className }: HeroSectionProps) {
             <div className="flex flex-col sm:flex-row gap-4 pt-2">
               <Link 
                 href="/catalog"
-                className="inline-flex items-center justify-center bg-stone-900 text-white px-8 lg:px-10 py-3.5 lg:py-4 font-medium hover:bg-stone-800 transition-all duration-300 text-sm lg:text-base"
+                className="inline-flex items-center justify-center bg-stone-900 text-white px-8 lg:px-10 py-3.5 lg:py-4 font-medium hover:bg-stone-800 transition-all duration-300 text-sm lg:text-base rounded-lg"
               >
                 Каталог продукції
                 <ArrowRight className="w-4 h-4 ml-2" />
@@ -78,7 +78,7 @@ export function HeroSection({ className }: HeroSectionProps) {
               
               <Link 
                 href="/contacts"
-                className="inline-flex items-center justify-center border-2 border-stone-900 text-stone-900 px-8 lg:px-10 py-3.5 lg:py-4 font-medium hover:bg-stone-900 hover:text-white transition-all duration-300 text-sm lg:text-base"
+                className="inline-flex items-center justify-center border-2 border-stone-900 text-stone-900 px-8 lg:px-10 py-3.5 lg:py-4 font-medium hover:bg-stone-900 hover:text-white transition-all duration-300 text-sm lg:text-base rounded-lg"
               >
                 Отримати консультацію
               </Link>

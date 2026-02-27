@@ -90,13 +90,13 @@ export default function ForgotPasswordPage() {
               <div className="flex flex-col gap-3 pt-4">
                 <button
                   onClick={() => { setSent(false); setEmail(''); }}
-                  className="w-full py-3 border border-stone-300 text-stone-700 font-medium hover:bg-stone-100 transition-colors"
+                  className="w-full py-3 border border-stone-300 text-stone-700 font-medium hover:bg-stone-100 transition-colors rounded-lg"
                 >
                   Спробувати іншу адресу
                 </button>
                 <Link
                   href="/login"
-                  className="w-full py-3 bg-stone-900 text-white font-medium hover:bg-stone-800 transition-colors text-center"
+                  className="w-full py-3 bg-stone-900 text-white font-medium hover:bg-stone-800 transition-colors text-center rounded-lg"
                 >
                   Повернутися до входу
                 </Link>
@@ -148,7 +148,7 @@ export default function ForgotPasswordPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full flex items-center justify-center gap-2 bg-stone-900 text-white py-3.5 font-medium hover:bg-stone-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
+                  className="w-full flex items-center justify-center gap-2 bg-stone-900 text-white py-3.5 font-medium hover:bg-stone-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed group rounded-lg"
                 >
                   {loading ? (
                     <>

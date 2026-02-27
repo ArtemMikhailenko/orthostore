@@ -15,10 +15,10 @@ const products = [
     id: 1,
     title: 'Преміум брекети зі знижкою',
     category: '',
-    description: 'Спеціальна пропозиція на самолігуючі брекет-системи преміум класу. Обмежена кількість!',
+    description: 'Спеціальна пропозиція на самолігуючі брекет-системи преміум класу.',
     discount: '-15%',
-    oldPrice: '2 940 грн',
-    price: '2 500 грн',
+    oldPrice: '2 940 ₴',
+    price: '2 500 ₴',
     image: '1',
     color: 'from-yellow-300 to-yellow-400',
     badge: 'Хіт продажів',
@@ -35,12 +35,12 @@ const products = [
     description: 'При покупці 2 упаковок ортодонтичних дуг - третя у подарунок',
     discount: '33%',
     oldPrice: '',
-    price: '700 грн',
+    price: '700 ₴',
     image: '2',
     color: 'from-yellow-300 to-yellow-500',
     badge: '2+1 у подарунок',
     features: [
-      'Економія до 350 грн',
+      'Економія до 350 ₴',
       'Всі популярні розміри',
       'Обмежена пропозиція'
     ]
@@ -51,8 +51,8 @@ const products = [
     category: 'РОЗПРОДАЖ',
     description: 'Додаткові товари або знижка 5-8% на весь асортимент лігатур та еластиків',
     discount: 'до -8%',
-    oldPrice: '130 грн',
-    price: 'від 120 грн',
+    oldPrice: '130 ₴',
+    price: 'від 120 ₴',
     image: '3',
     color: 'from-yellow-400 to-yellow-500',
     badge: 'Вигідно',
@@ -68,13 +68,13 @@ const products = [
     category: 'НОВИНКА',
     description: 'Комплексне рішення для початківців. Все необхідне в одному наборі за спеціальною ціною',
     discount: '-20%',
-    oldPrice: '1 060 грн',
-    price: '850 грн',
+    oldPrice: '1 060 ₴',
+    price: '850 ₴',
     image: '4',
     color: 'from-yellow-300 to-yellow-600',
     badge: 'Новинка',
     features: [
-      'Економія понад 200 грн',
+      'Економія понад 200 ₴',
       'Готове рішення "під ключ"',
       'Гарантія якості'
     ]
@@ -155,7 +155,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
   };
 
   return (
-    <section className={cn('py-24 bg-stone-50 relative overflow-hidden', className)}>
+    <section className={cn('py-16 bg-stone-50 relative overflow-hidden', className)}>
       <div className="container mx-auto px-6">
         
         {/* Header */}
@@ -163,25 +163,24 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-10"
         >
-          <h2 className="text-4xl md:text-5xl font-light text-stone-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-light text-stone-900 mb-3">
             Акційні пропозиції
           </h2>
           
-          <div className="w-16 h-px bg-stone-900 mx-auto mb-6"></div>
           
-          <p className="text-stone-600 max-w-2xl mx-auto">
+          <p className="text-stone-600 max-w-3xl mx-auto border-2 border-stone-900 rounded-xl px-6 py-3">
             Вигідні пропозиції на професійну ортодонтичну продукцію. Обмежена кількість!
           </p>
         </motion.div>
 
         {/* Main Slider */}
-        <div className="relative mb-16">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="relative mb-8">
+          <div className="grid lg:grid-cols-2 gap-6 items-center">
             
             {/* Left: Visual Card with Animation */}
-            <div className="relative h-[500px]">
+            <div className="relative h-[450px]">
               <AnimatePresence initial={false} custom={direction}>
                 <motion.div
                   key={currentIndex}
@@ -199,7 +198,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                 >
                   <div 
                     className={cn(
-                      'h-full border-2 border-stone-900 bg-gradient-to-br relative overflow-hidden',
+                      'h-full border-2 border-stone-900 bg-gradient-to-br relative overflow-hidden rounded-2xl',
                       currentProduct.color
                     )}
                   >
@@ -233,7 +232,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                     {/* Top Badge */}
                     
                     {/* Discount Badge */}
-                    <div className="absolute top-8 right-8 bg-white border-2 border-stone-900 px-6 py-3">
+                    <div className="absolute top-8 right-8 bg-white border-2 border-stone-900 px-6 py-3 rounded-xl">
                       <div className="text-3xl font-bold text-stone-900">{currentProduct.discount}</div>
                     </div>
 
@@ -241,7 +240,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                     <div className="absolute bottom-0 left-0 right-0 bg-stone-900 text-white p-6">
                       <div className="flex items-center justify-between">
                         <h3 className="text-xl font-medium">{currentProduct.title}</h3>
-                        <div className="flex items-center gap-2 bg-yellow-400 text-stone-900 px-3 py-1">
+                        <div className="flex items-center gap-2 bg-yellow-400 text-stone-900 px-3 py-1 rounded-lg">
                           <Star className="w-4 h-4 fill-stone-900" />
                           <span className="text-sm font-medium">{currentProduct.badge}</span>
                         </div>
@@ -257,30 +256,30 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
               key={currentIndex}
               initial="hidden"
               animate="visible"
-              className="space-y-6"
+              className="space-y-4"
             >
               <motion.div custom={0} variants={cardVariants}>
                 
-                <h3 className="text-3xl font-light text-stone-900 mb-3 mt-2">
+                <h3 className="text-2xl font-light text-stone-900 mb-2">
                   {currentProduct.title}
                 </h3>
-                <p className="text-stone-700 leading-relaxed">
+                <p className="text-stone-700 leading-relaxed text-sm">
                   {currentProduct.description}
                 </p>
               </motion.div>
 
               {/* Features List */}
-              <motion.div custom={1} variants={cardVariants} className="space-y-3">
+              <motion.div custom={1} variants={cardVariants} className="space-y-2">
                 {currentProduct.features.map((feature, idx) => (
                   <motion.div
                     key={idx}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.3 + idx * 0.1 }}
-                    className="flex items-center gap-3 p-3 border border-stone-200 bg-white"
+                    className="flex items-center gap-3 p-2 border border-stone-200 bg-white rounded-lg"
                   >
                     <div className="w-1.5 h-1.5 bg-stone-900 rounded-full flex-shrink-0"></div>
-                    <span className="text-stone-700">{feature}</span>
+                    <span className="text-stone-700 text-sm">{feature}</span>
                   </motion.div>
                 ))}
               </motion.div>
@@ -289,11 +288,11 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
               <motion.div
                 custom={1.5}
                 variants={cardVariants}
-                className="border-2 border-stone-900 bg-stone-900 p-4"
+                className="border-2 border-red-500 bg-white p-3 rounded-xl shadow-[0_0_20px_rgba(239,68,68,0.3)] hover:shadow-[0_0_30px_rgba(239,68,68,0.5)] transition-shadow duration-300"
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-xs text-stone-400 uppercase tracking-wider mb-1">До кінця акції</div>
+                    <div className="text-xs text-stone-600 uppercase tracking-wider mb-1 font-medium">До кінця акції</div>
                     <div className="text-[10px] text-stone-500">Встигніть замовити!</div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -309,13 +308,13 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                             key={unit.value}
                             initial={{ y: -8, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
-                            className="text-2xl font-bold text-white tabular-nums min-w-[2ch]"
+                            className="text-3xl font-bold text-red-600 tabular-nums min-w-[2ch]"
                           >
                             {String(unit.value).padStart(2, '0')}
                           </motion.div>
                           <div className="text-[9px] text-stone-500 uppercase">{unit.label}</div>
                         </div>
-                        {i < 3 && <span className="text-white/40 text-xl font-light -mt-3">:</span>}
+                        {i < 3 && <span className="text-red-400 text-xl font-light -mt-3">:</span>}
                       </React.Fragment>
                     ))}
                   </div>
@@ -326,36 +325,36 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
               <motion.div 
                 custom={2} 
                 variants={cardVariants}
-                className="pt-4 border-t-2 border-stone-200"
+                className="pt-3 border-t-2 border-stone-200"
               >
-                <div className="flex items-baseline gap-4 mb-4">
+                <div className="flex items-baseline gap-4 mb-3">
                   <div>
-                    <span className="text-sm text-stone-500 block mb-1">Акційна ціна</span>
-                    <span className="text-3xl font-semibold text-red-700">
+                    <span className="text-lg text-stone-600 block mb-2 font-medium">Акційна ціна</span>
+                    <span className="text-4xl font-bold text-red-600">
                       {currentProduct.price}
                     </span>
                   </div>
                   {currentProduct.oldPrice && (
-                    <div className="-translate-y-1">
-                      <span className="text-base text-stone-400 line-through">
+                    <div className="translate-y-2">
+                      <span className="text-xl text-stone-500 line-through">
                         {currentProduct.oldPrice}
                       </span>
                     </div>
                   )}
                 </div>
                 
-                <div className="flex gap-3">
+                <div className="flex gap-2">
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
+                    whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.95 }}
-                    className="flex-1 border-2 border-stone-900 bg-stone-900 text-white px-6 py-3 hover:bg-transparent hover:text-stone-900 transition-colors duration-300 font-medium"
+                    className="flex-1 border-2 border-stone-900 bg-stone-900 text-white px-4 py-4 hover:bg-transparent hover:text-stone-900 transition-colors duration-300 font-medium rounded-lg text-sm"
                   >
                     Замовити зараз
                   </motion.button>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="border-2 border-stone-300 px-6 py-3 hover:border-stone-900 transition-colors duration-300 font-medium"
+                    className="border-2 border-stone-300 px-4 py-4 hover:border-stone-900 transition-colors duration-300 font-medium rounded-lg text-sm"
                   >
                     Деталі
                   </motion.button>
@@ -365,20 +364,18 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
           </div>
 
           {/* Navigation Controls */}
-          <div className="flex items-center justify-center gap-8 mt-12">
+          <div className="flex items-center justify-center gap-6 mt-6">
             {/* Previous Button */}
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              animate={currentIndex > 0 ? { boxShadow: ['0 0 0px rgba(28,25,23,0)', '0 0 12px rgba(28,25,23,0.3)', '0 0 0px rgba(28,25,23,0)'] } : {}}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
               onClick={() => paginate(-1)}
               disabled={currentIndex === 0}
               className={cn(
-                "w-12 h-12 border-2 flex items-center justify-center transition-all duration-300",
+                "w-12 h-12 border-2 flex items-center justify-center transition-all duration-300 rounded-xl",
                 currentIndex === 0
                   ? "border-stone-300 text-stone-300 cursor-not-allowed"
-                  : "border-stone-900 bg-white hover:bg-stone-900 hover:text-white"
+                  : "border-stone-900 bg-white hover:bg-stone-900 hover:text-white hover:shadow-[0_0_40px_rgba(56,189,248,0.9),0_0_60px_rgba(56,189,248,0.5)]"
               )}
               aria-label="Попередній товар"
             >
@@ -395,7 +392,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                   onClick={() => goToSlide(index)}
                   whileHover={{ scale: 1.2 }}
                   className={cn(
-                    'h-2 transition-all duration-300',
+                    'h-2 transition-all duration-300 rounded-full',
                     currentIndex === index 
                       ? 'w-12 bg-stone-900' 
                       : 'w-2 bg-stone-300 hover:bg-stone-500'
@@ -409,15 +406,13 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              animate={currentIndex < products.length - 1 ? { boxShadow: ['0 0 0px rgba(28,25,23,0)', '0 0 12px rgba(28,25,23,0.3)', '0 0 0px rgba(28,25,23,0)'] } : {}}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
               onClick={() => paginate(1)}
               disabled={currentIndex === products.length - 1}
               className={cn(
-                "w-12 h-12 border-2 flex items-center justify-center transition-all duration-300",
+                "w-12 h-12 border-2 flex items-center justify-center transition-all duration-300 rounded-xl",
                 currentIndex === products.length - 1
                   ? "border-stone-300 text-stone-300 cursor-not-allowed"
-                  : "border-stone-900 bg-white hover:bg-stone-900 hover:text-white"
+                  : "border-stone-900 bg-white hover:bg-stone-900 hover:text-white hover:shadow-[0_0_40px_rgba(56,189,248,0.9),0_0_60px_rgba(56,189,248,0.5)]"
               )}
               aria-label="Наступний товар"
             >
@@ -429,7 +424,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
         </div>
 
         {/* All Products Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {products.map((product, index) => (
             <motion.button
               key={product.id}
@@ -439,7 +434,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
               transition={{ delay: index * 0.1 }}
               whileHover={{ y: -8, transition: { duration: 0.2 } }}
               className={cn(
-                'text-left border-2 p-6 transition-all duration-300 bg-white group',
+                'text-left border-2 p-6 transition-all duration-300 bg-white group rounded-xl',
                 currentIndex === index 
                   ? 'border-stone-900 shadow-lg' 
                   : 'border-stone-300 hover:border-stone-600 hover:shadow-md'
@@ -447,7 +442,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
             >
               <div 
                 className={cn(
-                  'w-full aspect-square mb-4 border-2 bg-gradient-to-br relative overflow-hidden',
+                  'w-full aspect-square mb-4 border-2 bg-gradient-to-br relative overflow-hidden rounded-lg',
                   product.color,
                   currentIndex === index ? 'border-stone-900' : 'border-stone-300'
                 )}
@@ -461,7 +456,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                 <div className="absolute inset-0 bg-gradient-to-br from-black/10 to-transparent" />
                 
                 {/* Discount Badge on Mini Card */}
-                <div className="absolute top-2 right-2 bg-stone-900 text-white px-2 py-1 text-xs font-bold z-10">
+                <div className="absolute top-2 right-2 bg-stone-900 text-white px-2 py-1 text-xs font-bold z-10 rounded">
                   {product.discount}
                 </div>
                 
@@ -484,7 +479,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                   {product.title}
                 </h4>
                 <div className="flex items-baseline gap-2">
-                  <p className="text-base font-semibold text-red-700">
+                  <p className="text-xl font-bold text-red-600">
                     {product.price}
                   </p>
                   {product.oldPrice && (
@@ -503,15 +498,15 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="text-center mt-16"
+          className="text-center mt-12"
         >
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="border-2 border-stone-900 px-12 py-4 hover:bg-stone-900 hover:text-white transition-all duration-300 font-medium inline-flex items-center gap-3"
+            className="border-2 border-stone-900 px-12 py-4 hover:bg-stone-900 hover:text-white transition-all duration-300 font-medium inline-flex items-center gap-3 rounded-lg"
           >
             <ShoppingBag className="w-5 h-5" />
-            Всі акційні пропозиції
+            Усі акційні пропозиції
           </motion.button>
         </motion.div>
       </div>

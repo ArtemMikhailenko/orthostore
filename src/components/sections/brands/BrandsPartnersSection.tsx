@@ -332,7 +332,7 @@ export function BrandsPartnersSection({ className }: BrandsPartnersSectionProps)
                 </div>
               </div>
               
-              <button className="bg-white text-gray-900 px-8 py-3 font-medium hover:bg-gray-100 transition-colors uppercase tracking-wider text-sm">
+              <button className="bg-white text-gray-900 px-8 py-3 font-medium hover:bg-gray-100 transition-colors uppercase tracking-wider text-sm rounded-lg">
                 Стать партнером
               </button>
             </div>

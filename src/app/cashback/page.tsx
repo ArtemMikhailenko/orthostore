@@ -397,10 +397,10 @@ export default function CashbackPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
-              <button className="bg-stone-900 text-white px-10 py-4 text-lg font-medium hover:bg-stone-800 transition-colors">
+              <button className="bg-stone-900 text-white px-10 py-4 text-lg font-medium hover:bg-stone-800 transition-colors rounded-lg">
                 Зареєструватись
               </button>
-              <button className="bg-white text-stone-900 px-10 py-4 text-lg font-medium border-2 border-stone-900 hover:bg-stone-900 hover:text-white transition-all">
+              <button className="bg-white text-stone-900 px-10 py-4 text-lg font-medium border-2 border-stone-900 hover:bg-stone-900 hover:text-white transition-all rounded-lg">
                 Дізнатись більше
               </button>
             </div>

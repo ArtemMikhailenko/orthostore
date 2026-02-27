@@ -632,7 +632,7 @@ export default function CheckoutPage() {
                       }
                     }}
                     disabled={submitting || cartItems.length === 0}
-                    className="w-full bg-emerald-500 text-white py-4 hover:bg-emerald-600 transition-colors font-semibold text-lg shadow-lg shadow-emerald-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="w-full bg-emerald-500 text-white py-4 hover:bg-emerald-600 transition-colors font-semibold text-lg shadow-lg shadow-emerald-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-lg"
                   >
                     {submitting ? (
                       <>

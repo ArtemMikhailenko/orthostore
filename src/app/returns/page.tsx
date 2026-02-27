@@ -200,7 +200,7 @@ export default function ReturnsPage() {
             </p>
             <a 
               href="tel:+380503039494"
-              className="inline-flex items-center gap-3 bg-stone-900 text-white px-8 py-4 font-medium hover:bg-stone-800 transition-all duration-300"
+              className="inline-flex items-center gap-3 bg-stone-900 text-white px-8 py-4 font-medium hover:bg-stone-800 transition-all duration-300 rounded-lg"
             >
               <Phone className="w-5 h-5" />
               +380 50 303 94 94

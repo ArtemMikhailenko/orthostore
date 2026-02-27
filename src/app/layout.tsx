@@ -1,14 +1,15 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Montserrat } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/layout/header/header';
 import { FooterSection } from '@/components/layout/footer/footer';
 import { AIChatWidget } from '@/components/ai-chat/ai-chat-widget';
+import { SplashScreen } from '@/components/splash-screen';
 import Providers from './providers';
 
-const inter = Inter({ 
+const montserrat = Montserrat({ 
   subsets: ['latin', 'cyrillic'],
-  variable: '--font-inter'
+  variable: '--font-montserrat'
 });
 
 export const metadata: Metadata = {
@@ -46,18 +47,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="uk" className={inter.variable}>
+    <html lang="uk" className={montserrat.variable}>
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <meta name="theme-color" content="#2563eb" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
       </head>
-      <body className={`${inter.className} antialiased`}>
-        {/* Умный хедер */}
+      <body className={`${montserrat.className} antialiased`}>
+        <SplashScreen>
+        {/* Умний хедер */}
         <Header />
         
-        {/* Основной контент */}
+        {/* Основний контент */}
         <Providers>
           <main className="min-h-screen">
             {children}
@@ -68,6 +70,7 @@ export default function RootLayout({
         <AIChatWidget />
         
         <FooterSection/>
+        </SplashScreen>
         {/* Дополнительные скрипты */}
         <script
           dangerouslySetInnerHTML={{

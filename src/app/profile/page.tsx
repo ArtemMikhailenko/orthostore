@@ -72,7 +72,7 @@ export default function ProfilePage() {
           </div>
           <button
             onClick={() => { logout(); router.push('/'); }}
-            className="flex items-center gap-2 px-4 py-2 text-stone-600 hover:text-red-600 hover:bg-red-50 transition-colors text-sm font-medium"
+            className="flex items-center gap-2 px-4 py-2 text-stone-600 hover:text-red-600 hover:bg-red-50 transition-colors text-sm font-medium rounded-lg"
           >
             <LogOut className="w-4 h-4" />
             Вийти

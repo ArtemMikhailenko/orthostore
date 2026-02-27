@@ -117,7 +117,7 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
   };
 
   return (
-    <section className={cn('py-32 bg-white', className)}>
+    <section className={cn('py-16 bg-white', className)}>
       <div className="container mx-auto px-6">
         
         {/* Header */}
@@ -186,14 +186,14 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
         <div className="grid lg:grid-cols-2 gap-8">
           
           {/* Left: ORTHOSTORE рекомендує - Doctors */}
-          <div className="border-2 border-stone-200 bg-white h-full flex flex-col">
+          <div className="border-2 border-stone-200 bg-white h-full flex flex-col rounded-xl overflow-hidden">
             {/* Header */}
-            <div className="bg-stone-900 text-white px-6 py-5 flex-shrink-0">
+            <div className="bg-stone-900 text-white px-5 py-3 flex-shrink-0">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-medium uppercase tracking-wider">
+                <h3 className="text-base font-medium uppercase tracking-wider">
                   ORTHOSTORE рекомендує
                 </h3>
-                <Quote className="w-5 h-5 opacity-50" />
+                <Quote className="w-4 h-4 opacity-50" />
               </div>
               <p className="text-stone-400 text-xs mt-1">
                 Лікарі та клініки, які працюють з нами
@@ -201,7 +201,7 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
             </div>
 
             {/* Doctor Card - with fixed height */}
-            <div className="p-6 flex-1 flex flex-col min-h-[420px]">
+            <div className="p-4 flex-1 flex flex-col min-h-[260px]">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeTestimonial}
@@ -216,11 +216,11 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
                   className="flex-1 flex flex-col"
                 >
                   {/* Doctor Photo */}
-                  <div className="aspect-[4/3] border-2 border-stone-200 bg-stone-50 flex items-center justify-center relative overflow-hidden mb-6">
+                  <div className="aspect-video border-2 border-stone-200 bg-stone-50 flex items-center justify-center relative overflow-hidden mb-3 rounded-lg">
                     <div className="absolute inset-0 bg-gradient-to-br from-stone-100 to-stone-200"></div>
                     <div className="relative z-10 text-center">
-                      <div className="w-20 h-20 border-2 border-stone-900 bg-white mx-auto flex items-center justify-center">
-                        <span className="text-2xl font-bold text-stone-900">
+                      <div className="w-16 h-16 border-2 border-stone-900 bg-white mx-auto flex items-center justify-center rounded-lg">
+                        <span className="text-xl font-bold text-stone-900">
                           {currentTestimonial.doctorName.split(' ')[1]?.[0] || 'О'}
                         </span>
                       </div>
@@ -228,9 +228,9 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
                   </div>
 
                   {/* Doctor Info */}
-                  <div className="space-y-4 flex-1">
+                  <div className="space-y-2 flex-1">
                     <div>
-                      <h4 className="text-xl font-medium text-stone-900 mb-1">
+                      <h4 className="text-lg font-medium text-stone-900 mb-1">
                         {currentTestimonial.doctorName}
                       </h4>
                       <p className="text-stone-600 text-sm">
@@ -251,7 +251,7 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
               </AnimatePresence>
 
               {/* Navigation */}
-              <div className="flex items-center justify-between pt-6 mt-auto border-t-2 border-stone-200">
+              <div className="flex items-center justify-between pt-4 mt-auto border-t-2 border-stone-200">
                 <div className="flex gap-2">
                   {testimonials.map((_, index) => (
                     <button
@@ -261,7 +261,7 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
                         setActiveTestimonial(index);
                       }}
                       className={cn(
-                        'h-1 transition-all duration-300',
+                        'h-1 transition-all duration-300 rounded-full',
                         activeTestimonial === index 
                           ? 'w-8 bg-stone-900' 
                           : 'w-1 bg-stone-300 hover:bg-stone-500'
@@ -276,7 +276,7 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={prevTestimonial}
-                    className="w-9 h-9 border-2 border-stone-900 flex items-center justify-center hover:bg-stone-900 hover:text-white transition-all"
+                    className="w-8 h-8 border-2 border-stone-900 flex items-center justify-center hover:bg-stone-900 hover:text-white transition-all rounded-lg"
                     aria-label="Попередній"
                   >
                     <ChevronLeft className="w-4 h-4" />
@@ -285,7 +285,7 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={nextTestimonial}
-                    className="w-9 h-9 border-2 border-stone-900 flex items-center justify-center hover:bg-stone-900 hover:text-white transition-all"
+                    className="w-8 h-8 border-2 border-stone-900 flex items-center justify-center hover:bg-stone-900 hover:text-white transition-all rounded-lg"
                     aria-label="Наступний"
                   >
                     <ChevronRight className="w-4 h-4" />
@@ -296,14 +296,14 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
           </div>
 
           {/* Right: Рекомендовані клініки */}
-          <div className="border-2 border-stone-200 bg-white h-full flex flex-col">
+          <div className="border-2 border-stone-200 bg-white h-full flex flex-col rounded-xl overflow-hidden">
             {/* Header */}
-            <div className="bg-stone-50 border-b-2 border-stone-200 px-6 py-5 flex-shrink-0">
+            <div className="bg-stone-50 border-b-2 border-stone-200 px-5 py-3 flex-shrink-0">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-medium text-stone-900 uppercase tracking-wider">
+                <h3 className="text-base font-medium text-stone-900 uppercase tracking-wider">
                   Рекомендовані клініки
                 </h3>
-                <Star className="w-5 h-5 fill-stone-900 text-stone-900" />
+                <Star className="w-4 h-4 fill-stone-900 text-stone-900" />
               </div>
               <p className="text-stone-600 text-xs mt-1">
                 Для найкращого лікування наших пацієнтів
@@ -311,7 +311,7 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
             </div>
 
             {/* Clinic Card - with fixed height */}
-            <div className="p-6 flex-1 flex flex-col min-h-[420px]">
+            <div className="p-4 flex-1 flex flex-col min-h-[260px]">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeTestimonial}
@@ -326,10 +326,10 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
                   className="flex-1 flex flex-col"
                 >
                   {/* Clinic Photo */}
-                  <div className="aspect-[4/3] border-2 border-stone-900 bg-stone-900 flex items-center justify-center relative overflow-hidden mb-6">
+                  <div className="aspect-video border-2 border-stone-900 bg-stone-900 flex items-center justify-center relative overflow-hidden mb-3 rounded-lg">
                     <div className="absolute inset-0 bg-gradient-to-br from-stone-800 to-stone-900"></div>
                     <div className="relative z-10 text-center text-white">
-                      <div className="text-2xl font-light mb-1">
+                      <div className="text-xl font-light mb-1">
                         {currentTestimonial.clinicName}
                       </div>
                       <div className="text-xs text-stone-400">
@@ -339,9 +339,9 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
                   </div>
 
                   {/* Clinic Info */}
-                  <div className="space-y-4 flex-1">
+                  <div className="space-y-2 flex-1">
                     <div>
-                      <h4 className="text-xl font-medium text-stone-900 mb-2">
+                      <h4 className="text-lg font-medium text-stone-900 mb-2">
                         {currentTestimonial.clinicName}
                       </h4>
                       <p className="text-stone-600 text-sm flex items-center gap-2">
@@ -361,7 +361,7 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
                       {currentTestimonial.clinicServices.map((service, idx) => (
                         <span
                           key={idx}
-                          className="px-2 py-1 border border-stone-300 text-stone-700 text-xs"
+                          className="px-2 py-1 border border-stone-300 text-stone-700 text-xs rounded-md"
                         >
                           {service}
                         </span>
@@ -373,7 +373,7 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full border-2 border-stone-900 bg-stone-900 text-white px-6 py-3 hover:bg-transparent hover:text-stone-900 transition-all duration-300 font-medium uppercase tracking-wider text-sm mt-6"
+                    className="w-full border-2 border-stone-900 bg-stone-900 text-white px-5 py-2.5 hover:bg-transparent hover:text-stone-900 transition-all duration-300 font-medium uppercase tracking-wider text-sm mt-4 rounded-lg"
                   >
                     Записатися на прийом
                   </motion.button>

@@ -237,7 +237,7 @@ function SmartFilters({
               </div>
             </div>
             <div className="flex-shrink-0 p-4 border-t border-stone-200 bg-stone-50 flex gap-3">
-              <button onClick={clear} className="flex-1 px-4 py-2 text-stone-600 hover:text-stone-900 transition-colors font-medium">Очистити</button>
+              <button onClick={clear} className="flex-1 px-4 py-2 text-stone-600 hover:text-stone-900 transition-colors font-medium rounded-lg">Очистити</button>
               <button onClick={() => setIsOpen(false)} className="flex-1 px-4 py-2 bg-stone-900 text-white rounded-lg hover:bg-stone-800 transition-colors font-medium">Застосувати</button>
             </div>
           </div>
@@ -330,7 +330,7 @@ function ProductCard({ product }: { product: UiProduct }) {
         <div className={cn('absolute bottom-0 left-0 right-0 p-4 transition-all duration-500', isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full')}>
           <button
             onClick={e => { e.stopPropagation(); addItem({ id: product.id, sku: product.sku, name: product.name, price: product.price, imageUrl: product.imageUrl, brand: product.brand }, 1); openCart(); }}
-            className="w-full bg-stone-900 text-white py-2.5 font-medium hover:bg-stone-800 transition-all duration-300 flex items-center justify-center gap-2"
+            className="w-full bg-stone-900 text-white py-2.5 font-medium hover:bg-stone-800 transition-all duration-300 flex items-center justify-center gap-2 rounded-lg"
           >
             <ShoppingCart className="w-4 h-4" />
             Додати в кошик
@@ -451,7 +451,7 @@ function ProductListCard({ product }: { product: UiProduct }) {
           </div>
           <button
             onClick={() => { addItem({ id: product.id, sku: product.sku, name: product.name, price: product.price, imageUrl: product.imageUrl, brand: product.brand }, 1); openCart(); }}
-            className="flex items-center gap-2 bg-stone-900 text-white px-4 py-2 hover:bg-stone-800 transition-colors text-sm font-medium"
+            className="flex items-center gap-2 bg-stone-900 text-white px-4 py-2 hover:bg-stone-800 transition-colors text-sm font-medium rounded-lg"
           >
             <ShoppingCart className="w-4 h-4" />
             <span className="hidden sm:inline">В кошик</span>

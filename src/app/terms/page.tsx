@@ -37,11 +37,11 @@ export default function TermsPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-              <button className="inline-flex items-center gap-2 bg-stone-900 text-white px-6 py-3 border-2 border-stone-900 hover:bg-white hover:text-stone-900 transition-colors">
+              <button className="inline-flex items-center gap-2 bg-stone-900 text-white px-6 py-3 border-2 border-stone-900 hover:bg-white hover:text-stone-900 transition-colors rounded-lg">
                 <Download className="w-5 h-5" />
                 Завантажити PDF
               </button>
-              <button className="inline-flex items-center gap-2 bg-white text-stone-900 px-6 py-3 border-2 border-stone-200 hover:border-stone-900 transition-colors">
+              <button className="inline-flex items-center gap-2 bg-white text-stone-900 px-6 py-3 border-2 border-stone-200 hover:border-stone-900 transition-colors rounded-lg">
                 <FileText className="w-5 h-5" />
                 Версія для друку
               </button>
@@ -360,10 +360,10 @@ export default function TermsPage() {
             Наша команда готова відповісти на будь-які питання та надати додаткову інформацію щодо умов співпраці
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="/contacts" className="inline-flex items-center gap-2 bg-stone-900 text-white px-6 py-3 border-2 border-stone-900 hover:bg-white hover:text-stone-900 transition-colors">
+            <a href="/contacts" className="inline-flex items-center gap-2 bg-stone-900 text-white px-6 py-3 border-2 border-stone-900 hover:bg-white hover:text-stone-900 transition-colors rounded-lg">
               Зв'язатись з нами
             </a>
-            <button className="inline-flex items-center gap-2 bg-white text-stone-900 px-6 py-3 border-2 border-stone-200 hover:border-stone-900 transition-colors">
+            <button className="inline-flex items-center gap-2 bg-white text-stone-900 px-6 py-3 border-2 border-stone-200 hover:border-stone-900 transition-colors rounded-lg">
               <Download className="w-5 h-5" />
               Завантажити договір
             </button>

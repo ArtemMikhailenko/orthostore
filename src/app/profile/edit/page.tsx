@@ -162,14 +162,14 @@ export default function ProfileEditPage() {
               <div className="flex gap-3 pt-2">
                 <Link
                   href="/profile"
-                  className="flex-1 py-3 border border-stone-300 text-stone-700 font-medium hover:bg-stone-100 transition-colors text-center"
+                  className="flex-1 py-3 border border-stone-300 text-stone-700 font-medium hover:bg-stone-100 transition-colors text-center rounded-lg"
                 >
                   Скасувати
                 </Link>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 flex items-center justify-center gap-2 bg-stone-900 text-white py-3 font-medium hover:bg-stone-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
+                  className="flex-1 flex items-center justify-center gap-2 bg-stone-900 text-white py-3 font-medium hover:bg-stone-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed group rounded-lg"
                 >
                   {loading ? (
                     <>

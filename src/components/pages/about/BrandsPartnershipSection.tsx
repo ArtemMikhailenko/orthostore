@@ -48,7 +48,7 @@ export function BrandsPartnershipSection({ className }: BrandsPartnershipSection
             Мы следуем инновациям в ортодонтии и предлагаем продукцию 
             высокого качества от ведущих мировых брендов.
           </p>
-          <button className="bg-stone-900 text-white px-8 py-3 hover:bg-stone-800 transition-colors">
+          <button className="bg-stone-900 text-white px-8 py-3 hover:bg-stone-800 transition-colors rounded-lg">
             Посмотреть все бренды
           </button>
         </div>

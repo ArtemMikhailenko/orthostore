@@ -214,7 +214,7 @@ export default function OrdersPage() {
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="px-4 py-2 border border-stone-300 text-stone-700 hover:bg-stone-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                  className="px-4 py-2 border border-stone-300 text-stone-700 hover:bg-stone-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm rounded-lg"
                 >
                   Назад
                 </button>
@@ -224,7 +224,7 @@ export default function OrdersPage() {
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page >= totalPages}
-                  className="px-4 py-2 border border-stone-300 text-stone-700 hover:bg-stone-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                  className="px-4 py-2 border border-stone-300 text-stone-700 hover:bg-stone-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm rounded-lg"
                 >
                   Далі
                 </button>
@@ -241,7 +241,7 @@ export default function OrdersPage() {
             <p className="text-stone-500 mb-8">Перейдіть до каталогу, щоб зробити перше замовлення</p>
             <Link
               href="/catalog"
-              className="inline-block bg-stone-900 text-white px-8 py-3 font-medium hover:bg-stone-800 transition-colors"
+              className="inline-block bg-stone-900 text-white px-8 py-3 font-medium hover:bg-stone-800 transition-colors rounded-lg"
             >
               Перейти до каталогу
             </Link>

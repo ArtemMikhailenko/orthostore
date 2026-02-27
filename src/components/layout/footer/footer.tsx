@@ -111,7 +111,7 @@ export function FooterSection({ className }: FooterSectionProps) {
               </div>
             </div>
             
-            <a href="/contacts" className="bg-white text-gray-900 px-8 py-3 font-medium hover:bg-gray-100 transition-colors uppercase tracking-wider text-sm">
+            <a href="/contacts" className="bg-white text-gray-900 px-8 py-3 font-medium hover:bg-gray-100 transition-colors uppercase tracking-wider text-sm rounded-lg">
               Зв'язок
             </a>
           </div>

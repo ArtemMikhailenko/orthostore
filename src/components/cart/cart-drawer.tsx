@@ -65,17 +65,17 @@ export function CartDrawer() {
                           <div className="text-xs text-stone-500 mt-0.5">{it.brand}</div>
                         ) : null}
                       </div>
-                      <button onClick={() => removeItem(it.id)} className="p-2 text-stone-400 hover:text-red-600 hover:bg-red-50">
+                      <button onClick={() => removeItem(it.id)} className="p-2 text-stone-400 hover:text-red-600 hover:bg-red-50 rounded">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                     <div className="mt-3 flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <button onClick={() => decrease(it.id)} className="p-1.5 border border-stone-300 text-stone-700 hover:bg-stone-50">
+                        <button onClick={() => decrease(it.id)} className="p-1.5 border border-stone-300 text-stone-700 hover:bg-stone-50 rounded">
                           <Minus className="w-4 h-4" />
                         </button>
                         <span className="w-8 text-center text-sm font-medium">{it.quantity}</span>
-                        <button onClick={() => increase(it.id)} className="p-1.5 border border-stone-300 text-stone-700 hover:bg-stone-50">
+                        <button onClick={() => increase(it.id)} className="p-1.5 border border-stone-300 text-stone-700 hover:bg-stone-50 rounded">
                           <Plus className="w-4 h-4" />
                         </button>
                       </div>
@@ -102,7 +102,7 @@ export function CartDrawer() {
             href="/checkout"
             onClick={close}
             className={cn(
-              'w-full inline-flex items-center justify-center gap-2 bg-stone-900 text-white py-3 hover:bg-stone-800 transition-colors',
+              'w-full inline-flex items-center justify-center gap-2 bg-stone-900 text-white py-3 hover:bg-stone-800 transition-colors rounded-lg',
               items.length === 0 && 'opacity-50 pointer-events-none'
             )}
           >

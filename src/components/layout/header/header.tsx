@@ -120,7 +120,7 @@ function TopBar() {
               </span>
             </div>
             <div className="text-stone-400 text-xs">
-              ПН-ПТ: 9:00-18:00 • СБ-НД: онлайн 24/7
+              ПН-ПТ: 9:00-18:00 
             </div>
           </div>
         </div>
