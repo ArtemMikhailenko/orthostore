@@ -369,8 +369,13 @@ function SearchBar({ isOpen, onToggle, isMobile = false }: { isOpen: boolean; on
 // Cart Button Component
 function CartButton() {
   const [isHovered, setIsHovered] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const count = useCartStore((s) => s.totalItems());
   const open = useCartStore((s) => s.open);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <button
@@ -386,7 +391,7 @@ function CartButton() {
           isHovered && "scale-110"
         )}
       />
-      {count > 0 && (
+      {mounted && count > 0 && (
         <span
           className={cn(
             "absolute -top-1 -right-1 min-w-5 h-5 px-1 bg-stone-900 text-white text-[10px] font-bold rounded-full flex items-center justify-center transition-all duration-300",
@@ -439,7 +444,7 @@ function UserMenu() {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-stone-200 shadow-xl z-50 overflow-hidden">
+        <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-stone-200 shadow-xl z-50 overflow-hidden rounded-lg">
           <div className="p-2">
             {isLoggedIn ? (
               <>

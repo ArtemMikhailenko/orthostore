@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
 import { useProducts, useManufacturers, useCategories, useCountries } from '@/lib/api/hooks';
 import type { ProductWithDiscounts } from '@/lib/api/public.types';
@@ -140,6 +141,8 @@ function SmartFilters({
   onChange: (f: CatalogFilters) => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
   const manufacturerIds = Array.isArray(value.manufacturerId) ? value.manufacturerId : value.manufacturerId ? [value.manufacturerId] : [];
   const countryIds = Array.isArray(value.countryId) ? value.countryId : value.countryId ? [value.countryId] : [];
   const priceTo = value.priceTo ?? 50000;
@@ -169,12 +172,30 @@ function SmartFilters({
         <ChevronDown className={cn('w-4 h-4 transition-transform duration-300', isOpen && 'rotate-180')} />
       </button>
 
-      {isOpen && (
+      {/* Portal: overlay + panel rendered outside sticky header to avoid backdrop-filter containment */}
+      {mounted && createPortal(
         <>
-          <div className="fixed inset-0 h-screen w-screen z-[100] bg-black/50 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
-          <div className="fixed top-0 left-0 z-[101] h-screen w-96 bg-white shadow-2xl flex flex-col">
+          {/* Overlay */}
+          <div
+            className={cn(
+              'fixed inset-0 z-[100] bg-black/30 backdrop-blur-sm transition-opacity duration-300',
+              isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+            )}
+            onClick={() => setIsOpen(false)}
+          />
+
+          {/* Panel */}
+          <aside
+            className={cn(
+              'fixed left-0 top-0 bottom-0 z-[101] w-96 max-w-[90vw] bg-white shadow-2xl border-r border-stone-200 rounded-r-2xl transition-transform duration-300 ease-out flex flex-col',
+              isOpen ? 'translate-x-0' : '-translate-x-full'
+            )}
+          >
             <div className="flex-shrink-0 p-6 border-b border-stone-200 flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-stone-900">Фільтри</h3>
+              <div className="flex items-center gap-3">
+                <SlidersHorizontal className="w-5 h-5 text-stone-700" />
+                <h3 className="text-lg font-semibold text-stone-900">Фільтри</h3>
+              </div>
               <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-stone-100 rounded-lg transition-colors"><X className="w-5 h-5" /></button>
             </div>
             <div className="flex-1 overflow-y-auto min-h-0">
@@ -188,8 +209,8 @@ function SmartFilters({
                       const label = pickI18n(m.nameI18n as any, 'uk');
                       const selected = manufacturerIds.includes(id);
                       return (
-                        <label key={id} className={cn('flex items-center gap-2 px-3 py-2 rounded-lg border cursor-pointer', selected ? 'border-stone-900 bg-stone-50' : 'border-stone-200')}>
-                          <input type="checkbox" checked={selected} onChange={e => {
+                        <label key={id} className={cn('flex items-center gap-2 px-3 py-2 rounded-xl border cursor-pointer transition-all', selected ? 'border-stone-900 bg-stone-50' : 'border-stone-200 hover:border-stone-300')}>
+                          <input type="checkbox" checked={selected} className="rounded" onChange={e => {
                             const next = e.target.checked ? [...manufacturerIds, id] : manufacturerIds.filter(x => x !== id);
                             setFilter({ manufacturerId: next.length ? next : undefined });
                           }} />
@@ -208,8 +229,8 @@ function SmartFilters({
                       const label = pickI18n(co.nameI18n as any, 'uk');
                       const selected = countryIds.includes(id);
                       return (
-                        <label key={id} className={cn('flex items-center gap-2 px-3 py-2 rounded-lg border cursor-pointer', selected ? 'border-stone-900 bg-stone-50' : 'border-stone-200')}>
-                          <input type="checkbox" checked={selected} onChange={e => {
+                        <label key={id} className={cn('flex items-center gap-2 px-3 py-2 rounded-xl border cursor-pointer transition-all', selected ? 'border-stone-900 bg-stone-50' : 'border-stone-200 hover:border-stone-300')}>
+                          <input type="checkbox" checked={selected} className="rounded" onChange={e => {
                             const next = e.target.checked ? [...countryIds, id] : countryIds.filter(x => x !== id);
                             setFilter({ countryId: next.length ? next : undefined });
                           }} />
@@ -236,12 +257,13 @@ function SmartFilters({
                 </div>
               </div>
             </div>
-            <div className="flex-shrink-0 p-4 border-t border-stone-200 bg-stone-50 flex gap-3">
-              <button onClick={clear} className="flex-1 px-4 py-2 text-stone-600 hover:text-stone-900 transition-colors font-medium rounded-lg">Очистити</button>
-              <button onClick={() => setIsOpen(false)} className="flex-1 px-4 py-2 bg-stone-900 text-white rounded-lg hover:bg-stone-800 transition-colors font-medium">Застосувати</button>
+            <div className="flex-shrink-0 p-4 border-t border-stone-200 bg-stone-50 rounded-br-2xl flex gap-3">
+              <button onClick={clear} className="flex-1 px-4 py-2 text-stone-600 hover:text-stone-900 transition-colors font-medium rounded-xl">Очистити</button>
+              <button onClick={() => setIsOpen(false)} className="flex-1 px-4 py-2 bg-stone-900 text-white rounded-xl hover:bg-stone-800 transition-colors font-medium">Застосувати</button>
             </div>
-          </div>
-        </>
+          </aside>
+        </>,
+        document.body
       )}
     </div>
   );
@@ -270,7 +292,7 @@ function ProductCard({ product }: { product: UiProduct }) {
   return (
     <div
       className={cn(
-        'group relative bg-white overflow-hidden transition-all duration-500 cursor-pointer',
+        'group relative bg-white overflow-hidden transition-all duration-500 cursor-pointer rounded-2xl',
         'hover:shadow-2xl hover:shadow-stone-900/10',
         'border border-stone-200/50 hover:border-stone-300',
       )}
@@ -296,7 +318,7 @@ function ProductCard({ product }: { product: UiProduct }) {
         {product.imageUrl ? (
           <Image src={product.imageUrl} alt={product.name} fill sizes="(max-width: 1280px) 50vw, 25vw" className="object-contain" />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-stone-100 to-stone-200 flex items-center justify-center">
+          <div className="absolute inset-0 bg-gradient-to-br from-stone-100 to-stone-200 flex items-center justify-center rounded-t-2xl">
             <Package className="w-16 h-16 text-stone-400" />
           </div>
         )}
@@ -330,7 +352,7 @@ function ProductCard({ product }: { product: UiProduct }) {
         <div className={cn('absolute bottom-0 left-0 right-0 p-4 transition-all duration-500', isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full')}>
           <button
             onClick={e => { e.stopPropagation(); addItem({ id: product.id, sku: product.sku, name: product.name, price: product.price, imageUrl: product.imageUrl, brand: product.brand }, 1); openCart(); }}
-            className="w-full bg-stone-900 text-white py-2.5 font-medium hover:bg-stone-800 transition-all duration-300 flex items-center justify-center gap-2 rounded-lg"
+            className="w-full bg-stone-900 text-white py-2.5 font-medium hover:bg-stone-800 transition-all duration-300 flex items-center justify-center gap-2 rounded-xl"
           >
             <ShoppingCart className="w-4 h-4" />
             Додати в кошик
@@ -401,9 +423,9 @@ function ProductListCard({ product }: { product: UiProduct }) {
   const StockIcon = { high: CheckCircle2, medium: Clock, low: Zap }[product.stockLevel];
 
   return (
-    <div className="group flex bg-white border border-stone-200/50 hover:border-stone-300 hover:shadow-lg transition-all duration-300 overflow-hidden">
+    <div className="group flex bg-white border border-stone-200/50 hover:border-stone-300 hover:shadow-lg transition-all duration-300 overflow-hidden rounded-2xl">
       {/* Image */}
-      <div className="relative w-36 sm:w-44 shrink-0 bg-stone-50">
+      <div className="relative w-36 sm:w-44 shrink-0 bg-stone-50 rounded-l-2xl overflow-hidden">
         {product.imageUrl ? (
           <Image src={product.imageUrl} alt={product.name} fill className="object-contain p-3" sizes="176px" />
         ) : (
@@ -451,7 +473,7 @@ function ProductListCard({ product }: { product: UiProduct }) {
           </div>
           <button
             onClick={() => { addItem({ id: product.id, sku: product.sku, name: product.name, price: product.price, imageUrl: product.imageUrl, brand: product.brand }, 1); openCart(); }}
-            className="flex items-center gap-2 bg-stone-900 text-white px-4 py-2 hover:bg-stone-800 transition-colors text-sm font-medium rounded-lg"
+            className="flex items-center gap-2 bg-stone-900 text-white px-4 py-2 hover:bg-stone-800 transition-colors text-sm font-medium rounded-xl"
           >
             <ShoppingCart className="w-4 h-4" />
             <span className="hidden sm:inline">В кошик</span>

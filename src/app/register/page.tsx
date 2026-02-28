@@ -49,60 +49,54 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="h-screen bg-stone-50 flex overflow-hidden">
+    <div className="min-h-screen bg-stone-50 flex overflow-hidden">
       {/* Left — decorative panel */}
       <div className="hidden lg:flex lg:w-1/2 bg-stone-900 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(255,255,255,0.04),transparent_70%)]" />
         <div className="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-transparent via-stone-700 to-transparent" />
 
-        <div className="relative z-10 flex flex-col justify-between p-12 w-full">
-          <div>
-            <Link href="/" className="text-2xl font-bold text-white tracking-tight">
-              ORTHOSTORE
-            </Link>
-          </div>
-
-          <div className="space-y-8">
+        <div className="relative z-10 flex flex-col justify-center p-10 w-full">
+          <div className="space-y-6">
             <h2 className="text-4xl xl:text-5xl font-light text-white leading-tight">
               Приєднуйтесь до
               <br />
-              <span className="font-medium">професіоналів</span>
+              професіоналів
             </h2>
             <p className="text-stone-400 text-lg max-w-md leading-relaxed">
               Створіть обліковий запис, щоб отримати доступ до повного каталогу та спеціальних цін
             </p>
 
-            <div className="space-y-4 pt-4">
+            <div className="space-y-3 pt-4">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-stone-800 flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">1</span>
+                <div className="w-7 h-7 bg-stone-800 rounded flex items-center justify-center">
+                  <span className="text-white text-xs font-medium">1</span>
                 </div>
-                <span className="text-stone-300">Швидка реєстрація за 30 секунд</span>
+                <span className="text-stone-300 text-sm">Швидка реєстрація за 30 секунд</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-stone-800 flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">2</span>
+                <div className="w-7 h-7 bg-stone-800 rounded flex items-center justify-center">
+                  <span className="text-white text-xs font-medium">2</span>
                 </div>
-                <span className="text-stone-300">Доступ до всього каталогу продукції</span>
+                <span className="text-stone-300 text-sm">Доступ до всього каталогу продукції</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-stone-800 flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">3</span>
+                <div className="w-7 h-7 bg-stone-800 rounded flex items-center justify-center">
+                  <span className="text-white text-xs font-medium">3</span>
                 </div>
-                <span className="text-stone-300">Персональні ціни та знижки</span>
+                <span className="text-stone-300 text-sm">Персональні ціни та знижки</span>
               </div>
             </div>
-          </div>
 
-          <div className="flex items-center gap-3 text-stone-500 text-sm">
-            <ShieldCheck className="w-4 h-4" />
-            <span>Безпечна реєстрація · Ваші дані захищені</span>
+            <div className="flex items-center gap-3 text-stone-500 text-sm pt-4">
+              <ShieldCheck className="w-4 h-4" />
+              <span>Безпечна реєстрація · Ваші дані захищені</span>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Right — form */}
-      <div className="flex-1 flex items-center justify-center px-6 py-8 overflow-y-auto">
+      <div className="flex-1 flex items-center justify-center px-6 py-6 overflow-y-auto">
         <div className="w-full max-w-md">
           {/* Mobile logo */}
           <div className="lg:hidden mb-8 text-center">
@@ -128,7 +122,7 @@ export default function RegisterPage() {
             {/* Name */}
             <div className="space-y-1.5">
               <label className="block text-sm font-medium text-stone-700">
-                Ім&apos;я <span className="text-stone-400 font-normal">(необов&apos;язково)</span>
+                Ім&apos;я, прізвище та по батькові
               </label>
               <div className="relative">
                 <User className={cn(
@@ -141,9 +135,10 @@ export default function RegisterPage() {
                   onChange={(e) => setName(e.target.value)}
                   onFocus={() => setFocused('name')}
                   onBlur={() => setFocused(null)}
-                  placeholder="Ваше ім'я"
+                  placeholder="Іванов Іван Іванович"
                   disabled={loading}
-                  className="w-full pl-11 pr-4 py-3 bg-white border border-stone-300 text-stone-900 placeholder:text-stone-400 focus:border-stone-900 focus:ring-1 focus:ring-stone-900 outline-none transition-all disabled:opacity-50"
+                  required
+                  className="w-full pl-11 pr-4 py-3 bg-white border border-stone-300 rounded-lg text-stone-900 placeholder:text-stone-400 focus:border-[#3179cf] focus:ring-2 focus:ring-[#3179cf] outline-none transition-all disabled:opacity-50"
                 />
               </div>
             </div>
@@ -166,7 +161,7 @@ export default function RegisterPage() {
                   inputMode="tel"
                   disabled={loading}
                   required
-                  className="w-full pl-11 pr-4 py-3 bg-white border border-stone-300 text-stone-900 placeholder:text-stone-400 focus:border-stone-900 focus:ring-1 focus:ring-stone-900 outline-none transition-all disabled:opacity-50"
+                  className="w-full pl-11 pr-4 py-3 bg-white border border-stone-300 rounded-lg text-stone-900 placeholder:text-stone-400 focus:border-[#3179cf] focus:ring-2 focus:ring-[#3179cf] outline-none transition-all disabled:opacity-50"
                 />
               </div>
             </div>
@@ -188,7 +183,7 @@ export default function RegisterPage() {
                   placeholder="email@example.com"
                   disabled={loading}
                   required
-                  className="w-full pl-11 pr-4 py-3 bg-white border border-stone-300 text-stone-900 placeholder:text-stone-400 focus:border-stone-900 focus:ring-1 focus:ring-stone-900 outline-none transition-all disabled:opacity-50"
+                  className="w-full pl-11 pr-4 py-3 bg-white border border-stone-300 rounded-lg text-stone-900 placeholder:text-stone-400 focus:border-[#3179cf] focus:ring-2 focus:ring-[#3179cf] outline-none transition-all disabled:opacity-50"
                 />
               </div>
             </div>
@@ -211,7 +206,7 @@ export default function RegisterPage() {
                   disabled={loading}
                   required
                   minLength={6}
-                  className="w-full pl-11 pr-4 py-3 bg-white border border-stone-300 text-stone-900 placeholder:text-stone-400 focus:border-stone-900 focus:ring-1 focus:ring-stone-900 outline-none transition-all disabled:opacity-50"
+                  className="w-full pl-11 pr-4 py-3 bg-white border border-stone-300 rounded-lg text-stone-900 placeholder:text-stone-400 focus:border-[#3179cf] focus:ring-2 focus:ring-[#3179cf] outline-none transition-all disabled:opacity-50"
                 />
               </div>
             </div>

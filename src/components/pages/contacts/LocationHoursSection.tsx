@@ -40,7 +40,7 @@ export function LocationHoursSection({ className }: LocationHoursSectionProps) {
                   <MapPin className="w-6 h-6 text-stone-600 mt-1 flex-shrink-0" />
                   <div>
                     <div className="font-medium text-stone-900">
-                      м. Київ, вул. Саксаганського, 54/56 офс. 124
+                      м. Київ, вул. Саксаганського, 54/56
                     </div>
                   </div>
                 </div>

@@ -1,4 +1,4 @@
-import { Award, Target, Users, Shield, TrendingUp, Heart, Sparkles } from 'lucide-react';
+import { Award, Target, Users, Shield, TrendingUp, Heart } from 'lucide-react';
 import Image from 'next/image';
 
 export default function AboutPage() {
@@ -43,22 +43,26 @@ export default function AboutPage() {
         <div className="max-w-5xl mx-auto px-6 py-16 lg:py-20">
           <div className="grid md:grid-cols-2 gap-8">
             {/* Photo 1 */}
-            <div className="bg-white border-2 border-stone-200 overflow-hidden">
-              <div className="aspect-[4/3] bg-stone-100 flex items-center justify-center">
-                <div className="text-center space-y-2 p-8">
-                  <Sparkles className="w-12 h-12 text-stone-400 mx-auto" />
-                  <p className="text-stone-400 text-sm">Фото 9027</p>
-                </div>
+            <div className="bg-white border-2 border-stone-200 rounded-xl overflow-hidden">
+              <div className="aspect-[3/4] bg-stone-100 relative">
+                <Image
+                  src="/images/about/about1.jpg"
+                  alt="ORTHOSTORE офіс"
+                  fill
+                  className="object-cover"
+                />
               </div>
             </div>
 
             {/* Photo 2 */}
-            <div className="bg-white border-2 border-stone-200 overflow-hidden">
-              <div className="aspect-[4/3] bg-stone-100 flex items-center justify-center">
-                <div className="text-center space-y-2 p-8">
-                  <Sparkles className="w-12 h-12 text-stone-400 mx-auto" />
-                  <p className="text-stone-400 text-sm">Фото 9115</p>
-                </div>
+            <div className="bg-white border-2 border-stone-200 rounded-xl overflow-hidden">
+              <div className="aspect-[3/4] bg-stone-100 relative">
+                <Image
+                  src="/images/about/about2.jpg"
+                  alt="ORTHOSTORE команда"
+                  fill
+                  className="object-cover"
+                />
               </div>
             </div>
           </div>
@@ -70,15 +74,15 @@ export default function AboutPage() {
         <div className="space-y-12">
           <div className="space-y-6 text-base lg:text-lg text-stone-700 leading-relaxed">
             <p>
-              Для постійних клієнтів передбачені знижки, подарунки та інші приємні сюрпризи. В умовах кризи і нестабільності наш омагазин підтримує лояльну цінову політику щоб і професіонал і молодий фахівець знайшли необхідну продукцію на будь-який бюджет.
+              Для постійних клієнтів передбачені знижки, подарунки та інші приємні сюрпризи. В умовах кризи і нестабільності наш магазин підтримує лояльну цінову політику щоб і професіонал і молодий фахівець знайшли необхідну продукцію на будь-який бюджет.
             </p>
           </div>
 
           <div className="space-y-6">
             {/* Budget Segment */}
-            <div className="bg-white p-8 border-2 border-stone-200">
+            <div className="bg-blue-50/30 p-8 border-2 border-[#3179cf]/40 rounded-xl transition-all hover:border-[#3179cf]/60 hover:shadow-lg hover:shadow-[#3179cf]/10">
               <div className="flex items-start gap-6">
-                <span className="text-4xl font-light text-stone-300">01</span>
+                <span className="text-4xl font-light text-[#3179cf]/60">01</span>
                 <div className="space-y-2">
                   <h3 className="text-xl font-medium text-stone-900">
                     Бюджетний сегмент
@@ -91,9 +95,9 @@ export default function AboutPage() {
             </div>
 
             {/* Mid Segment */}
-            <div className="bg-white p-8 border-2 border-stone-200">
+            <div className="bg-blue-50/30 p-8 border-2 border-[#3179cf]/40 rounded-xl transition-all hover:border-[#3179cf]/60 hover:shadow-lg hover:shadow-[#3179cf]/10">
               <div className="flex items-start gap-6">
-                <span className="text-4xl font-light text-stone-300">02</span>
+                <span className="text-4xl font-light text-[#3179cf]/60">02</span>
                 <div className="space-y-2">
                   <h3 className="text-xl font-medium text-stone-900">
                     Середній ціновий клас
@@ -106,15 +110,15 @@ export default function AboutPage() {
             </div>
 
             {/* Premium Segment */}
-            <div className="bg-white p-8 border-2 border-stone-200">
+            <div className="bg-blue-50/30 p-8 border-2 border-[#3179cf]/40 rounded-xl transition-all hover:border-[#3179cf]/60 hover:shadow-lg hover:shadow-[#3179cf]/10">
               <div className="flex items-start gap-6">
-                <span className="text-4xl font-light text-stone-300">03</span>
+                <span className="text-4xl font-light text-[#3179cf]/60">03</span>
                 <div className="space-y-2">
                   <h3 className="text-xl font-medium text-stone-900">
                     Преміум сегмент
                   </h3>
                   <p className="text-stone-600 leading-relaxed">
-                    Де фахівці найвищого рівня, які мають високі вимоги до функціоналу і надійності матеріалів і інструментів.
+                    Для фахівців найвищого рівня, які мають високі вимоги до функціоналу і надійності матеріалів і інструментів.
                   </p>
                 </div>
               </div>

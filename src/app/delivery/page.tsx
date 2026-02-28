@@ -7,7 +7,7 @@ export default function DeliveryPage() {
       <section className="bg-stone-50 border-b border-stone-200">
         <div className="max-w-5xl mx-auto px-6 py-16 lg:py-24">
           <div className="text-center space-y-6">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-stone-900 rounded-full mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-stone-900 rounded-xl mb-4">
               <Truck className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-4xl lg:text-5xl font-light text-stone-900">
@@ -41,7 +41,7 @@ export default function DeliveryPage() {
             </div>
 
             {/* Kyiv Delivery */}
-            <div className="bg-white border-2 border-stone-200 p-6 lg:p-8">
+            <div className="bg-white border-2 border-stone-200 p-6 lg:p-8 rounded-lg">
               <div className="flex items-start gap-4 mb-4">
                 <MapPin className="w-5 h-5 text-stone-900 flex-shrink-0 mt-1" />
                 <div className="space-y-3 w-full">
@@ -79,7 +79,7 @@ export default function DeliveryPage() {
             </div>
 
             {/* Ukraine Delivery */}
-            <div className="bg-white border-2 border-stone-200 p-6 lg:p-8">
+            <div className="bg-white border-2 border-stone-200 p-6 lg:p-8 rounded-lg">
               <div className="flex items-start gap-4">
                 <Truck className="w-5 h-5 text-stone-900 flex-shrink-0 mt-1" />
                 <div className="space-y-3 w-full">
@@ -140,13 +140,13 @@ export default function DeliveryPage() {
             </h2>
           </div>
 
-          <div className="bg-stone-50 p-6 lg:p-8">
+          <div className="bg-stone-50 p-6 lg:p-8 rounded-lg">
             <p className="text-lg text-stone-700 mb-6">
               Оплату товару можна здійснити наступними способами:
             </p>
             
             <div className="space-y-4">
-              <div className="flex items-center gap-4 p-4 bg-white border border-stone-200">
+              <div className="flex items-center gap-4 p-4 bg-white border border-stone-200 rounded-lg">
                 <div className="w-10 h-10 bg-stone-900 rounded-full flex items-center justify-center flex-shrink-0">
                   <span className="text-white font-medium">1</span>
                 </div>
@@ -155,7 +155,7 @@ export default function DeliveryPage() {
                 </p>
               </div>
               
-              <div className="flex items-center gap-4 p-4 bg-white border border-stone-200">
+              <div className="flex items-center gap-4 p-4 bg-white border border-stone-200 rounded-lg">
                 <div className="w-10 h-10 bg-stone-900 rounded-full flex items-center justify-center flex-shrink-0">
                   <span className="text-white font-medium">2</span>
                 </div>
@@ -177,7 +177,7 @@ export default function DeliveryPage() {
           </div>
 
           <div className="space-y-6">
-            <div className="bg-white border-2 border-stone-200 p-6 lg:p-8">
+            <div className="bg-white border-2 border-stone-200 p-6 lg:p-8 rounded-lg">
               <div className="space-y-6">
                 <div className="flex items-start gap-3">
                   <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
@@ -188,7 +188,7 @@ export default function DeliveryPage() {
               </div>
             </div>
 
-            <div className="bg-white border-2 border-stone-200 p-6 lg:p-8">
+            <div className="bg-white border-2 border-stone-200 p-6 lg:p-8 rounded-lg">
               <div className="flex items-start gap-3">
                 <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-stone-700">
@@ -197,7 +197,7 @@ export default function DeliveryPage() {
               </div>
             </div>
 
-            <div className="bg-white border-2 border-stone-200 p-6 lg:p-8">
+            <div className="bg-white border-2 border-stone-200 p-6 lg:p-8 rounded-lg">
               <div className="flex items-start gap-3">
                 <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-stone-700">
@@ -210,7 +210,7 @@ export default function DeliveryPage() {
             <div className="bg-stone-900 text-white p-6 lg:p-8 rounded-lg">
               <div className="flex items-center gap-3 mb-6">
                 <ShieldCheck className="w-6 h-6" />
-                <h3 className="text-xl font-medium">Заміна товару з браком?</h3>
+                <h3 className="text-xl font-medium">Заміна товару з браком</h3>
               </div>
               <ol className="space-y-4">
                 <li className="flex items-start gap-4">
@@ -223,7 +223,7 @@ export default function DeliveryPage() {
                 </li>
                 <li className="flex items-start gap-4">
                   <span className="text-lg font-bold text-stone-400 shrink-0">3.</span>
-                  <span className="text-stone-200">Ми зробимо заміщення товару протягом 3-5 робочих днів</span>
+                  <span className="text-stone-200">Ми зробимо заміну товару протягом 3-5 робочих днів</span>
                 </li>
               </ol>
             </div>

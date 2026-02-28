@@ -4,16 +4,24 @@ import React, { useState, useEffect, useRef } from 'react';
 
 const STORAGE_KEY = 'orthostore_splash_seen';
 
-function isSeen(): boolean {
-  if (typeof window === 'undefined') return false;
-  try { return !!sessionStorage.getItem(STORAGE_KEY); } catch { return false; }
-}
-
 export function SplashScreen({ children }: { children: React.ReactNode }) {
-  // Start with splash visible — prevents flash of content
-  const [show, setShow] = useState(() => !isSeen());
+  const [mounted, setMounted] = useState(false);
+  const [show, setShow] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Check if splash was already seen after mount
+  useEffect(() => {
+    setMounted(true);
+    try {
+      const seen = sessionStorage.getItem(STORAGE_KEY);
+      if (!seen) {
+        setShow(true);
+      }
+    } catch {
+      // If sessionStorage fails, don't show splash
+    }
+  }, []);
 
   useEffect(() => {
     if (show) {

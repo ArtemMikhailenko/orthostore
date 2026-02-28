@@ -1,12 +1,27 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ShoppingCart } from 'lucide-react';
 import { useCartStore } from '@/lib/cart-store';
 
 export function CartButton() {
   const open = useCartStore((s) => s.open);
-  const count = useCartStore((s) => s.totalItems());
+  const totalItems = useCartStore((s) => s.totalItems);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <button onClick={open} className="relative p-2 text-gray-600 hover:text-gray-900 transition-colors">
+        <ShoppingCart className="w-5 h-5" />
+      </button>
+    );
+  }
+
+  const count = totalItems();
 
   return (
     <button onClick={open} className="relative p-2 text-gray-600 hover:text-gray-900 transition-colors">

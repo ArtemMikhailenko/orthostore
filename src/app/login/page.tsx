@@ -39,54 +39,48 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="h-screen bg-stone-50 flex overflow-hidden">
+    <div className="min-h-screen bg-stone-50 flex overflow-hidden">
       {/* Left — decorative panel */}
       <div className="hidden lg:flex lg:w-1/2 bg-stone-900 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.04),transparent_70%)]" />
         <div className="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-transparent via-stone-700 to-transparent" />
 
-        <div className="relative z-10 flex flex-col justify-between p-12 w-full">
-          <div>
-            <Link href="/" className="text-2xl font-bold text-white tracking-tight">
-              ORTHOSTORE
-            </Link>
-          </div>
-
-          <div className="space-y-8">
+        <div className="relative z-10 flex flex-col justify-center p-10 w-full">
+          <div className="space-y-6">
             <h2 className="text-4xl xl:text-5xl font-light text-white leading-tight">
               Все для сучасної
               <br />
-              <span className="font-medium">ортодонтії</span>
+              ортодонтії
             </h2>
             <p className="text-stone-400 text-lg max-w-md leading-relaxed">
-              Професійне обладнання та матеріали від провідних світових брендів
+              Професійні матеріали та інструменти від провідних світових брендів
             </p>
 
-            <div className="flex gap-12 pt-4">
+            <div className="flex gap-10 pt-4">
               <div>
-                <div className="text-3xl font-bold text-white">500+</div>
-                <div className="text-sm text-stone-500 mt-1">Товарів</div>
+                <div className="text-2xl font-bold text-white">1000+</div>
+                <div className="text-xs text-stone-500 mt-0.5">Товарів</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-white">50+</div>
-                <div className="text-sm text-stone-500 mt-1">Брендів</div>
+                <div className="text-2xl font-bold text-white">10+</div>
+                <div className="text-xs text-stone-500 mt-0.5">років досвіду</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-white">10+</div>
-                <div className="text-sm text-stone-500 mt-1">Років досвіду</div>
+                <div className="text-2xl font-bold text-white">1750+</div>
+                <div className="text-xs text-stone-500 mt-0.5">Задоволених клієнтів</div>
               </div>
             </div>
-          </div>
 
-          <div className="flex items-center gap-3 text-stone-500 text-sm">
-            <ShieldCheck className="w-4 h-4" />
-            <span>Безпечний вхід · Ваші дані захищені</span>
+            <div className="flex items-center gap-3 text-stone-500 text-sm pt-4">
+              <ShieldCheck className="w-4 h-4" />
+              <span>Безпечний вхід · Ваші дані захищені</span>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Right — form */}
-      <div className="flex-1 flex items-center justify-center px-6 py-8 overflow-y-auto">
+      <div className="flex-1 flex items-center justify-center px-6 py-6 overflow-y-auto">
         <div className="w-full max-w-md">
           {/* Mobile logo */}
           <div className="lg:hidden mb-12 text-center">
@@ -126,7 +120,7 @@ export default function LoginPage() {
                   placeholder="email@example.com або +380..."
                   disabled={loading}
                   required
-                  className="w-full pl-11 pr-4 py-3.5 bg-white border border-stone-300 text-stone-900 placeholder:text-stone-400 focus:border-stone-900 focus:ring-1 focus:ring-stone-900 outline-none transition-all disabled:opacity-50"
+                  className="w-full pl-11 pr-4 py-3.5 bg-white border border-stone-300 rounded-lg text-stone-900 placeholder:text-stone-400 focus:border-[#3179cf] focus:ring-2 focus:ring-[#3179cf] outline-none transition-all disabled:opacity-50"
                 />
               </div>
             </div>
@@ -154,7 +148,7 @@ export default function LoginPage() {
                   disabled={loading}
                   required
                   minLength={6}
-                  className="w-full pl-11 pr-4 py-3.5 bg-white border border-stone-300 text-stone-900 placeholder:text-stone-400 focus:border-stone-900 focus:ring-1 focus:ring-stone-900 outline-none transition-all disabled:opacity-50"
+                  className="w-full pl-11 pr-4 py-3.5 bg-white border border-stone-300 rounded-lg text-stone-900 placeholder:text-stone-400 focus:border-[#3179cf] focus:ring-2 focus:ring-[#3179cf] outline-none transition-all disabled:opacity-50"
                 />
               </div>
             </div>

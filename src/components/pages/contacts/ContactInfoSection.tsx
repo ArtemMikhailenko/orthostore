@@ -57,17 +57,17 @@ const contactMethods = [
 
 export function ContactInfoSection({ className }: ContactInfoSectionProps) {
   return (
-    <section className={cn('py-16 bg-stone-50', className)}>
+    <section id="contact-methods" className={cn('py-16 bg-stone-50', className)}>
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {contactMethods.map((method, index) => (
             <div 
               key={index} 
-              className="bg-white p-6 group hover:shadow-lg transition-all duration-300 cursor-pointer"
+              className="bg-white p-6 group hover:shadow-lg transition-all duration-300 cursor-pointer rounded-xl"
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="w-12 h-12 bg-stone-100 rounded-full flex items-center justify-center group-hover:bg-stone-900 group-hover:text-white transition-all duration-300">
+                  <div className="w-12 h-12 bg-stone-100 rounded-xl flex items-center justify-center group-hover:bg-stone-900 group-hover:text-white transition-all duration-300">
                     <method.icon className="w-6 h-6" />
                   </div>
                   <ArrowRight className="w-4 h-4 text-stone-400 group-hover:text-stone-900 group-hover:translate-x-1 transition-all duration-300" />

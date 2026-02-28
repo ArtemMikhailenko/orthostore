@@ -33,7 +33,7 @@ export function UserMenu() {
         className="p-2 text-stone-600 hover:text-stone-900 transition-colors flex items-center gap-1"
       >
         {isAuthenticated && customer ? (
-          <span className="w-8 h-8 bg-stone-900 text-white flex items-center justify-center text-sm font-medium">
+          <span className="w-8 h-8 bg-stone-900 text-white rounded-lg flex items-center justify-center text-sm font-medium">
             {(customer.name || customer.phone)?.[0]?.toUpperCase() || 'U'}
           </span>
         ) : (
@@ -42,7 +42,7 @@ export function UserMenu() {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-stone-200 shadow-lg z-50">
+        <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-stone-200 rounded-lg shadow-lg z-50 overflow-hidden">
           {isAuthenticated && customer ? (
             <>
               {/* User info header */}

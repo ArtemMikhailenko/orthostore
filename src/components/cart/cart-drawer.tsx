@@ -24,7 +24,7 @@ export function CartDrawer() {
       {/* Panel */}
       <aside
         className={cn(
-          'fixed right-0 top-0 bottom-0 z-[61] w-full sm:w-[420px] bg-white shadow-2xl border-l border-stone-200 transition-transform duration-300 ease-out flex flex-col',
+          'fixed right-0 top-0 bottom-0 z-[61] w-full sm:w-[420px] bg-white shadow-2xl border-l border-stone-200 rounded-l-2xl overflow-hidden transition-transform duration-300 ease-out flex flex-col',
           isOpen ? 'translate-x-0' : 'translate-x-full'
         )}
         aria-hidden={!isOpen}
@@ -51,8 +51,8 @@ export function CartDrawer() {
           ) : (
             <div className="space-y-4">
               {items.map((it) => (
-                <div key={it.id} className="flex gap-3 p-3 bg-white border border-stone-200">
-                  <div className="relative w-16 h-16 flex-shrink-0 overflow-hidden bg-stone-50 border border-stone-200">
+                <div key={it.id} className="flex gap-3 p-3 bg-white border border-stone-200 rounded-lg">
+                  <div className="relative w-16 h-16 flex-shrink-0 overflow-hidden bg-stone-50 border border-stone-200 rounded-lg">
                     {it.imageUrl ? (
                       <Image src={it.imageUrl} alt={it.name} fill className="object-contain" />
                     ) : null}
@@ -102,12 +102,14 @@ export function CartDrawer() {
             href="/checkout"
             onClick={close}
             className={cn(
-              'w-full inline-flex items-center justify-center gap-2 bg-stone-900 text-white py-3 hover:bg-stone-800 transition-colors rounded-lg',
+              'w-full inline-flex items-center justify-center gap-2 bg-stone-900 text-white py-3 rounded-lg font-medium transition-all duration-300 group relative overflow-hidden',
+              'hover:gap-3 hover:shadow-xl hover:shadow-stone-900/30 hover:scale-[1.02]',
+              'before:absolute before:inset-0 before:bg-gradient-to-r before:from-stone-800 before:to-stone-900 before:opacity-0 before:transition-opacity hover:before:opacity-100',
               items.length === 0 && 'opacity-50 pointer-events-none'
             )}
           >
-            Перейти до оформлення
-            <ArrowRight className="w-4 h-4" />
+            <span className="relative z-10">Перейти до оформлення</span>
+            <ArrowRight className="w-4 h-4 relative z-10 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>
       </aside>
