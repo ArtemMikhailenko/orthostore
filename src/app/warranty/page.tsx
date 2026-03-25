@@ -60,7 +60,7 @@ export default function WarrantyPage() {
             {warrantyTerms.map((item, index) => (
               <div 
                 key={index}
-                className="bg-white border-2 border-stone-200 p-8 hover:border-stone-900 transition-all duration-300"
+                className="bg-white border-2 border-stone-200 rounded-2xl p-8 hover:border-stone-900 transition-all duration-300"
               >
                 <div className="flex items-center gap-3 mb-4">
                   <Clock className="w-5 h-5 text-stone-900" />

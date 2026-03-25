@@ -22,7 +22,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/lib/cart-store';
 import { useAuthStore } from '@/lib/auth-store';
-import { apiCreateOrder } from '@/lib/api/auth';
+import { apiCreateOrder, apiValidatePromoCode } from '@/lib/api/auth';
 import { getClientId } from '@/lib/client-id';
 
 const DELIVERY_METHODS = [
@@ -42,14 +42,6 @@ const DELIVERY_METHODS = [
     time: '1-2 дні',
     icon: Truck,
   },
-  {
-    id: 'ukrposhta',
-    name: 'Укрпошта',
-    description: 'Доставка у відділення',
-    price: 0,
-    time: '3-5 днів',
-    icon: Package,
-  },
 ];
 
 const PAYMENT_METHODS = [
@@ -61,9 +53,9 @@ const PAYMENT_METHODS = [
   },
   {
     id: 'cash-on-delivery',
-    name: 'Накладений платіж',
+    name: 'Оплата кур\'єру при отриманні',
     description: 'Оплата при отриманні',
-    icon: Package,
+    icon: Truck,
   },
   {
     id: 'bank-transfer',
@@ -72,6 +64,8 @@ const PAYMENT_METHODS = [
     icon: Shield,
   },
 ];
+
+const NP_API_KEY = 'af092fe62addae80ad81f2c3a9704042';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -92,6 +86,23 @@ export default function CheckoutPage() {
     address: '',
     comment: '',
   });
+
+  // Nova Poshta autocomplete state
+  const [npCityQuery, setNpCityQuery] = useState('');
+  const [npCitySuggestions, setNpCitySuggestions] = useState<Array<{Present: string; Ref: string; DeliveryCity: string}>>([]);
+  const [npCityRef, setNpCityRef] = useState('');
+  const [npCityLoading, setNpCityLoading] = useState(false);
+  const [npShowCitySuggestions, setNpShowCitySuggestions] = useState(false);
+  const [npWarehouses, setNpWarehouses] = useState<Array<{Description: string; Ref: string; TypeOfWarehouse: string}>>([]);
+  const [npWarehouseQuery, setNpWarehouseQuery] = useState('');
+  const [npWarehouseLoading, setNpWarehouseLoading] = useState(false);
+  const [npShowWarehouseSuggestions, setNpShowWarehouseSuggestions] = useState(false);
+
+  // Promo code state
+  const [promoCode, setPromoCode] = useState('');
+  const [promoApplied, setPromoApplied] = useState<{ code: string; type: 'percent' | 'fixed'; value: number; name: string } | null>(null);
+  const [promoLoading, setPromoLoading] = useState(false);
+  const [promoError, setPromoError] = useState<string | null>(null);
 
   // Pre-fill form from customer profile
   useEffect(() => {
@@ -115,18 +126,80 @@ export default function CheckoutPage() {
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const deliveryPrice = DELIVERY_METHODS.find(m => m.id === selectedDelivery)?.price || 0;
-  const total = subtotal + deliveryPrice;
+  const discount = promoApplied
+    ? promoApplied.type === 'percent'
+      ? Math.round(subtotal * promoApplied.value / 100)
+      : promoApplied.value
+    : 0;
+  const total = subtotal + deliveryPrice - discount;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Nova Poshta: debounced city search
+  useEffect(() => {
+    if (npCityQuery.length < 2) { setNpCitySuggestions([]); return; }
+    const timer = setTimeout(async () => {
+      setNpCityLoading(true);
+      try {
+        const res = await fetch('https://api.novaposhta.ua/v2.0/json/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            apiKey: NP_API_KEY,
+            modelName: 'Address',
+            calledMethod: 'searchSettlements',
+            methodProperties: { CityName: npCityQuery, Limit: 7 },
+          }),
+        });
+        const data = await res.json();
+        setNpCitySuggestions(data?.data?.[0]?.Addresses || []);
+        setNpShowCitySuggestions(true);
+      } catch { /* ignore */ } finally {
+        setNpCityLoading(false);
+      }
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [npCityQuery]);
+
+  // Nova Poshta: search warehouses as user types
+  useEffect(() => {
+    if (selectedDelivery !== 'nova-poshta' || !npCityRef || npWarehouseQuery.length < 2) {
+      setNpWarehouses([]);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      setNpWarehouseLoading(true);
+      try {
+        const res = await fetch('https://api.novaposhta.ua/v2.0/json/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            apiKey: NP_API_KEY,
+            modelName: 'AddressGeneral',
+            calledMethod: 'getWarehouses',
+            methodProperties: { CityRef: npCityRef, FindByString: npWarehouseQuery, Limit: 20 },
+          }),
+        });
+        const data = await res.json();
+        setNpWarehouses(data?.data || []);
+        setNpShowWarehouseSuggestions(true);
+      } catch { /* ignore */ } finally {
+        setNpWarehouseLoading(false);
+      }
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [npWarehouseQuery, npCityRef, selectedDelivery]);
+
   const isStepComplete = (stepName: string) => {
     switch (stepName) {
       case 'info':
-        return formData.firstName && formData.lastName && formData.phone && formData.email;
+        return formData.firstName && formData.lastName && formData.phone;
       case 'delivery':
-        return selectedDelivery && formData.city;
+        if (selectedDelivery === 'nova-poshta') return !!(formData.city && formData.address);
+        if (selectedDelivery === 'nova-poshta-courier') return !!(formData.city && formData.address);
+        return !!(selectedDelivery && formData.city);
       case 'payment':
         return selectedPayment;
       default:
@@ -184,9 +257,9 @@ export default function CheckoutPage() {
                   <div className="flex flex-col items-center gap-2 flex-1">
                     <div
                       className={cn(
-                        'w-12 h-12  flex items-center justify-center transition-all duration-300',
-                        isCompleted ? 'bg-emerald-500 text-white' :
-                        isActive ? 'bg-stone-900 text-white' :
+                        'w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300',
+                        isCompleted ? 'bg-sky-500 text-white' :
+                        isActive ? 'bg-sky-500 text-white' :
                         'bg-stone-200 text-stone-400'
                       )}
                     >
@@ -202,7 +275,7 @@ export default function CheckoutPage() {
                   {index < 3 && (
                     <div className={cn(
                       'h-1 flex-1  transition-all duration-300 mt-6',
-                      isCompleted ? 'bg-emerald-500' : 'bg-stone-200'
+                      isCompleted ? 'bg-sky-500' : 'bg-stone-200'
                     )} />
                   )}
                 </React.Fragment>
@@ -218,14 +291,14 @@ export default function CheckoutPage() {
             
             {/* Step 1: Contact Info */}
             <div className={cn(
-              'bg-white  shadow-sm border border-stone-200 overflow-hidden transition-all duration-300',
-              step === 'info' ? 'ring-2 ring-stone-900' : ''
+              'bg-white rounded-2xl shadow-sm border border-stone-200 transition-all duration-300',
+              step === 'info' ? 'ring-2 ring-sky-500' : ''
             )}>
               <div className="p-6 border-b border-stone-100 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className={cn(
-                    'w-10 h-10  flex items-center justify-center',
-                    isStepComplete('info') ? 'bg-emerald-500 text-white' : 'bg-stone-100 text-stone-600'
+                    'w-10 h-10 rounded-full flex items-center justify-center',
+                    isStepComplete('info') ? 'bg-sky-500 text-white' : step === 'info' ? 'bg-sky-500 text-white' : 'bg-stone-100 text-stone-600'
                   )}>
                     {isStepComplete('info') ? <CheckCircle2 className="w-5 h-5" /> : <User className="w-5 h-5" />}
                   </div>
@@ -257,7 +330,7 @@ export default function CheckoutPage() {
                         value={formData.firstName}
                         onChange={handleInputChange}
                         placeholder="Іван"
-                        className="w-full px-4 py-3 border border-stone-300  focus:outline-none focus:ring-2 focus:ring-stone-900 focus:border-transparent"
+                        className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                       />
                     </div>
                     <div>
@@ -270,7 +343,7 @@ export default function CheckoutPage() {
                         value={formData.lastName}
                         onChange={handleInputChange}
                         placeholder="Іваненко"
-                        className="w-full px-4 py-3 border border-stone-300  focus:outline-none focus:ring-2 focus:ring-stone-900 focus:border-transparent"
+                        className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                       />
                     </div>
                   </div>
@@ -286,12 +359,12 @@ export default function CheckoutPage() {
                         value={formData.phone}
                         onChange={handleInputChange}
                         placeholder="+380 XX XXX XX XX"
-                        className="w-full px-4 py-3 border border-stone-300  focus:outline-none focus:ring-2 focus:ring-stone-900 focus:border-transparent"
+                        className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-stone-700 mb-2">
-                        Email *
+                        Email
                       </label>
                       <input
                         type="email"
@@ -299,7 +372,7 @@ export default function CheckoutPage() {
                         value={formData.email}
                         onChange={handleInputChange}
                         placeholder="example@email.com"
-                        className="w-full px-4 py-3 border border-stone-300  focus:outline-none focus:ring-2 focus:ring-stone-900 focus:border-transparent"
+                        className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                       />
                     </div>
                   </div>
@@ -307,7 +380,7 @@ export default function CheckoutPage() {
                   <button
                     onClick={() => isStepComplete('info') && setStep('delivery')}
                     disabled={!isStepComplete('info')}
-                    className="w-full bg-stone-900 text-white py-3  hover:bg-stone-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                    className="w-full bg-stone-900 text-white py-3 rounded-xl border border-stone-900 hover:bg-white hover:text-stone-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                   >
                     Продовжити
                   </button>
@@ -331,14 +404,14 @@ export default function CheckoutPage() {
 
             {/* Step 2: Delivery */}
             <div className={cn(
-              'bg-white  shadow-sm border border-stone-200 overflow-hidden transition-all duration-300',
-              step === 'delivery' ? 'ring-2 ring-stone-900' : step === 'info' ? 'opacity-50 pointer-events-none' : ''
+              'bg-white rounded-2xl shadow-sm border border-stone-200 transition-all duration-300',
+              step === 'delivery' ? 'ring-2 ring-sky-500' : step === 'info' ? 'opacity-50 pointer-events-none' : ''
             )}>
               <div className="p-6 border-b border-stone-100 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className={cn(
-                    'w-10 h-10  flex items-center justify-center',
-                    isStepComplete('delivery') ? 'bg-emerald-500 text-white' : 'bg-stone-100 text-stone-600'
+                    'w-10 h-10 rounded-full flex items-center justify-center',
+                    isStepComplete('delivery') ? 'bg-sky-500 text-white' : step === 'delivery' ? 'bg-sky-500 text-white' : 'bg-stone-100 text-stone-600'
                   )}>
                     {isStepComplete('delivery') ? <CheckCircle2 className="w-5 h-5" /> : <Truck className="w-5 h-5" />}
                   </div>
@@ -366,9 +439,9 @@ export default function CheckoutPage() {
                         <label
                           key={method.id}
                           className={cn(
-                            'flex items-center gap-4 p-4 border-2  cursor-pointer transition-all',
+                            'flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all',
                             selectedDelivery === method.id
-                              ? 'border-stone-900 bg-stone-50'
+                              ? 'border-sky-500 bg-sky-50'
                               : 'border-stone-200 hover:border-stone-300'
                           )}
                         >
@@ -377,13 +450,26 @@ export default function CheckoutPage() {
                             name="delivery"
                             value={method.id}
                             checked={selectedDelivery === method.id}
-                            onChange={(e) => setSelectedDelivery(e.target.value)}
+                            onChange={(e) => {
+                              setSelectedDelivery(e.target.value);
+                              setNpCityQuery('');
+                              setNpCityRef('');
+                              setNpCitySuggestions([]);
+                              setNpWarehouses([]);
+                              setNpWarehouseQuery('');
+                              setNpShowCitySuggestions(false);
+                              setNpShowWarehouseSuggestions(false);
+                              setFormData(prev => ({ ...prev, city: '', address: '' }));
+                            }}
                             className="w-5 h-5 text-stone-900"
                           />
                           <Icon className="w-6 h-6 text-stone-600" />
                           <div className="flex-1">
                             <div className="font-medium text-stone-900">{method.name}</div>
                             <div className="text-sm text-stone-500">{method.description}</div>
+                            {method.id === 'nova-poshta-courier' && (
+                              <div className="text-xs text-amber-600 mt-0.5">Тільки по Києву та Київській області</div>
+                            )}
                           </div>
                           <div className="text-right">
                             <div className="font-semibold text-stone-900">
@@ -399,38 +485,126 @@ export default function CheckoutPage() {
                     })}
                   </div>
 
-                  <div>
+                  {/* NP City autocomplete */}
+                  <div className="relative">
                     <label className="block text-sm font-medium text-stone-700 mb-2">
                       Місто *
                     </label>
-                    <input
-                      type="text"
-                      name="city"
-                      value={formData.city}
-                      onChange={handleInputChange}
-                      placeholder="Київ"
-                      className="w-full px-4 py-3 border border-stone-300  focus:outline-none focus:ring-2 focus:ring-stone-900 focus:border-transparent"
-                    />
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={npCityQuery}
+                        onChange={(e) => {
+                          setNpCityQuery(e.target.value);
+                          setNpCityRef('');
+                          setNpShowCitySuggestions(true);
+                          setNpWarehouses([]);
+                          setNpWarehouseQuery('');
+                          setFormData(prev => ({ ...prev, city: e.target.value, address: '' }));
+                        }}
+                        onBlur={() => setTimeout(() => setNpShowCitySuggestions(false), 150)}
+                        onFocus={() => npCitySuggestions.length > 0 && setNpShowCitySuggestions(true)}
+                        placeholder="Почніть вводити місто..."
+                        className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+                        autoComplete="off"
+                      />
+                      {npCityLoading && <Loader2 className="absolute right-3 top-3.5 w-5 h-5 animate-spin text-stone-400" />}
+                    </div>
+                    {npShowCitySuggestions && npCitySuggestions.length > 0 && (
+                      <div className="absolute z-50 w-full bg-white border border-stone-200 rounded-xl shadow-lg mt-1 overflow-hidden max-h-56 overflow-y-auto">
+                        {npCitySuggestions.map((c) => (
+                          <button
+                            key={c.Ref}
+                            type="button"
+                            onMouseDown={(e) => {
+                              e.preventDefault();
+                              setNpCityQuery(c.Present);
+                              setNpCityRef(c.DeliveryCity);
+                              setFormData(prev => ({ ...prev, city: c.Present, address: '' }));
+                              setNpShowCitySuggestions(false);
+                              setNpWarehouseQuery('');
+                              setNpWarehouses([]);
+                            }}
+                            className="w-full text-left px-4 py-2.5 hover:bg-sky-50 text-sm text-stone-800 border-b border-stone-100 last:border-0"
+                          >
+                            {c.Present}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">
-                      Адреса / Відділення
-                    </label>
-                    <input
-                      type="text"
-                      name="address"
-                      value={formData.address}
-                      onChange={handleInputChange}
-                      placeholder="Відділення №1 або вул. Хрещатик 1"
-                      className="w-full px-4 py-3 border border-stone-300  focus:outline-none focus:ring-2 focus:ring-stone-900 focus:border-transparent"
-                    />
-                  </div>
+                  {/* Warehouse selector for відділення */}
+                  {selectedDelivery === 'nova-poshta' && npCityRef && (
+                    <div className="relative">
+                      <label className="block text-sm font-medium text-stone-700 mb-2">
+                        Відділення *
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={npWarehouseQuery}
+                          onChange={(e) => {
+                            setNpWarehouseQuery(e.target.value);
+                            setNpShowWarehouseSuggestions(true);
+                            if (!e.target.value) setFormData(prev => ({ ...prev, address: '' }));
+                          }}
+                          onBlur={() => setTimeout(() => setNpShowWarehouseSuggestions(false), 150)}
+                          onFocus={() => setNpShowWarehouseSuggestions(true)}
+                      placeholder={npWarehouseQuery.length < 2 ? 'Введіть номер або назву відділення...' : 'Пошук...'}
+                          className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+                          autoComplete="off"
+                        />
+                        {npWarehouseLoading && <Loader2 className="absolute right-3 top-3.5 w-5 h-5 animate-spin text-stone-400" />}
+                      </div>
+                      {npShowWarehouseSuggestions && !npWarehouseLoading && npWarehouses.length > 0 && (
+                        <div className="absolute z-50 w-full bg-white border border-stone-200 rounded-xl shadow-lg mt-1 max-h-56 overflow-y-auto">
+                          {npWarehouses.map((w) => (
+                              <button
+                                key={w.Ref}
+                                type="button"
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  setNpWarehouseQuery(w.Description);
+                                  setFormData(prev => ({ ...prev, address: w.Description }));
+                                  setNpShowWarehouseSuggestions(false);
+                                }}
+                                className="w-full text-left px-4 py-2.5 hover:bg-sky-50 text-sm text-stone-800 border-b border-stone-100 last:border-0"
+                              >
+                                {w.Description}
+                              </button>
+                            ))}
+                        </div>
+                      )}
+                      {npShowWarehouseSuggestions && !npWarehouseLoading && npWarehouses.length === 0 && npWarehouseQuery.length >= 2 && (
+                        <div className="absolute z-50 w-full bg-white border border-stone-200 rounded-xl shadow-lg mt-1">
+                          <div className="px-4 py-3 text-sm text-stone-400">Відділень не знайдено</div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Manual address for courier */}
+                  {selectedDelivery === 'nova-poshta-courier' && npCityRef && (
+                    <div>
+                      <label className="block text-sm font-medium text-stone-700 mb-2">
+                        Адреса доставки
+                      </label>
+                      <input
+                        type="text"
+                        name="address"
+                        value={formData.address}
+                        onChange={handleInputChange}
+                        placeholder="вул. Назва, номер будинку, кв."
+                        className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+                      />
+                    </div>
+                  )}
 
                   <button
                     onClick={() => isStepComplete('delivery') && setStep('payment')}
                     disabled={!isStepComplete('delivery')}
-                    className="w-full bg-stone-900 text-white py-3  hover:bg-stone-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                    className="w-full bg-stone-900 text-white py-3 rounded-xl border border-stone-900 hover:bg-white hover:text-stone-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                   >
                     Продовжити
                   </button>
@@ -460,14 +634,14 @@ export default function CheckoutPage() {
 
             {/* Step 3: Payment */}
             <div className={cn(
-              'bg-white  shadow-sm border border-stone-200 overflow-hidden transition-all duration-300',
-              step === 'payment' ? 'ring-2 ring-stone-900' : !isStepComplete('delivery') ? 'opacity-50 pointer-events-none' : ''
+              'bg-white rounded-2xl shadow-sm border border-stone-200 transition-all duration-300',
+              step === 'payment' ? 'ring-2 ring-sky-500' : !isStepComplete('delivery') ? 'opacity-50 pointer-events-none' : ''
             )}>
               <div className="p-6 border-b border-stone-100 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className={cn(
-                    'w-10 h-10  flex items-center justify-center',
-                    isStepComplete('payment') ? 'bg-emerald-500 text-white' : 'bg-stone-100 text-stone-600'
+                    'w-10 h-10 rounded-full flex items-center justify-center',
+                    isStepComplete('payment') ? 'bg-sky-500 text-white' : step === 'payment' ? 'bg-sky-500 text-white' : 'bg-stone-100 text-stone-600'
                   )}>
                     {isStepComplete('payment') ? <CheckCircle2 className="w-5 h-5" /> : <CreditCard className="w-5 h-5" />}
                   </div>
@@ -495,9 +669,9 @@ export default function CheckoutPage() {
                         <label
                           key={method.id}
                           className={cn(
-                            'flex items-center gap-4 p-4 border-2  cursor-pointer transition-all',
+                            'flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all',
                             selectedPayment === method.id
-                              ? 'border-stone-900 bg-stone-50'
+                              ? 'border-sky-500 bg-sky-50'
                               : 'border-stone-200 hover:border-stone-300'
                           )}
                         >
@@ -521,6 +695,61 @@ export default function CheckoutPage() {
                     })}
                   </div>
 
+                  {/* Promo code */}
+                  <div>
+                    <label className="block text-sm font-medium text-stone-700 mb-2">
+                      Промокод
+                    </label>
+                    {promoApplied ? (
+                      <div className="flex items-center gap-3 p-3 bg-sky-50 border border-sky-300 rounded-xl">
+                        <div className="flex-1 text-sm">
+                          <span className="font-semibold text-sky-800">{promoApplied.code}</span>
+                          <span className="text-sky-600 ml-2">— {promoApplied.name}</span>
+                          <div className="text-sky-700 font-medium">
+                            Знижка: {promoApplied.type === 'percent' ? `${promoApplied.value}%` : `${promoApplied.value} ₴`}
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => { setPromoApplied(null); setPromoCode(''); setPromoError(null); }}
+                          className="text-xs text-stone-500 hover:text-red-600 underline"
+                        >
+                          Видалити
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={promoCode}
+                          onChange={(e) => { setPromoCode(e.target.value.toUpperCase()); setPromoError(null); }}
+                          onKeyDown={(e) => e.key === 'Enter' && promoCode.trim() && (async () => {
+                            setPromoLoading(true); setPromoError(null);
+                            try { const r = await apiValidatePromoCode(promoCode.trim()); setPromoApplied(r); }
+                            catch (err: unknown) { setPromoError(err instanceof Error ? err.message : 'Невірний промокод'); }
+                            finally { setPromoLoading(false); }
+                          })()}
+                          placeholder="Введіть промокод..."
+                          className="flex-1 px-4 py-3 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent uppercase"
+                        />
+                        <button
+                          type="button"
+                          disabled={!promoCode.trim() || promoLoading}
+                          onClick={async () => {
+                            setPromoLoading(true); setPromoError(null);
+                            try { const r = await apiValidatePromoCode(promoCode.trim()); setPromoApplied(r); }
+                            catch (err: unknown) { setPromoError(err instanceof Error ? err.message : 'Невірний промокод'); }
+                            finally { setPromoLoading(false); }
+                          }}
+                          className="px-5 py-3 bg-stone-900 text-white rounded-xl border border-stone-900 hover:bg-white hover:text-stone-900 transition-colors font-medium disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2"
+                        >
+                          {promoLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Застосувати'}
+                        </button>
+                      </div>
+                    )}
+                    {promoError && <p className="mt-1.5 text-sm text-red-600">{promoError}</p>}
+                  </div>
+
                   <div>
                     <label className="block text-sm font-medium text-stone-700 mb-2">
                       Коментар до замовлення
@@ -531,13 +760,13 @@ export default function CheckoutPage() {
                       onChange={handleInputChange}
                       placeholder="Додаткова інформація для обробки замовлення..."
                       rows={3}
-                      className="w-full px-4 py-3 border border-stone-300  focus:outline-none focus:ring-2 focus:ring-stone-900 focus:border-transparent resize-none"
+                      className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent resize-none"
                     />
                   </div>
 
                   <button
                     onClick={() => setStep('confirm')}
-                    className="w-full bg-stone-900 text-white py-3  hover:bg-stone-800 transition-colors font-medium"
+                    className="w-full bg-stone-900 text-white py-3 rounded-xl border border-stone-900 hover:bg-white hover:text-stone-900 transition-colors font-medium"
                   >
                     Переглянути замовлення
                   </button>
@@ -559,10 +788,10 @@ export default function CheckoutPage() {
 
             {/* Step 4: Confirmation */}
             {step === 'confirm' && (
-              <div className="bg-white  shadow-sm border border-stone-200 overflow-hidden">
+              <div className="bg-white rounded-2xl shadow-sm border border-stone-200">
                 <div className="p-6 border-b border-stone-100">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10  bg-stone-900 flex items-center justify-center text-white">
+                    <div className="w-10 h-10 rounded-full bg-sky-500 flex items-center justify-center text-white">
                       <CheckCircle2 className="w-5 h-5" />
                     </div>
                     <div>
@@ -573,14 +802,14 @@ export default function CheckoutPage() {
                 </div>
 
                 <div className="p-6 space-y-6">
-                  <div className="bg-emerald-50 border border-emerald-200  p-4">
+                  <div className="bg-sky-50 border border-sky-200 rounded-xl p-4">
                     <div className="flex items-start gap-3">
-                      <Shield className="w-5 h-5 text-emerald-600 mt-0.5" />
+                      <Shield className="w-5 h-5 text-sky-600 mt-0.5" />
                       <div className="flex-1">
-                        <div className="font-medium text-emerald-900 mb-1">
+                        <div className="font-medium text-sky-900 mb-1">
                           Ваші дані захищені
                         </div>
-                        <div className="text-sm text-emerald-700">
+                        <div className="text-sm text-sky-700">
                           Ми використовуємо сучасні технології шифрування для захисту вашої інформації
                         </div>
                       </div>
@@ -588,7 +817,7 @@ export default function CheckoutPage() {
                   </div>
 
                   {submitError && (
-                    <div className="flex items-start gap-3 bg-red-50 border border-red-200 p-4">
+                    <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-xl p-4">
                       <AlertCircle className="w-5 h-5 text-red-600 mt-0.5" />
                       <div className="text-sm text-red-700">{submitError}</div>
                     </div>
@@ -617,6 +846,7 @@ export default function CheckoutPage() {
                             deliveryFee: deliveryPrice,
                             name: fullName || undefined,
                             comment: formData.comment || undefined,
+                            promoCode: promoApplied?.code || undefined,
                           },
                           idempotencyKey
                         );
@@ -632,7 +862,7 @@ export default function CheckoutPage() {
                       }
                     }}
                     disabled={submitting || cartItems.length === 0}
-                    className="w-full bg-emerald-500 text-white py-4 hover:bg-emerald-600 transition-colors font-semibold text-lg shadow-lg shadow-emerald-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-lg"
+                    className="w-full bg-stone-900 text-white py-4 border border-stone-900 hover:bg-white hover:text-stone-900 transition-colors font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-xl"
                   >
                     {submitting ? (
                       <>
@@ -658,7 +888,7 @@ export default function CheckoutPage() {
             <div className="sticky top-6 space-y-6">
               
               {/* Cart Items */}
-              <div className="bg-white  shadow-sm border border-stone-200 overflow-hidden">
+              <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
                 <div className="p-6 border-b border-stone-100">
                   <div className="flex items-center gap-2">
                     <ShoppingBag className="w-5 h-5 text-stone-600" />
@@ -677,7 +907,7 @@ export default function CheckoutPage() {
                   ) : (
                     cartItems.map((item) => (
                       <div key={item.id} className="flex gap-3">
-                        <div className="w-20 h-20 bg-stone-100 overflow-hidden flex-shrink-0">
+                        <div className="w-20 h-20 bg-stone-100 rounded-lg overflow-hidden flex-shrink-0">
                           {item.imageUrl ? (
                             <Image
                               src={item.imageUrl}
@@ -715,7 +945,7 @@ export default function CheckoutPage() {
               </div>
 
               {/* Price Summary */}
-              <div className="bg-white  shadow-sm border border-stone-200 overflow-hidden">
+              <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
                 <div className="p-6 space-y-4">
                   <div className="flex justify-between text-stone-600">
                     <span>Вартість товарів:</span>
@@ -729,6 +959,13 @@ export default function CheckoutPage() {
                     </span>
                   </div>
 
+                  {discount > 0 && (
+                    <div className="flex justify-between text-sky-700">
+                      <span>Знижка ({promoApplied?.code}):</span>
+                      <span className="font-medium">-{discount.toLocaleString()} ₴</span>
+                    </div>
+                  )}
+
                   <div className="border-t border-stone-200 pt-4">
                     <div className="flex justify-between items-center">
                       <span className="text-lg font-semibold text-stone-900">Всього:</span>
@@ -741,25 +978,25 @@ export default function CheckoutPage() {
               </div>
 
               {/* Benefits */}
-              <div className="bg-gradient-to-br from-stone-900 to-stone-800  p-6 text-white">
+              <div className="bg-gradient-to-br from-stone-900 to-stone-800 rounded-2xl p-6 text-white">
                 <h4 className="font-semibold mb-4">Переваги замовлення</h4>
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-5 h-5 text-sky-400 flex-shrink-0 mt-0.5" />
                     <div className="text-sm">
                       <div className="font-medium">Гарантія якості</div>
                       <div className="text-stone-300 text-xs">Всі товари сертифіковані</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-5 h-5 text-sky-400 flex-shrink-0 mt-0.5" />
                     <div className="text-sm">
                       <div className="font-medium">Швидка доставка</div>
                       <div className="text-stone-300 text-xs">По всій Україні</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-5 h-5 text-sky-400 flex-shrink-0 mt-0.5" />
                     <div className="text-sm">
                       <div className="font-medium">Підтримка 24/7</div>
                       <div className="text-stone-300 text-xs">Завжди на зв'язку</div>

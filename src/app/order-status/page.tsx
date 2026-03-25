@@ -183,7 +183,7 @@ export default function OrderStatusPage() {
           </div>
 
           {/* Status Badge */}
-          <div className={cn('inline-flex items-center gap-2 px-4 py-2 border', statusInfo.bgColor, statusInfo.borderColor)}>
+          <div className={cn('inline-flex items-center gap-2 px-4 py-2 border rounded-full', statusInfo.bgColor, statusInfo.borderColor)}>
             <StatusIcon className={cn('w-5 h-5', statusInfo.color)} />
             <span className={cn('font-medium', statusInfo.color)}>{statusInfo.label}</span>
           </div>
@@ -221,7 +221,7 @@ export default function OrderStatusPage() {
             {activeTab === 'details' && (
               <>
                 {/* Order Items */}
-                <div className="bg-white shadow-sm border border-stone-200 overflow-hidden">
+                <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
                   <div className="p-6 border-b border-stone-100">
                     <h3 className="text-lg font-semibold text-stone-900 flex items-center gap-2">
                       <Package className="w-5 h-5" />
@@ -232,7 +232,7 @@ export default function OrderStatusPage() {
                   <div className="p-6 space-y-4">
                     {order.items.map((item, idx) => (
                       <div key={idx} className="flex gap-4 pb-4 border-b border-stone-100 last:border-0 last:pb-0">
-                        <div className="w-16 h-16 bg-stone-100 flex-shrink-0 overflow-hidden">
+                        <div className="w-16 h-16 bg-stone-100 rounded-lg flex-shrink-0 overflow-hidden">
                           {item.image ? (
                             <Image src={item.image} alt={item.title || item.sku} width={64} height={64} className="w-full h-full object-cover" />
                           ) : (
@@ -290,7 +290,7 @@ export default function OrderStatusPage() {
                 </div>
 
                 {/* Customer Info */}
-                <div className="bg-white shadow-sm border border-stone-200 overflow-hidden">
+                <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
                   <div className="p-6 border-b border-stone-100">
                     <h3 className="text-lg font-semibold text-stone-900 flex items-center gap-2">
                       <User className="w-5 h-5" />
@@ -301,7 +301,7 @@ export default function OrderStatusPage() {
                   <div className="p-6 space-y-4">
                     {order.name && (
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-stone-100 flex items-center justify-center">
+                        <div className="w-10 h-10 bg-stone-100 rounded-full flex items-center justify-center">
                           <User className="w-5 h-5 text-stone-600" />
                         </div>
                         <div>
@@ -312,7 +312,7 @@ export default function OrderStatusPage() {
                     )}
 
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-stone-100 flex items-center justify-center">
+                      <div className="w-10 h-10 bg-stone-100 rounded-full flex items-center justify-center">
                         <Phone className="w-5 h-5 text-stone-600" />
                       </div>
                       <div>
@@ -323,7 +323,7 @@ export default function OrderStatusPage() {
 
                     {order.comment && (
                       <div className="flex items-start gap-3 mt-2">
-                        <div className="w-10 h-10 bg-stone-100 flex items-center justify-center flex-shrink-0">
+                        <div className="w-10 h-10 bg-stone-100 rounded-full flex items-center justify-center flex-shrink-0">
                           <FileText className="w-5 h-5 text-stone-600" />
                         </div>
                         <div>
@@ -338,7 +338,7 @@ export default function OrderStatusPage() {
             )}
 
             {activeTab === 'tracking' && (
-              <div className="bg-white shadow-sm border border-stone-200 overflow-hidden">
+              <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
                 <div className="p-6 border-b border-stone-100">
                   <h3 className="text-lg font-semibold text-stone-900 flex items-center gap-2">
                     <Clock className="w-5 h-5" />
@@ -348,7 +348,7 @@ export default function OrderStatusPage() {
 
                 <div className="p-6">
                   {order.status === 'cancelled' ? (
-                    <div className="flex items-start gap-3 bg-red-50 border border-red-200 p-4">
+                    <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-xl p-4">
                       <AlertCircle className="w-5 h-5 text-red-600 mt-0.5" />
                       <div>
                         <div className="font-medium text-red-900 mb-1">Замовлення скасовано</div>
@@ -374,11 +374,11 @@ export default function OrderStatusPage() {
 
                             <div className="flex gap-4">
                               <div className={cn(
-                                'w-10 h-10 flex items-center justify-center flex-shrink-0 relative z-10',
+                                'w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 relative z-10',
                                 step.completed
-                                  ? 'bg-emerald-500 text-white'
+                                  ? 'bg-sky-500 text-white'
                                   : step.current
-                                    ? 'bg-stone-900 text-white animate-pulse'
+                                    ? 'bg-sky-500 text-white animate-pulse'
                                     : 'bg-stone-200 text-stone-400'
                               )}>
                                 <Icon className="w-5 h-5" />
@@ -405,10 +405,11 @@ export default function OrderStatusPage() {
           </div>
 
           {/* Sidebar */}
-          <div className="lg:col-span-1 space-y-6">
+          <div className="lg:col-span-1">
+            <div className="sticky top-6 space-y-6">
 
             {/* Order Summary */}
-            <div className="bg-white shadow-sm border border-stone-200 overflow-hidden sticky top-6">
+            <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
               <div className="p-6 border-b border-stone-100">
                 <h3 className="text-lg font-semibold text-stone-900 flex items-center gap-2">
                   <CreditCard className="w-5 h-5" />
@@ -448,14 +449,14 @@ export default function OrderStatusPage() {
             </div>
 
             {/* Help */}
-            <div className="bg-gradient-to-br from-stone-900 to-stone-800 p-6 text-white">
+            <div className="bg-gradient-to-br from-stone-900 to-stone-800 rounded-2xl p-6 text-white">
               <h4 className="font-semibold mb-4">Потрібна допомога?</h4>
               <p className="text-sm text-stone-300 mb-4">
                 Наша команда підтримки завжди готова відповісти на ваші питання
               </p>
               <Link
                 href="/contacts"
-                className="w-full bg-white text-stone-900 py-3 hover:bg-stone-100 transition-colors font-medium flex items-center justify-center gap-2"
+                className="w-full bg-white text-stone-900 py-3 rounded-xl border border-white hover:bg-transparent hover:text-white transition-colors font-medium flex items-center justify-center gap-2"
               >
                 <MessageCircle className="w-5 h-5" />
                 Зв&#39;язатись з підтримкою
@@ -463,7 +464,7 @@ export default function OrderStatusPage() {
             </div>
 
             {/* Quick Links */}
-            <div className="bg-white shadow-sm border border-stone-200 overflow-hidden">
+            <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
               <div className="p-6 space-y-3">
                 <Link
                   href="/catalog"
@@ -480,6 +481,7 @@ export default function OrderStatusPage() {
                   <Package className="w-4 h-4 text-stone-400 group-hover:text-stone-600" />
                 </Link>
               </div>
+            </div>
             </div>
           </div>
         </div>

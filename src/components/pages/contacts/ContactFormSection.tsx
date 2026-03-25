@@ -85,11 +85,11 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
             Надішліть нам повідомлення
           </h2>
           <p className="text-stone-600 text-sm">
-            Заповніть форму нижче, і ми зв&apos;яжемося з вами протягом 2 годин
+            Заповніть форму нижче, і наші менеджери зв&apos;яжуться з Вами у найближчий час
           </p>
         </div>
 
-        <div className="bg-white p-6 rounded-lg">
+        <div className="bg-white p-6 rounded-lg shadow-[0_0_0_1px_rgba(186,230,253,0.7)]">
           {!isSubmitted ? (
             <div className="space-y-4">
               <div className="grid md:grid-cols-2 gap-4">
@@ -103,7 +103,7 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full p-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-stone-900 focus:border-transparent transition-all text-sm"
+                    className="w-full p-3 border-2 border-sky-300/80 rounded-lg shadow-[inset_0_0_0_1px_rgba(255,255,255,0.95),0_0_0_1px_rgba(186,230,253,0.75)] focus:border-sky-500 focus:ring-2 focus:ring-sky-300/90 focus:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.95),0_0_0_2px_rgba(125,211,252,0.5),0_0_0_5px_rgba(125,211,252,0.18)] transition-all text-sm"
                     placeholder="Введіть ваше ім'я"
                   />
                 </div>
@@ -117,7 +117,7 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full p-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-stone-900 focus:border-transparent transition-all text-sm"
+                    className="w-full p-3 border-2 border-sky-300/80 rounded-lg shadow-[inset_0_0_0_1px_rgba(255,255,255,0.95),0_0_0_1px_rgba(186,230,253,0.75)] focus:border-sky-500 focus:ring-2 focus:ring-sky-300/90 focus:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.95),0_0_0_2px_rgba(125,211,252,0.5),0_0_0_5px_rgba(125,211,252,0.18)] transition-all text-sm"
                     placeholder="your@email.com"
                   />
                 </div>
@@ -133,7 +133,7 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full p-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-stone-900 focus:border-transparent transition-all text-sm"
+                    className="w-full p-3 border-2 border-sky-300/80 rounded-lg shadow-[inset_0_0_0_1px_rgba(255,255,255,0.95),0_0_0_1px_rgba(186,230,253,0.75)] focus:border-sky-500 focus:ring-2 focus:ring-sky-300/90 focus:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.95),0_0_0_2px_rgba(125,211,252,0.5),0_0_0_5px_rgba(125,211,252,0.18)] transition-all text-sm"
                     placeholder="+38 (000) 000-00-00"
                   />
                 </div>
@@ -147,10 +147,10 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
                       type="button"
                       onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                       className={cn(
-                        "w-full p-3 border rounded-lg transition-all text-sm text-left bg-white flex items-center justify-between",
+                        "w-full p-3 border-2 rounded-lg transition-all text-sm text-left bg-white flex items-center justify-between shadow-[inset_0_0_0_1px_rgba(255,255,255,0.95),0_0_0_1px_rgba(186,230,253,0.75)]",
                         isDropdownOpen 
-                          ? "border-[#3179cf] ring-2 ring-[#3179cf]" 
-                          : "border-stone-300",
+                          ? "border-sky-500 ring-2 ring-sky-300/80 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.95),0_0_0_2px_rgba(125,211,252,0.5),0_0_0_5px_rgba(125,211,252,0.18)]" 
+                          : "border-sky-300/80",
                         !formData.subject && "text-stone-500"
                       )}
                     >
@@ -158,13 +158,13 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
                       <ChevronDown 
                         className={cn(
                           "w-5 h-5 transition-transform",
-                          isDropdownOpen ? "rotate-180 text-[#3179cf]" : "text-stone-400"
+                          isDropdownOpen ? "rotate-180 text-sky-500" : "text-stone-400"
                         )} 
                       />
                     </button>
                     
                     {isDropdownOpen && (
-                      <div className="absolute top-full left-0 right-0 mt-1 bg-white border-2 border-[#3179cf] rounded-lg shadow-lg z-50 overflow-hidden">
+                      <div className="absolute top-full left-0 right-0 mt-1 bg-white border-2 border-sky-500 rounded-lg shadow-[0_18px_40px_rgba(56,189,248,0.18)] z-50 overflow-hidden">
                         {subjectOptions.map((option) => (
                           <button
                             key={option.value}
@@ -173,8 +173,8 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
                             className={cn(
                               "w-full p-3 text-sm text-left transition-colors",
                               formData.subject === option.value
-                                ? "bg-[#3179cf] text-white"
-                                : "hover:bg-blue-50 text-stone-900",
+                                ? "bg-sky-500 text-white"
+                                : "hover:bg-sky-50 text-stone-900",
                               option.value === "" && "text-stone-500"
                             )}
                           >
@@ -197,7 +197,7 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
                   onChange={handleChange}
                   required
                   rows={4}
-                  className="w-full p-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-stone-900 focus:border-transparent transition-all resize-none text-sm"
+                  className="w-full p-3 border-2 border-sky-300/80 rounded-lg shadow-[inset_0_0_0_1px_rgba(255,255,255,0.95),0_0_0_1px_rgba(186,230,253,0.75)] focus:border-sky-500 focus:ring-2 focus:ring-sky-300/90 focus:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.95),0_0_0_2px_rgba(125,211,252,0.5),0_0_0_5px_rgba(125,211,252,0.18)] transition-all resize-none text-sm"
                   placeholder="Розкажіть детальніше про ваші потреби..."
                 />
               </div>
@@ -214,7 +214,7 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
                     'px-6 py-2.5 rounded-lg font-medium transition-all duration-300 flex items-center gap-2 text-sm',
                     isSubmitting
                       ? 'bg-stone-400 text-white cursor-not-allowed'
-                      : 'bg-stone-900 text-white hover:bg-stone-800 hover:gap-3'
+                      : 'bg-stone-900 text-white border-2 border-stone-900 hover:bg-white hover:text-stone-900 hover:shadow-[0_0_24px_rgba(56,189,248,0.3)] hover:gap-3'
                   )}
                 >
                   {isSubmitting ? (

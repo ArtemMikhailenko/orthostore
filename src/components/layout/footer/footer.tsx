@@ -98,24 +98,13 @@ export function FooterSection({ className }: FooterSectionProps) {
           </div>
 
           {/* Logo with balls */}
-          <div className="flex items-center justify-center lg:justify-end">
-            <div className="relative group">
-              {/* Decorative glow */}
-              <div className="absolute -inset-3 bg-gradient-to-br from-sky-500/20 via-transparent to-sky-400/10 rounded-2xl blur-lg opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
-              {/* Border frame */}
-              <div className="relative px-6 py-10 rounded-2xl border border-gray-700/50 bg-gray-800/30 backdrop-blur-sm shadow-lg shadow-sky-900/10">
-                {/* Corner accents */}
-                <div className="absolute top-0 left-0 w-5 h-5 border-t-2 border-l-2 border-sky-400/60 rounded-tl-2xl" />
-                <div className="absolute top-0 right-0 w-5 h-5 border-t-2 border-r-2 border-sky-400/60 rounded-tr-2xl" />
-                <div className="absolute bottom-0 left-0 w-5 h-5 border-b-2 border-l-2 border-sky-400/60 rounded-bl-2xl" />
-                <div className="absolute bottom-0 right-0 w-5 h-5 border-b-2 border-r-2 border-sky-400/60 rounded-br-2xl" />
-                <img
-                  src="/logo-balls.png"
-                  alt="OrthoDent Pro"
-                  className="w-78 h-auto object-contain drop-shadow-lg"
-                />
-              </div>
-            </div>
+          <div className="flex flex-col items-center justify-center lg:justify-end gap-3">
+            <img
+              src="/logo-balls.png"
+              alt="ORTHOSTORE"
+              className="w-72 h-auto object-contain drop-shadow-lg"
+            />
+            <span className="text-xl font-bold tracking-widest text-white">ORTHOSTORE</span>
           </div>
         </div>
       </div>

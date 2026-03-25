@@ -18,6 +18,9 @@ interface LocationHoursSectionProps {
 
 export function LocationHoursSection({ className }: LocationHoursSectionProps) {
   const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const destinationUrl = 'https://www.google.com/maps/dir/?api=1&destination=50.4391,30.51573';
+  const openMapUrl = 'https://www.google.com/maps/search/?api=1&query=%D0%B2%D1%83%D0%BB.%20%D0%A1%D0%B0%D0%BA%D1%81%D0%B0%D0%B3%D0%B0%D0%BD%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE%2054%2F56%2C%20%D0%9A%D0%B8%D1%97%D0%B2';
+  const embedMapUrl = 'https://maps.google.com/maps?q=%D0%B2%D1%83%D0%BB.+%D0%A1%D0%B0%D0%BA%D1%81%D0%B0%D0%B3%D0%B0%D0%BD%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE+54/56,+%D0%9A%D0%B8%D1%97%D0%B2&z=17&output=embed';
 
   const workingHours = [
     { day: 'Понеділок-П\'ятниця', hours: '9:00 - 18:00', isToday: true },
@@ -82,8 +85,8 @@ export function LocationHoursSection({ className }: LocationHoursSectionProps) {
                 Як добратись
               </h4>
               <div className="space-y-2 text-sm text-stone-600">
-                <div className="flex items-center gap-2"><TrainFront className="w-4 h-4 text-stone-500 flex-shrink-0" /> Метро: Університет (10 хв. пішки)</div>
-                <div className="flex items-center gap-2"><Bus className="w-4 h-4 text-stone-500 flex-shrink-0" /> Громадський транспорт: 3, 69, 14, 171 (зупинка - готель Кооператор)</div>
+                <div className="flex items-center gap-2"><TrainFront className="w-4 h-4 text-stone-500 flex-shrink-0" /> Метро: Університет (10 хв), Палац Спорту (10 хв), Площа Українських Героїв (10 хв)</div>
+                <div className="flex items-center gap-2"><Bus className="w-4 h-4 text-stone-500 flex-shrink-0" /> Громадський транспорт: 3, 69, 14, 171 (зупинка - готель Кооператор) від метро Палац Спорту</div>
                 <div className="flex items-center gap-2"><Car className="w-4 h-4 text-stone-500 flex-shrink-0" /> Парковка: доступна біля офісу</div>
               </div>
             </div>
@@ -115,7 +118,7 @@ export function LocationHoursSection({ className }: LocationHoursSectionProps) {
                   </div>
                 ) : (
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2540.8355657498236!2d30.51573!3d50.4391!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d4ce5672b7b2f7%3A0x85b7e4a0a08c3d1a!2z0YPQuy4g0KHQsNC60YHQsNCz0LDQvdGB0LrQvtCz0L4sIDU0LzU2LCDQmtC40LXQsiwg0KPQutGA0LDQuNC90LAsIDAyMDAw!5e0!3m2!1sru!2sua!4v1647856234567!5m2!1sru!2sua"
+                    src={embedMapUrl}
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
@@ -126,29 +129,16 @@ export function LocationHoursSection({ className }: LocationHoursSectionProps) {
                   />
                 )}
               </div>
-              
-              {/* Map Overlay Info */}
-              {isMapLoaded && (
-                <div className="absolute top-4 left-4 bg-white p-4 rounded-lg shadow-lg">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                    <div>
-                      <div className="font-medium text-stone-900 text-sm">OrthoDent Pro</div>
-                      <div className="text-xs text-stone-600">вул. Саксаганського 54/56</div>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Map Actions */}
             <div className="flex gap-3">
-              <button className="flex-1 border border-stone-300 text-stone-700 py-3 px-4 rounded-lg hover:border-stone-400 transition-colors text-sm">
+              <a href={destinationUrl} target="_blank" rel="noreferrer" className="flex-1 border-2 border-stone-300 bg-white text-stone-700 py-3 px-4 rounded-lg hover:bg-stone-900 hover:text-white hover:border-stone-900 transition-all text-sm text-center">
                 Прокласти маршрут
-              </button>
-              <button className="flex-1 bg-stone-900 text-white py-3 px-4 rounded-lg hover:bg-stone-800 transition-colors text-sm">
+              </a>
+              <a href={openMapUrl} target="_blank" rel="noreferrer" className="flex-1 border-2 border-stone-900 bg-stone-900 text-white py-3 px-4 rounded-lg hover:bg-white hover:text-stone-900 transition-all text-sm text-center">
                 Відкрити в картах
-              </button>
+              </a>
             </div>
           </div>
         </div>

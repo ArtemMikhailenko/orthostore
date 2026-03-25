@@ -375,7 +375,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                 "w-12 h-12 border-2 flex items-center justify-center transition-all duration-300 rounded-xl",
                 currentIndex === 0
                   ? "border-stone-300 text-stone-300 cursor-not-allowed"
-                  : "border-stone-900 bg-white hover:bg-stone-900 hover:text-white hover:shadow-[0_0_40px_rgba(56,189,248,0.9),0_0_60px_rgba(56,189,248,0.5)]"
+                  : "border-stone-900 bg-white hover:bg-stone-900 hover:text-white hover:border-sky-400 hover:shadow-[0_0_20px_rgba(56,189,248,0.7),0_0_40px_rgba(56,189,248,0.35),0_0_60px_rgba(56,189,248,0.15)] hover:ring-[3px] hover:ring-sky-400/60"
               )}
               aria-label="Попередній товар"
             >
@@ -412,7 +412,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                 "w-12 h-12 border-2 flex items-center justify-center transition-all duration-300 rounded-xl",
                 currentIndex === products.length - 1
                   ? "border-stone-300 text-stone-300 cursor-not-allowed"
-                  : "border-stone-900 bg-white hover:bg-stone-900 hover:text-white hover:shadow-[0_0_40px_rgba(56,189,248,0.9),0_0_60px_rgba(56,189,248,0.5)]"
+                  : "border-stone-900 bg-white hover:bg-stone-900 hover:text-white hover:border-sky-400 hover:shadow-[0_0_20px_rgba(56,189,248,0.7),0_0_40px_rgba(56,189,248,0.35),0_0_60px_rgba(56,189,248,0.15)] hover:ring-[3px] hover:ring-sky-400/60"
               )}
               aria-label="Наступний товар"
             >
@@ -434,17 +434,17 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
               transition={{ delay: index * 0.1 }}
               whileHover={{ y: -8, transition: { duration: 0.2 } }}
               className={cn(
-                'text-left border-2 p-6 transition-all duration-300 bg-white group rounded-xl',
+                'text-left border p-6 transition-all duration-300 bg-white group rounded-xl',
                 currentIndex === index 
-                  ? 'border-stone-900 shadow-lg' 
-                  : 'border-stone-300 hover:border-stone-600 hover:shadow-md'
+                  ? 'border-sky-400/70 ring-[2.5px] ring-sky-300/50 shadow-[0_0_10px_rgba(56,189,248,0.4),0_0_25px_rgba(56,189,248,0.15),inset_0_0_8px_rgba(56,189,248,0.06)]' 
+                  : 'border-stone-300 hover:border-sky-300/40 hover:ring-[2.5px] hover:ring-sky-400/50 hover:shadow-[0_0_10px_rgba(56,189,248,0.5),0_0_25px_rgba(56,189,248,0.2)]'
               )}
             >
               <div 
                 className={cn(
                   'w-full aspect-square mb-4 border-2 bg-gradient-to-br relative overflow-hidden rounded-lg',
                   product.color,
-                  currentIndex === index ? 'border-stone-900' : 'border-stone-300'
+                  currentIndex === index ? 'border-sky-400/50' : 'border-stone-500'
                 )}
               >
                 <Image

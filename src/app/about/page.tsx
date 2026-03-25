@@ -29,7 +29,7 @@ export default function AboutPage() {
               Ми вийшли на цей ринок в 2015 році з головною метою – задовільнити Ваші потреби в якісній ортодонтичній продукції. Ми не просто пропонуємо товари — ми ділимося тим, у що справді віримо.
             </p>
             <p>
-              Ми постійно стежимо за інноваціями в сфері ортодонтії та підберемо вам найкращий варіант з широкого асортименту ортодонтичної продукції та інструментів. Надаємо індивідуальний підхід до кожного клієнта, проконсультуємо, допоможемо в виборі ідеального варіанта.
+              Ми постійно стежимо за інноваціями в сфері ортодонтії та підберемо Вам найкращий варіант з широкого асортименту ортодонтичної продукції та інструментів. Надаємо індивідуальний підхід до кожного клієнта, проконсультуємо, допоможемо в виборі ідеального варіанта.
             </p>
             <p>
               Ми з повагою ставимося як до великих компаній, цінуємо їхній досвід і готові поставити будь-яку кількість ортодонтичної продукції, так і до кожного лікаря, який бажає працювати з нами. Інтернет-магазин ортодонтичної продукції ORTHOSTORE слідкує за іноваціями у своїй сфері діяльності і пропонує продукцію високої якості від провідних світових брендів.
@@ -80,9 +80,9 @@ export default function AboutPage() {
 
           <div className="space-y-6">
             {/* Budget Segment */}
-            <div className="bg-blue-50/30 p-8 border-2 border-[#3179cf]/40 rounded-xl transition-all hover:border-[#3179cf]/60 hover:shadow-lg hover:shadow-[#3179cf]/10">
+            <div className="bg-white p-8 border-2 border-stone-200 rounded-xl transition-all duration-300 hover:border-sky-300/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_30px_rgba(56,189,248,0.2)]">
               <div className="flex items-start gap-6">
-                <span className="text-4xl font-light text-[#3179cf]/60">01</span>
+                <span className="text-5xl font-bold text-stone-900">01</span>
                 <div className="space-y-2">
                   <h3 className="text-xl font-medium text-stone-900">
                     Бюджетний сегмент
@@ -95,9 +95,9 @@ export default function AboutPage() {
             </div>
 
             {/* Mid Segment */}
-            <div className="bg-blue-50/30 p-8 border-2 border-[#3179cf]/40 rounded-xl transition-all hover:border-[#3179cf]/60 hover:shadow-lg hover:shadow-[#3179cf]/10">
+            <div className="bg-white p-8 border-2 border-stone-200 rounded-xl transition-all duration-300 hover:border-sky-300/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_30px_rgba(56,189,248,0.2)]">
               <div className="flex items-start gap-6">
-                <span className="text-4xl font-light text-[#3179cf]/60">02</span>
+                <span className="text-5xl font-bold text-stone-900">02</span>
                 <div className="space-y-2">
                   <h3 className="text-xl font-medium text-stone-900">
                     Середній ціновий клас
@@ -110,9 +110,9 @@ export default function AboutPage() {
             </div>
 
             {/* Premium Segment */}
-            <div className="bg-blue-50/30 p-8 border-2 border-[#3179cf]/40 rounded-xl transition-all hover:border-[#3179cf]/60 hover:shadow-lg hover:shadow-[#3179cf]/10">
+            <div className="bg-white p-8 border-2 border-stone-200 rounded-xl transition-all duration-300 hover:border-sky-300/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_30px_rgba(56,189,248,0.2)]">
               <div className="flex items-start gap-6">
-                <span className="text-4xl font-light text-[#3179cf]/60">03</span>
+                <span className="text-5xl font-bold text-stone-900">03</span>
                 <div className="space-y-2">
                   <h3 className="text-xl font-medium text-stone-900">
                     Преміум сегмент
@@ -128,13 +128,13 @@ export default function AboutPage() {
       </section>
 
       {/* Final CTA */}
-      <section className="bg-stone-900 text-white">
+      <section className="bg-stone-100">
         <div className="max-w-3xl mx-auto px-6 py-16 lg:py-20 text-center">
           <div className="space-y-6">
-            <h2 className="text-2xl lg:text-3xl font-light">
+            <h2 className="text-3xl lg:text-5xl font-light text-stone-900">
               З нами зручно, легко та швидко!
             </h2>
-            <p className="text-xl text-stone-200 font-medium">
+            <p className="text-xl text-stone-600 font-medium">
               Щиро дякуємо за довіру до ORTHOSTORE!
             </p>
           </div>

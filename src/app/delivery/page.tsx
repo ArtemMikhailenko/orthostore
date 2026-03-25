@@ -70,7 +70,7 @@ export default function DeliveryPage() {
                     <div className="flex items-start gap-3">
                       <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
                       <p className="text-stone-700">
-                        <span className="font-medium">Доставка по Київській області оплачується!</span> Вартість доставки 150 грн.
+                        <span className="font-medium">Доставка по Київській області оплачується!</span> Вартість доставки 200 грн.
                       </p>
                     </div>
                   </div>

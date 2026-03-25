@@ -34,18 +34,18 @@ export default function ReturnsPage() {
             </div>
           </div>
           
-          <div className="bg-stone-50 p-6 lg:p-8 rounded-lg">
+          <div className="bg-white border-2 border-stone-200 p-6 lg:p-8 rounded-2xl">
             <p className="text-base text-stone-700 leading-relaxed mb-4">
               Згідно з чинним законодавством України (згідно з додатком №3 постанови Кабінету Міністрів України від 19.03.1994 № 172 «Про реалізацію окремих положень Закону України «Про захист прав споживачів», п. 16 наказу Міністерства охорони здоров'я України від 10.07.2005 № 360 «Порядок відпуску лікарських засобів і виробів медичного призначення з аптек та їх структурних підрозділів»), товари, придбані в інтернет-магазині ORTHOSTORE:
             </p>
-            <div className="bg-white border-l-4 border-stone-900 p-4 mt-4">
-              <p className="text-stone-900 font-medium">
+            <div className="bg-stone-900 p-4 mt-4 rounded-2xl">
+              <p className="text-white font-medium">
                 НЕ ПІДЛЯГАЮТЬ ОБМІНУ (ПОВЕРНЕННЮ), ЯКЩО ВОНИ НАЛЕЖНОЇ ЯКОСТІ.
               </p>
             </div>
           </div>
 
-          <div className="mt-6 bg-white border-2 border-stone-200 p-6 lg:p-8">
+          <div className="mt-6 bg-white border-2 border-stone-200 p-6 lg:p-8 rounded-2xl">
             <p className="text-base text-stone-700 leading-relaxed">
               Однак, якщо товар має виробничий брак або був неправильно укомплектований з вини продавця, покупець має право на його повернення або обмін.
             </p>
@@ -65,7 +65,7 @@ export default function ReturnsPage() {
           </div>
 
           <div className="space-y-4">
-            <div className="bg-white border-2 border-stone-200 p-6">
+            <div className="bg-white border-2 border-stone-200 p-6 rounded-2xl">
               <div className="flex items-start gap-3">
                 <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-stone-700">
@@ -74,7 +74,7 @@ export default function ReturnsPage() {
               </div>
             </div>
 
-            <div className="bg-white border-2 border-stone-200 p-6">
+            <div className="bg-white border-2 border-stone-200 p-6 rounded-2xl">
               <div className="flex items-start gap-3">
                 <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-stone-700">
@@ -83,7 +83,7 @@ export default function ReturnsPage() {
               </div>
             </div>
 
-            <div className="bg-white border-2 border-stone-200 p-6">
+            <div className="bg-white border-2 border-stone-200 p-6 rounded-2xl">
               <div className="flex items-start gap-3">
                 <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-stone-700">
@@ -92,7 +92,7 @@ export default function ReturnsPage() {
               </div>
             </div>
 
-            <div className="bg-white border-2 border-stone-200 p-6">
+            <div className="bg-white border-2 border-stone-200 p-6 rounded-2xl">
               <div className="flex items-start gap-3">
                 <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-stone-700">
@@ -135,14 +135,14 @@ export default function ReturnsPage() {
         {/* Cannot Return */}
         <div className="mb-16">
           <div className="flex items-center gap-3 mb-8">
-            <AlertCircle className="w-6 h-6 text-stone-900" />
+            <AlertCircle className="w-12 h-12 text-stone-900" />
             <h2 className="text-2xl lg:text-3xl font-light text-stone-900">
               Ми не зможемо замінити товар або повернути Вам гроші, якщо:
             </h2>
           </div>
 
           <div className="space-y-4">
-            <div className="bg-red-50 border-l-4 border-red-600 p-6">
+            <div className="bg-red-50 border-2 border-red-200 border-l-[5px] border-l-red-400 p-6 rounded-2xl">
               <div className="flex items-start gap-3">
                 <div className="w-1.5 h-1.5 bg-red-600 rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-stone-900">
@@ -151,7 +151,7 @@ export default function ReturnsPage() {
               </div>
             </div>
 
-            <div className="bg-red-50 border-l-4 border-red-600 p-6">
+            <div className="bg-red-50 border-2 border-red-200 border-l-[5px] border-l-red-400 p-6 rounded-2xl">
               <div className="flex items-start gap-3">
                 <div className="w-1.5 h-1.5 bg-red-600 rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-stone-900">
@@ -160,7 +160,7 @@ export default function ReturnsPage() {
               </div>
             </div>
 
-            <div className="bg-red-50 border-l-4 border-red-600 p-6">
+            <div className="bg-red-50 border-2 border-red-200 border-l-[5px] border-l-red-400 p-6 rounded-2xl">
               <div className="flex items-start gap-3">
                 <div className="w-1.5 h-1.5 bg-red-600 rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-stone-900">
@@ -169,7 +169,7 @@ export default function ReturnsPage() {
               </div>
             </div>
 
-            <div className="bg-red-50 border-l-4 border-red-600 p-6">
+            <div className="bg-red-50 border-2 border-red-200 border-l-[5px] border-l-red-400 p-6 rounded-2xl">
               <div className="flex items-start gap-3">
                 <div className="w-1.5 h-1.5 bg-red-600 rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-stone-900">
@@ -178,7 +178,7 @@ export default function ReturnsPage() {
               </div>
             </div>
 
-            <div className="bg-red-50 border-l-4 border-red-600 p-6">
+            <div className="bg-red-50 border-2 border-red-200 border-l-[5px] border-l-red-400 p-6 rounded-2xl">
               <div className="flex items-start gap-3">
                 <div className="w-1.5 h-1.5 bg-red-600 rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-stone-900">
@@ -200,7 +200,7 @@ export default function ReturnsPage() {
             </p>
             <a 
               href="tel:+380503039494"
-              className="inline-flex items-center gap-3 bg-stone-900 text-white px-8 py-4 font-medium hover:bg-stone-800 transition-all duration-300 rounded-lg"
+              className="inline-flex items-center gap-3 bg-stone-900 text-white px-8 py-4 font-medium hover:bg-white hover:text-stone-900 border-2 border-stone-900 transition-all duration-300 rounded-lg"
             >
               <Phone className="w-5 h-5" />
               +380 50 303 94 94

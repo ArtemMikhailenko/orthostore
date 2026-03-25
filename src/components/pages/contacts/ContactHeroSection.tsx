@@ -33,7 +33,7 @@ export function ContactHeroSection({ className }: ContactHeroSectionProps) {
           </p>
           <button
             onClick={scrollToContacts}
-            className="inline-flex items-center gap-3 border-2 border-stone-900 bg-stone-900 text-white px-8 py-4 rounded-lg hover:shadow-[0_0_40px_rgba(56,189,248,0.9),0_0_60px_rgba(56,189,248,0.5)] transition-all duration-300 font-medium text-lg group"
+            className="inline-flex items-center gap-3 border-2 border-stone-900 bg-stone-900 text-white px-8 py-4 rounded-lg hover:bg-white hover:text-stone-900 hover:shadow-[0_0_24px_rgba(56,189,248,0.75),0_0_48px_rgba(56,189,248,0.35)] transition-all duration-300 font-medium text-lg group"
           >
             Як з нами зв'язатись
             <ArrowDown className="w-5 h-5 group-hover:translate-y-1 transition-transform" />

@@ -93,6 +93,7 @@ export interface CreateOrderPayload {
   deliveryFee?: number;
   name?: string;
   comment?: string;
+  promoCode?: string;
 }
 
 /* ─── Token storage helpers ─── */
@@ -200,6 +201,21 @@ export async function apiGetMyOrders(page = 1, limit = 20): Promise<OrdersPage> 
   return http<OrdersPage>('/me/orders', {
     headers: authHeaders(),
     query: { page, limit },
+  });
+}
+
+export interface PromoValidation {
+  valid: true;
+  code: string;
+  name: string;
+  type: 'percent' | 'fixed';
+  value: number;
+}
+
+export async function apiValidatePromoCode(code: string): Promise<PromoValidation> {
+  return http<PromoValidation>('/promo-codes/validate', {
+    method: 'POST',
+    body: { code },
   });
 }
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react';
 import { useCartStore } from '@/lib/cart-store';
 import Image from 'next/image';
@@ -9,6 +9,11 @@ import { cn } from '@/lib/utils';
 
 export function CartDrawer() {
   const { items, isOpen, close, removeItem, increase, decrease, totalItems, totalPrice, clear } = useCartStore();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <>
@@ -34,7 +39,7 @@ export function CartDrawer() {
           <div className="flex items-center gap-3">
             <ShoppingBag className="w-5 h-5 text-stone-700" />
             <h2 className="text-lg font-semibold text-stone-900">Кошик</h2>
-            <span className="text-sm text-stone-500">{totalItems()} шт.</span>
+            <span className="text-sm text-stone-500">{mounted ? totalItems() : 0} шт.</span>
           </div>
           <button onClick={close} className="p-2 rounded-lg hover:bg-stone-100">
             <X className="w-5 h-5 text-stone-600" />

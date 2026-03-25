@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { ArrowRight, Search, Package, Plus, ChevronRight, Layers } from "lucide-react";
+import { ArrowRight, Search, Package, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
@@ -13,7 +13,7 @@ function SubcategoryTags({ subcategories, parentSlug, variant = "light" }: {
 }) {
   const styles = {
     light: {
-      tag: "bg-white/80 text-stone-700 hover:bg-white hover:text-[#3179cf] backdrop-blur-sm",
+      tag: "bg-white/80 text-stone-700 hover:bg-white hover:text-[#0ea5e9] backdrop-blur-sm",
       count: "text-stone-400",
     },
     dark: {
@@ -21,8 +21,8 @@ function SubcategoryTags({ subcategories, parentSlug, variant = "light" }: {
       count: "text-white/40",
     },
     accent: {
-      tag: "bg-[#3179cf]/10 text-stone-700 hover:bg-[#3179cf]/20 hover:text-[#3179cf] border border-[#3179cf]/20",
-      count: "text-[#3179cf]/50",
+      tag: "bg-[#0ea5e9]/10 text-stone-700 hover:bg-[#0ea5e9]/20 hover:text-[#0ea5e9] border border-[#0ea5e9]/20",
+      count: "text-[#0ea5e9]/50",
     },
   };
   const s = styles[variant];
@@ -69,35 +69,15 @@ type CatItem = {
   This guarantees zero gaps.
 */
 
-const PLACEHOLDER_IMG = "https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800&q=80&fit=crop&sat=-100";
+function catImg(filename: string) {
+  return `/images/${encodeURIComponent('Фото для каталога на головну')}/${encodeURIComponent(filename)}`;
+}
 
 const ALL_CATEGORIES: CatItem[] = [
   { 
-    name: "ПРОПИСИ БРЕКЕТІВ", 
-    slug: "propysy-breketiv", 
-    img: PLACEHOLDER_IMG, 
-    style: "photo"
-  },
-  { 
-    name: "МІКРОІМПЛАНТИ", 
-    slug: "mikroimplanty", 
-    img: PLACEHOLDER_IMG, 
-    style: "dark"
-  },
-  { 
-    name: "МІНІ ПЛАСТИНЫ", 
-    slug: "mini-plastyny", 
-    img: PLACEHOLDER_IMG, 
-    style: "accent",
-    subcategories: [
-      { name: "міні пластини", count: 18 },
-      { name: "щелепно-лицьова хірургія", count: 12 },
-    ]
-  },
-  { 
     name: "БРЕКЕТИ", 
     slug: "brekety", 
-    img: PLACEHOLDER_IMG, 
+    img: catImg("Атачменти - кнопки 1.jpg"), 
     style: "photo",
     subcategories: [
       { name: "самолігуючі", count: 28 },
@@ -106,15 +86,37 @@ const ALL_CATEGORIES: CatItem[] = [
     ]
   },
   { 
+    name: "МІКРОІМПЛАНТИ", 
+    slug: "mikroimplanty", 
+    img: catImg("Микроімпланти - тільки розверніть її горизонтально.png"), 
+    style: "dark"
+  },
+  { 
+    name: "МІНІ ПЛАСТИНЫ", 
+    slug: "mini-plastyny", 
+    img: catImg("Міні пластини.png"), 
+    style: "accent",
+    subcategories: [
+      { name: "міні пластини", count: 18 },
+      { name: "щелепно-лицьова хірургія", count: 12 },
+    ]
+  },
+  { 
+    name: "ПРОПИСИ БРЕКЕТІВ", 
+    slug: "propysy-breketiv", 
+    img: catImg("Атачменти - стопори.JPG"), 
+    style: "photo"
+  },
+  { 
     name: "ЩІЧНІ ТРУБКИ ТА МОЛЯРНІ КІЛЬЦЯ", 
     slug: "shchichni-molyarni", 
-    img: PLACEHOLDER_IMG, 
+    img: catImg("Щічні трубки.jpeg"), 
     style: "light"
   },
   { 
     name: "АТАЧМЕНТИ", 
     slug: "atachments", 
-    img: PLACEHOLDER_IMG, 
+    img: catImg("Атачменти 1.jpg"), 
     style: "dark",
     subcategories: [
       { name: "стопори", count: 35 },
@@ -127,49 +129,49 @@ const ALL_CATEGORIES: CatItem[] = [
   { 
     name: "ДУГИ", 
     slug: "duhy", 
-    img: PLACEHOLDER_IMG, 
+    img: catImg("Дуги.JPG"), 
     style: "photo"
   },
   { 
     name: "ЕЛАСТИЧНІ МАТЕРІАЛИ", 
     slug: "elastychni", 
-    img: PLACEHOLDER_IMG, 
+    img: catImg("Трейнера та миобрайс (2).jpg"), 
     style: "accent"
   },
   { 
     name: "ФІКСАЦІЙНІ МАТЕРІАЛИ", 
     slug: "fiksatsiini", 
-    img: PLACEHOLDER_IMG, 
+    img: catImg("Матеріали Для техників 1.jpg"), 
     style: "light"
   },
   { 
     name: "РЕТРАКТОРИ", 
     slug: "retraktory", 
-    img: PLACEHOLDER_IMG, 
+    img: catImg("Ретрактори.jpg"), 
     style: "dark"
   },
   { 
     name: "ДЗЕРКАЛА ТА ФОТОКОНТРАСТЕРИ", 
     slug: "dzerkala-foto", 
-    img: PLACEHOLDER_IMG, 
+    img: catImg("Дзеркала та фотоконтрастори.jpg"), 
     style: "photo"
   },
   { 
     name: "ЗОВНІШНЬОРОТОВІ ПРИСТОСУВАННЯ", 
     slug: "zovnishnorotovi", 
-    img: PLACEHOLDER_IMG, 
+    img: catImg("Зовнішньоротові пристосування.jpg"), 
     style: "accent"
   },
   { 
     name: "ТРЕЙНЕРА ТА МИОБРЕЙСИ", 
     slug: "treynera-myobreysy", 
-    img: PLACEHOLDER_IMG, 
+    img: catImg("Трейнера та миобрайс.jpg"), 
     style: "light"
   },
   { 
     name: "МАТЕРІАЛИ ДЛЯ ТЕХНІКІВ", 
     slug: "materialy-tehnikiv", 
-    img: PLACEHOLDER_IMG, 
+    img: catImg("Матеріали Для техників.JPG"), 
     style: "photo",
     subcategories: [
       { name: "гвинти", count: 15 },
@@ -183,19 +185,19 @@ const ALL_CATEGORIES: CatItem[] = [
   { 
     name: "СЕПАРАЦІЙНІ ІНСТРУМЕНТИ", 
     slug: "separatsiyni-instrumenty", 
-    img: PLACEHOLDER_IMG, 
+    img: catImg("Сепараційні інструменти.jpg"), 
     style: "dark"
   },
   { 
     name: "АКСЕСУАРИ", 
     slug: "aksesuari", 
-    img: PLACEHOLDER_IMG, 
+    img: catImg("Атачменти - кнопки.jpg"), 
     style: "accent"
   },
   { 
     name: "ІНСТРУМЕНТИ", 
     slug: "instrumenty", 
-    img: PLACEHOLDER_IMG, 
+    img: catImg("Інструменти.jpg"), 
     style: "photo",
     subcategories: [
       { name: "ORTHOSTORE", count: 45 },
@@ -207,11 +209,11 @@ const ALL_CATEGORIES: CatItem[] = [
 /* Grid area assignments for each of the 17 items (desktop: 4 cols) */
 const GRID_AREAS = [
   "col-span-2 row-span-2",   // 0  БРЕКЕТИ         — large 2×2
-  "col-span-1 row-span-1",   // 1  ДУГИ            — 1×1
-  "col-span-1 row-span-1",   // 2  МІКРОІМПЛАНТИ   — 1×1
+  "col-span-2 row-span-1",   // 1  МІКРОІМПЛАНТИ   — wide 2×1
+  "col-span-1 row-span-1",   // 2  МІНІ ПЛАСТИНИ   — 1×1
   "col-span-1 row-span-1",   // 3  ПРОПИСИ         — 1×1
-  "col-span-1 row-span-1",   // 4  ІНСТРУМЕНТИ     — 1×1
-  "col-span-2 row-span-1",   // 5  МІНІ ПЛАСТИНИ   — wide 2×1
+  "col-span-1 row-span-1",   // 4  ЩІЧНІ ТРУБКИ    — 1×1
+  "col-span-1 row-span-1",   // 5  АТАЧМЕНТИ       — 1×1
   "col-span-1 row-span-1",   // 6  ЩІЧНІ ТРУБКИ    — 1×1
   "col-span-1 row-span-2",   // 7  АТАЧМЕНТИ       — tall 1×2
   "col-span-1 row-span-1",   // 8  ЕЛАСТИЧНІ       — 1×1
@@ -226,26 +228,16 @@ const GRID_AREAS = [
 ];
 
 /* ─── Photo Card — full image background ─── */
-function PhotoCard({ cat, index, area }: { cat: CatItem; index: number; area: string }) {
+function PhotoCard({ cat, area }: { cat: CatItem; area: string }) {
   const isLarge = area.includes("col-span-2") && area.includes("row-span-2");
   const hasSubcats = cat.subcategories && cat.subcategories.length > 0;
   return (
-    <Link href={`/catalog/${cat.slug}`} className={cn("group relative block rounded-2xl overflow-hidden", area)}>
-      <Image src={cat.img} alt={cat.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" sizes="(max-width:768px) 100vw, 33vw" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition duration-500" />
+    <Link href={`/catalog/${cat.slug}`} className={cn("group relative block rounded-2xl overflow-hidden hover:scale-[1.02] transition-transform duration-300", area)}>
+      <Image src={cat.img} alt={cat.name} fill className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" sizes="(max-width:768px) 100vw, 33vw" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent transition-opacity duration-500" />
       <div className={cn("relative z-10 flex flex-col justify-end h-full p-5", isLarge && "p-7")}>
-        <span className={cn("absolute top-4 right-5 font-extralight tabular-nums text-white/[0.08] select-none", isLarge ? "text-[96px] leading-none" : "text-[56px] leading-none")}>
-          {String(index + 1).padStart(2, "0")}
-        </span>
-        {hasSubcats && (
-          <div className="absolute top-5 left-5 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full hidden lg:flex items-center gap-1.5">
-            <Layers className="w-3 h-3 text-stone-700" />
-            <span className="text-[10px] font-semibold text-stone-900">{cat.subcategories!.length}</span>
-          </div>
-        )}
-        <h3 className={cn("font-semibold uppercase tracking-wider leading-tight text-white", isLarge ? "text-2xl" : "text-sm")}>{cat.name}</h3>
-        <div className="flex items-center gap-2 mt-2 text-white/50 group-hover:text-white transition-colors duration-300">
+        <h3 className={cn("font-semibold uppercase tracking-wider leading-tight text-white line-clamp-2", isLarge ? "text-2xl" : "text-sm")}>{cat.name}</h3>
+        <div className="flex items-center gap-2 mt-2 text-white/50 group-hover:text-sky-300 transition-colors duration-300">
           <span className="text-[10px] font-medium tracking-[0.15em] uppercase">Переглянути</span>
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
         </div>
@@ -253,29 +245,21 @@ function PhotoCard({ cat, index, area }: { cat: CatItem; index: number; area: st
           <SubcategoryTags subcategories={cat.subcategories!} parentSlug={cat.slug} variant="dark" />
         )}
       </div>
+      <div className="absolute bottom-0 left-0 right-0 h-[3px] w-0 bg-gradient-to-r from-[#0ea5e9] to-sky-300 group-hover:w-full transition-all duration-500 z-20" />
     </Link>
   );
 }
 
-/* ─── Dark Card — stone-900 bg, small image thumbnail ─── */
-function DarkCard({ cat, index, area }: { cat: CatItem; index: number; area: string }) {
+/* ─── Dark Card — full image, dark overlay ─── */
+function DarkCard({ cat, area }: { cat: CatItem; area: string }) {
   const hasSubcats = cat.subcategories && cat.subcategories.length > 0;
   return (
-    <Link href={`/catalog/${cat.slug}`} className={cn("group relative block rounded-2xl overflow-hidden bg-stone-900", area)}>
-      {/* Small circular image */}
-      <div className="absolute top-5 right-5 w-16 h-16 overflow-hidden rounded-full opacity-40 group-hover:opacity-70 transition-opacity duration-500">
-        <Image src={cat.img} alt="" fill className="object-cover" sizes="64px" />
-      </div>
+    <Link href={`/catalog/${cat.slug}`} className={cn("group relative block rounded-2xl overflow-hidden bg-stone-900 hover:scale-[1.02] transition-transform duration-300", area)}>
+      <Image src={cat.img} alt={cat.name} fill className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105 opacity-55 group-hover:opacity-75" sizes="(max-width:768px) 100vw, 25vw" />
+      <div className="absolute inset-0 bg-gradient-to-t from-stone-900/85 via-stone-900/30 to-transparent" />
       <div className="relative z-10 flex flex-col justify-end h-full p-5">
-        <span className="absolute top-4 left-5 text-[11px] font-mono text-white/20 tracking-wider">{String(index + 1).padStart(2, "0")}</span>
-        {hasSubcats && (
-          <div className="absolute top-4 right-24 bg-white/10 backdrop-blur-sm px-2.5 py-1 rounded-full hidden lg:flex items-center gap-1.5">
-            <Layers className="w-3 h-3 text-white/70" />
-            <span className="text-[10px] font-semibold text-white">{cat.subcategories!.length}</span>
-          </div>
-        )}
-        <h3 className="font-semibold uppercase tracking-wider leading-tight text-white text-sm">{cat.name}</h3>
-        <div className="flex items-center gap-2 mt-2 text-stone-500 group-hover:text-stone-300 transition-colors duration-300">
+        <h3 className="font-semibold uppercase tracking-wider leading-tight text-white text-sm line-clamp-2">{cat.name}</h3>
+        <div className="flex items-center gap-2 mt-2 text-stone-400 group-hover:text-sky-300 transition-colors duration-300">
           <span className="text-[10px] font-medium tracking-[0.15em] uppercase">Переглянути</span>
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
         </div>
@@ -283,76 +267,51 @@ function DarkCard({ cat, index, area }: { cat: CatItem; index: number; area: str
           <SubcategoryTags subcategories={cat.subcategories!} parentSlug={cat.slug} variant="dark" />
         )}
       </div>
-      {/* Bottom line */}
-      <div className="absolute bottom-0 left-0 right-0 h-[2px] w-0 bg-gradient-to-r from-[#3179cf] to-blue-400 group-hover:w-full transition-all duration-500 z-20" />
+      <div className="absolute bottom-0 left-0 right-0 h-[3px] w-0 bg-gradient-to-r from-[#0ea5e9] to-sky-300 group-hover:w-full transition-all duration-500 z-20" />
     </Link>
   );
 }
 
-/* ─── Light Card — stone-100 bg, image strip on right ─── */
-function LightCard({ cat, index, area }: { cat: CatItem; index: number; area: string }) {
-  const isTall = area.includes("row-span-2");
+/* ─── Light Card — full image, soft overlay ─── */
+function LightCard({ cat, area }: { cat: CatItem; area: string }) {
   const hasSubcats = cat.subcategories && cat.subcategories.length > 0;
   return (
-    <Link href={`/catalog/${cat.slug}`} className={cn("group relative block rounded-2xl overflow-hidden bg-stone-100", area)}>
-      {/* Right-side image strip */}
-      <div className={cn("absolute top-0 right-0 h-full overflow-hidden", isTall ? "w-1/2" : "w-2/5")}>
-        <Image src={cat.img} alt="" fill className="object-cover opacity-50 group-hover:opacity-80 transition-all duration-700 group-hover:scale-105" sizes="200px" />
-        <div className="absolute inset-0 bg-gradient-to-r from-stone-100 to-transparent" />
-      </div>
+    <Link href={`/catalog/${cat.slug}`} className={cn("group relative block rounded-2xl overflow-hidden bg-stone-200 hover:scale-[1.02] transition-transform duration-300", area)}>
+      <Image src={cat.img} alt={cat.name} fill className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105 opacity-60 group-hover:opacity-85" sizes="(max-width:768px) 100vw, 25vw" />
+      <div className="absolute inset-0 bg-gradient-to-t from-stone-900/70 via-stone-900/15 to-transparent" />
       <div className="relative z-10 flex flex-col justify-end h-full p-5">
-        <span className="absolute top-4 left-5 text-[11px] font-mono text-stone-400/50 tracking-wider">{String(index + 1).padStart(2, "0")}</span>
-        {hasSubcats && (
-          <div className="absolute top-4 right-5 bg-stone-900 px-2.5 py-1 rounded-full hidden lg:flex items-center gap-1.5">
-            <Layers className="w-3 h-3 text-white/70" />
-            <span className="text-[10px] font-semibold text-white">{cat.subcategories!.length}</span>
-          </div>
-        )}
-        <h3 className="font-semibold uppercase tracking-wider leading-tight text-stone-800 text-sm max-w-[60%]">{cat.name}</h3>
-        <div className="flex items-center gap-2 mt-2 text-stone-400 group-hover:text-stone-700 transition-colors duration-300">
+        <h3 className="font-semibold uppercase tracking-wider leading-tight text-white text-sm line-clamp-2">{cat.name}</h3>
+        <div className="flex items-center gap-2 mt-2 text-white/50 group-hover:text-sky-300 transition-colors duration-300">
           <span className="text-[10px] font-medium tracking-[0.15em] uppercase">Переглянути</span>
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
         </div>
         {hasSubcats && (
-          <SubcategoryTags subcategories={cat.subcategories!} parentSlug={cat.slug} variant="light" />
+          <SubcategoryTags subcategories={cat.subcategories!} parentSlug={cat.slug} variant="dark" />
         )}
       </div>
-      {/* Bottom line */}
-      <div className="absolute bottom-0 left-0 right-0 h-[2px] w-0 bg-gradient-to-r from-stone-900 to-stone-600 group-hover:w-full transition-all duration-500 z-20 rounded-b-2xl" />
+      <div className="absolute bottom-0 left-0 right-0 h-[3px] w-0 bg-gradient-to-r from-[#0ea5e9] to-sky-300 group-hover:w-full transition-all duration-500 z-20" />
     </Link>
   );
 }
 
-/* ─── Accent Card — bordered, minimal, with plus icon ─── */
-function AccentCard({ cat, index, area }: { cat: CatItem; index: number; area: string }) {
+/* ─── Accent Card — full image, sky-tinted overlay ─── */
+function AccentCard({ cat, area }: { cat: CatItem; area: string }) {
   const hasSubcats = cat.subcategories && cat.subcategories.length > 0;
   return (
-    <Link href={`/catalog/${cat.slug}`} className={cn("group relative block rounded-2xl overflow-hidden bg-white border border-stone-200 hover:border-[#3179cf]/30 transition-colors duration-300", area)}>
-      {/* Corner dot */}
-      <div className="absolute top-5 right-5 w-8 h-8 border border-stone-300 rounded-lg group-hover:border-[#3179cf] group-hover:bg-[#3179cf] transition-all duration-300 flex items-center justify-center">
-        <Plus className="w-3.5 h-3.5 text-stone-400 group-hover:text-white transition-colors duration-300" />
-      </div>
-      {/* Small image at bottom-right */}
-      <div className="absolute bottom-0 right-0 w-24 h-24 overflow-hidden rounded-tl-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500">
-        <Image src={cat.img} alt="" fill className="object-cover" sizes="96px" />
-      </div>
+    <Link href={`/catalog/${cat.slug}`} className={cn("group relative block rounded-2xl overflow-hidden bg-sky-950 hover:scale-[1.02] transition-transform duration-300", area)}>
+      <Image src={cat.img} alt={cat.name} fill className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105 opacity-55 group-hover:opacity-80" sizes="(max-width:768px) 100vw, 25vw" />
+      <div className="absolute inset-0 bg-gradient-to-t from-sky-950/90 via-sky-950/25 to-transparent group-hover:from-sky-950/70 transition-all duration-500" />
       <div className="relative z-10 flex flex-col justify-end h-full p-5">
-        <span className="absolute top-4 left-5 text-[11px] font-mono text-stone-300 tracking-wider">{String(index + 1).padStart(2, "0")}</span>
-        {hasSubcats && (
-          <div className="absolute top-4 right-16 bg-[#3179cf] px-2.5 py-1 rounded-full hidden lg:flex items-center gap-1.5">
-            <Layers className="w-3 h-3 text-white/70" />
-            <span className="text-[10px] font-semibold text-white">{cat.subcategories!.length}</span>
-          </div>
-        )}
-        <h3 className="font-semibold uppercase tracking-wider leading-tight text-stone-900 text-sm">{cat.name}</h3>
-        <div className="flex items-center gap-2 mt-2 text-stone-400 group-hover:text-[#3179cf] transition-colors duration-300">
+        <h3 className="font-semibold uppercase tracking-wider leading-tight text-white text-sm line-clamp-2">{cat.name}</h3>
+        <div className="flex items-center gap-2 mt-2 text-sky-300/60 group-hover:text-sky-300 transition-colors duration-300">
           <span className="text-[10px] font-medium tracking-[0.15em] uppercase">Переглянути</span>
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
         </div>
         {hasSubcats && (
-          <SubcategoryTags subcategories={cat.subcategories!} parentSlug={cat.slug} variant="accent" />
+          <SubcategoryTags subcategories={cat.subcategories!} parentSlug={cat.slug} variant="dark" />
         )}
       </div>
+      <div className="absolute bottom-0 left-0 right-0 h-[3px] w-0 bg-gradient-to-r from-[#0ea5e9] to-sky-300 group-hover:w-full transition-all duration-500 z-20" />
     </Link>
   );
 }
@@ -360,7 +319,7 @@ function AccentCard({ cat, index, area }: { cat: CatItem; index: number; area: s
 /* ─── Route to correct card component ─── */
 function CategoryCard({ cat, index }: { cat: CatItem; index: number }) {
   const area = GRID_AREAS[index] ?? "col-span-1 row-span-1";
-  const props = { cat, index, area };
+  const props = { cat, area };
   switch (cat.style) {
     case "dark":   return <DarkCard {...props} />;
     case "light":  return <LightCard {...props} />;
@@ -408,7 +367,7 @@ export default function CatalogPage() {
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Пошук категорій..."
-                className="w-full pl-11 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3179cf] focus:border-transparent transition-all placeholder:text-stone-400"
+                className="w-full pl-11 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] focus:border-transparent transition-all placeholder:text-stone-400"
               />
             </div>
           </div>
