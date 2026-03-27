@@ -98,19 +98,14 @@ export function SplashScreen({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
   const [show, setShow] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
-  const [soundPlayed, setSoundPlayed] = useState(false);
+  const soundPlayedRef = useRef(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Play chime on first user interaction (needed for browser autoplay policy)
   const triggerSound = useCallback(() => {
-    if (soundPlayed) return;
-    setSoundPlayed(true);
+    if (soundPlayedRef.current) return;
+    soundPlayedRef.current = true;
     playChime();
-    // Also try to unmute the video in case it has its own audio
-    if (videoRef.current) {
-      videoRef.current.muted = false;
-    }
-  }, [soundPlayed]);
+  }, []);
 
   // Check if splash was already seen after mount
   useEffect(() => {
@@ -125,19 +120,37 @@ export function SplashScreen({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  // Try to play sound immediately when splash shows, fallback to first interaction
   useEffect(() => {
-    if (show) {
-      document.body.style.overflow = 'hidden';
-      // Listen for any interaction to unlock audio
-      const handler = () => triggerSound();
-      document.addEventListener('pointerdown', handler, { once: true });
-      document.addEventListener('keydown', handler, { once: true });
-      return () => {
-        document.body.style.overflow = '';
-        document.removeEventListener('pointerdown', handler);
-        document.removeEventListener('keydown', handler);
-      };
+    if (!show) return;
+    document.body.style.overflow = 'hidden';
+
+    // Attempt immediate playback (works if browser allows without gesture)
+    try {
+      const testCtx = new AudioContext();
+      if (testCtx.state === 'running') {
+        testCtx.close();
+        triggerSound();
+      } else {
+        // Suspended — wait for resume on interaction
+        testCtx.resume().then(() => {
+          testCtx.close();
+          triggerSound();
+        }).catch(() => { testCtx.close(); });
+        // Also listen for any interaction as fallback
+        const handler = () => triggerSound();
+        document.addEventListener('pointerdown', handler, { once: true });
+        document.addEventListener('keydown', handler, { once: true });
+        return () => {
+          document.body.style.overflow = '';
+          document.removeEventListener('pointerdown', handler);
+          document.removeEventListener('keydown', handler);
+        };
+      }
+    } catch {
+      // No AudioContext at all
     }
+
     return () => { document.body.style.overflow = ''; };
   }, [show, triggerSound]);
 
@@ -162,8 +175,7 @@ export function SplashScreen({ children }: { children: React.ReactNode }) {
       {/* Splash overlay */}
       <div
         className={`fixed inset-0 z-[9999] bg-black flex items-center justify-center transition-opacity duration-700 ${fadeOut ? 'opacity-0' : 'opacity-100'}`}
-        onClick={() => { triggerSound(); handleSkip(); }}
-        onPointerDown={triggerSound}
+        onClick={handleSkip}
         style={{ cursor: 'pointer' }}
       >
         <video
