@@ -24,7 +24,19 @@ interface HeaderProps {
 }
 
 // Navigation Data
-const navigationItems = [
+interface NavSubItem {
+  title: string;
+  href: string;
+  subcategories?: { title: string; href: string }[];
+}
+interface NavItem {
+  title: string;
+  href: string;
+  hasDropdown?: boolean;
+  items?: NavSubItem[];
+}
+
+const navigationItems: NavItem[] = [
   {
     title: 'Каталог',
     href: '/catalog',
