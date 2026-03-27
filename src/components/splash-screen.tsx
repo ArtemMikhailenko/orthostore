@@ -1,20 +1,45 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const STORAGE_KEY = 'orthostore_splash_seen';
 
-/** Cinematic "reveal" whoosh + shimmer sound */
-function playChime() {
+/** Encode an AudioBuffer as a WAV Blob */
+function audioBufferToWav(buffer: AudioBuffer): Blob {
+  const ch = buffer.getChannelData(0);
+  const sr = buffer.sampleRate;
+  const dataSize = ch.length * 2;
+  const buf = new ArrayBuffer(44 + dataSize);
+  const v = new DataView(buf);
+  const w = (o: number, s: string) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+  w(0, 'RIFF'); v.setUint32(4, 36 + dataSize, true); w(8, 'WAVE');
+  w(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true);
+  v.setUint16(22, 1, true); v.setUint32(24, sr, true); v.setUint32(28, sr * 2, true);
+  v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, dataSize, true);
+  let off = 44;
+  for (let i = 0; i < ch.length; i++, off += 2) {
+    const s = Math.max(-1, Math.min(1, ch[i]));
+    v.setInt16(off, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+  }
+  return new Blob([buf], { type: 'audio/wav' });
+}
+
+/**
+ * Pre-render the cinematic chime to WAV via OfflineAudioContext,
+ * then try autoplay. If blocked — play on first user interaction anywhere.
+ */
+async function tryAutoplayChime() {
   try {
-    const ctx = new AudioContext();
-    const now = ctx.currentTime;
+    const sampleRate = 44100;
+    const dur = 2.0;
+    const ctx = new OfflineAudioContext(1, sampleRate * dur, sampleRate);
+    const now = 0;
 
     const master = ctx.createGain();
     master.gain.value = 0.25;
     master.connect(ctx.destination);
 
-    // 1. Low rumble sweep (sub-bass whoosh rising)
+    // 1. Low rumble sweep
     const sub = ctx.createOscillator();
     sub.type = 'sine';
     sub.frequency.setValueAtTime(60, now);
@@ -25,38 +50,34 @@ function playChime() {
     subEnv.gain.linearRampToValueAtTime(0.35, now + 0.3);
     subEnv.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
     sub.connect(subEnv).connect(master);
-    sub.start(now);
-    sub.stop(now + 1.3);
+    sub.start(now); sub.stop(now + 1.3);
 
-    // 2. Filtered noise burst (whoosh / air)
-    const bufLen = ctx.sampleRate * 1.5;
-    const noiseBuf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
-    const noiseData = noiseBuf.getChannelData(0);
-    for (let i = 0; i < bufLen; i++) noiseData[i] = Math.random() * 2 - 1;
+    // 2. Noise whoosh
+    const noiseBuf = ctx.createBuffer(1, sampleRate * 1.5, sampleRate);
+    const nd = noiseBuf.getChannelData(0);
+    for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
     const noise = ctx.createBufferSource();
     noise.buffer = noiseBuf;
-    const bandpass = ctx.createBiquadFilter();
-    bandpass.type = 'bandpass';
-    bandpass.frequency.setValueAtTime(400, now);
-    bandpass.frequency.exponentialRampToValueAtTime(3000, now + 0.4);
-    bandpass.frequency.exponentialRampToValueAtTime(800, now + 1.2);
-    bandpass.Q.value = 1.5;
-    const noiseEnv = ctx.createGain();
-    noiseEnv.gain.setValueAtTime(0, now);
-    noiseEnv.gain.linearRampToValueAtTime(0.12, now + 0.15);
-    noiseEnv.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
-    noise.connect(bandpass).connect(noiseEnv).connect(master);
-    noise.start(now);
-    noise.stop(now + 1.3);
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.frequency.setValueAtTime(400, now);
+    bp.frequency.exponentialRampToValueAtTime(3000, now + 0.4);
+    bp.frequency.exponentialRampToValueAtTime(800, now + 1.2);
+    bp.Q.value = 1.5;
+    const ne = ctx.createGain();
+    ne.gain.setValueAtTime(0, now);
+    ne.gain.linearRampToValueAtTime(0.12, now + 0.15);
+    ne.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+    noise.connect(bp).connect(ne).connect(master);
+    noise.start(now); noise.stop(now + 1.3);
 
-    // 3. Sparkle / shimmer hits (bright tones appearing)
-    const sparkles = [
-      { freq: 1318.5, start: 0.25, dur: 0.6 },  // E6
-      { freq: 1760,   start: 0.35, dur: 0.5 },   // A6
-      { freq: 2093,   start: 0.45, dur: 0.55 },   // C7
-      { freq: 2637,   start: 0.55, dur: 0.5 },   // E7
-    ];
-    for (const s of sparkles) {
+    // 3. Sparkle shimmer
+    for (const s of [
+      { freq: 1318.5, start: 0.25, dur: 0.6 },
+      { freq: 1760, start: 0.35, dur: 0.5 },
+      { freq: 2093, start: 0.45, dur: 0.55 },
+      { freq: 2637, start: 0.55, dur: 0.5 },
+    ]) {
       const osc = ctx.createOscillator();
       osc.type = 'sine';
       osc.frequency.value = s.freq;
@@ -65,17 +86,15 @@ function playChime() {
       env.gain.linearRampToValueAtTime(0.08, now + s.start + 0.03);
       env.gain.exponentialRampToValueAtTime(0.001, now + s.start + s.dur);
       osc.connect(env).connect(master);
-      osc.start(now + s.start);
-      osc.stop(now + s.start + s.dur + 0.05);
+      osc.start(now + s.start); osc.stop(now + s.start + s.dur + 0.05);
     }
 
-    // 4. Final resolving tone (warm chord landing)
-    const chord = [
-      { freq: 523.25, start: 0.7, dur: 1.0 },  // C5
-      { freq: 659.25, start: 0.7, dur: 1.0 },  // E5
-      { freq: 783.99, start: 0.7, dur: 1.0 },  // G5
-    ];
-    for (const c of chord) {
+    // 4. Warm chord
+    for (const c of [
+      { freq: 523.25, start: 0.7, dur: 1.0 },
+      { freq: 659.25, start: 0.7, dur: 1.0 },
+      { freq: 783.99, start: 0.7, dur: 1.0 },
+    ]) {
       const osc = ctx.createOscillator();
       osc.type = 'triangle';
       osc.frequency.value = c.freq;
@@ -84,75 +103,51 @@ function playChime() {
       env.gain.linearRampToValueAtTime(0.1, now + c.start + 0.08);
       env.gain.exponentialRampToValueAtTime(0.001, now + c.start + c.dur);
       osc.connect(env).connect(master);
-      osc.start(now + c.start);
-      osc.stop(now + c.start + c.dur + 0.05);
+      osc.start(now + c.start); osc.stop(now + c.start + c.dur + 0.05);
     }
 
-    setTimeout(() => ctx.close(), 2500);
+    const rendered = await ctx.startRendering();
+    const wavBlob = audioBufferToWav(rendered);
+    const url = URL.createObjectURL(wavBlob);
+
+    // Try autoplay immediately
+    const audio = new Audio(url);
+    audio.volume = 1;
+    const p = audio.play();
+    if (p) {
+      p.catch(() => {
+        // Browser blocked — play on first click/touch anywhere (e.g. "Пропустити" button)
+        const unlock = () => {
+          audio.play().catch(() => {});
+          document.removeEventListener('click', unlock, true);
+          document.removeEventListener('touchstart', unlock, true);
+        };
+        document.addEventListener('click', unlock, true);
+        document.addEventListener('touchstart', unlock, true);
+      });
+    }
   } catch {
-    // AudioContext not available — silent fallback
+    // Silent fallback
   }
 }
 
 export function SplashScreen({ children }: { children: React.ReactNode }) {
-  const [mounted, setMounted] = useState(false);
   const [show, setShow] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
-  const soundPlayedRef = useRef(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const triggerSound = useCallback(() => {
-    if (soundPlayedRef.current) return;
-    soundPlayedRef.current = true;
-    playChime();
-  }, []);
-
-  // Check if splash was already seen after mount
   useEffect(() => {
-    setMounted(true);
     try {
-      const seen = sessionStorage.getItem(STORAGE_KEY);
-      if (!seen) {
-        setShow(true);
-      }
-    } catch {
-      // If sessionStorage fails, don't show splash
-    }
+      if (!sessionStorage.getItem(STORAGE_KEY)) setShow(true);
+    } catch {}
   }, []);
 
-  // Try to play sound immediately when splash shows, fallback to first interaction
   useEffect(() => {
     if (!show) return;
     document.body.style.overflow = 'hidden';
-
-    // Attempt immediate playback (works if browser allows without gesture)
-    try {
-      const testCtx = new AudioContext();
-      if (testCtx.state === 'running') {
-        testCtx.close();
-        triggerSound();
-      } else {
-        // Suspended — wait for resume on interaction
-        testCtx.resume().then(() => {
-          testCtx.close();
-          triggerSound();
-        }).catch(() => { testCtx.close(); });
-        // Also listen for any interaction as fallback
-        const handler = () => triggerSound();
-        document.addEventListener('pointerdown', handler, { once: true });
-        document.addEventListener('keydown', handler, { once: true });
-        return () => {
-          document.body.style.overflow = '';
-          document.removeEventListener('pointerdown', handler);
-          document.removeEventListener('keydown', handler);
-        };
-      }
-    } catch {
-      // No AudioContext at all
-    }
-
+    tryAutoplayChime();
     return () => { document.body.style.overflow = ''; };
-  }, [show, triggerSound]);
+  }, [show]);
 
   const handleEnd = () => {
     setFadeOut(true);
@@ -172,7 +167,6 @@ export function SplashScreen({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      {/* Splash overlay */}
       <div
         className={`fixed inset-0 z-[9999] bg-black flex items-center justify-center transition-opacity duration-700 ${fadeOut ? 'opacity-0' : 'opacity-100'}`}
         onClick={handleSkip}
@@ -188,7 +182,6 @@ export function SplashScreen({ children }: { children: React.ReactNode }) {
           className="w-full h-full object-cover"
         />
 
-        {/* Skip button */}
         <button
           onClick={(e) => { e.stopPropagation(); handleSkip(); }}
           className="absolute bottom-8 right-8 px-6 py-2 bg-white/20 backdrop-blur-sm text-white text-sm font-medium hover:bg-white/30 transition-colors border border-white/30 rounded-lg"
@@ -197,7 +190,6 @@ export function SplashScreen({ children }: { children: React.ReactNode }) {
         </button>
       </div>
 
-      {/* Content hidden behind splash */}
       <div className="opacity-0 pointer-events-none" aria-hidden>
         {children}
       </div>
