@@ -123,7 +123,7 @@ export function AIChatWidget() {
         className={cn(
           'fixed bottom-6 right-6 z-50 w-14 h-14 rounded-2xl shadow-xl transition-all duration-300',
           'bg-stone-900 text-white',
-          'hover:scale-110 active:scale-95 flex items-center justify-center relative overflow-hidden',
+          'hover:scale-110 active:scale-95 flex items-center justify-center overflow-hidden',
           (isMenuOpen || showChat) && 'scale-0'
         )}
         aria-label="Контакти"

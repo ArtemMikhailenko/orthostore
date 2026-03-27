@@ -73,7 +73,6 @@ export function HeroSection({ className }: HeroSectionProps) {
                 className="inline-flex items-center justify-center bg-stone-900 text-white px-8 lg:px-10 py-3.5 lg:py-4 font-medium hover:bg-stone-800 transition-all duration-300 text-sm lg:text-base rounded-lg"
               >
                 Каталог продукції
-                <ArrowRight className="w-4 h-4 ml-2" />
               </Link>
               
               <Link 
