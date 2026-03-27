@@ -4,39 +4,91 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 const STORAGE_KEY = 'orthostore_splash_seen';
 
-/** Plays a short elegant chime via Web Audio API */
+/** Cinematic "reveal" whoosh + shimmer sound */
 function playChime() {
   try {
     const ctx = new AudioContext();
     const now = ctx.currentTime;
 
-    // Two-note chime: C5 → E5
-    const notes = [
-      { freq: 523.25, start: 0, dur: 0.4 },
-      { freq: 659.25, start: 0.15, dur: 0.5 },
-    ];
-
     const master = ctx.createGain();
-    master.gain.value = 0.18;
+    master.gain.value = 0.25;
     master.connect(ctx.destination);
 
-    for (const n of notes) {
+    // 1. Low rumble sweep (sub-bass whoosh rising)
+    const sub = ctx.createOscillator();
+    sub.type = 'sine';
+    sub.frequency.setValueAtTime(60, now);
+    sub.frequency.exponentialRampToValueAtTime(200, now + 0.6);
+    sub.frequency.exponentialRampToValueAtTime(80, now + 1.2);
+    const subEnv = ctx.createGain();
+    subEnv.gain.setValueAtTime(0, now);
+    subEnv.gain.linearRampToValueAtTime(0.35, now + 0.3);
+    subEnv.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+    sub.connect(subEnv).connect(master);
+    sub.start(now);
+    sub.stop(now + 1.3);
+
+    // 2. Filtered noise burst (whoosh / air)
+    const bufLen = ctx.sampleRate * 1.5;
+    const noiseBuf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
+    const noiseData = noiseBuf.getChannelData(0);
+    for (let i = 0; i < bufLen; i++) noiseData[i] = Math.random() * 2 - 1;
+    const noise = ctx.createBufferSource();
+    noise.buffer = noiseBuf;
+    const bandpass = ctx.createBiquadFilter();
+    bandpass.type = 'bandpass';
+    bandpass.frequency.setValueAtTime(400, now);
+    bandpass.frequency.exponentialRampToValueAtTime(3000, now + 0.4);
+    bandpass.frequency.exponentialRampToValueAtTime(800, now + 1.2);
+    bandpass.Q.value = 1.5;
+    const noiseEnv = ctx.createGain();
+    noiseEnv.gain.setValueAtTime(0, now);
+    noiseEnv.gain.linearRampToValueAtTime(0.12, now + 0.15);
+    noiseEnv.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+    noise.connect(bandpass).connect(noiseEnv).connect(master);
+    noise.start(now);
+    noise.stop(now + 1.3);
+
+    // 3. Sparkle / shimmer hits (bright tones appearing)
+    const sparkles = [
+      { freq: 1318.5, start: 0.25, dur: 0.6 },  // E6
+      { freq: 1760,   start: 0.35, dur: 0.5 },   // A6
+      { freq: 2093,   start: 0.45, dur: 0.55 },   // C7
+      { freq: 2637,   start: 0.55, dur: 0.5 },   // E7
+    ];
+    for (const s of sparkles) {
       const osc = ctx.createOscillator();
       osc.type = 'sine';
-      osc.frequency.value = n.freq;
-
+      osc.frequency.value = s.freq;
       const env = ctx.createGain();
-      env.gain.setValueAtTime(0, now + n.start);
-      env.gain.linearRampToValueAtTime(1, now + n.start + 0.05);
-      env.gain.exponentialRampToValueAtTime(0.001, now + n.start + n.dur);
-
+      env.gain.setValueAtTime(0, now + s.start);
+      env.gain.linearRampToValueAtTime(0.08, now + s.start + 0.03);
+      env.gain.exponentialRampToValueAtTime(0.001, now + s.start + s.dur);
       osc.connect(env).connect(master);
-      osc.start(now + n.start);
-      osc.stop(now + n.start + n.dur);
+      osc.start(now + s.start);
+      osc.stop(now + s.start + s.dur + 0.05);
     }
 
-    // Clean up after sound ends
-    setTimeout(() => ctx.close(), 1000);
+    // 4. Final resolving tone (warm chord landing)
+    const chord = [
+      { freq: 523.25, start: 0.7, dur: 1.0 },  // C5
+      { freq: 659.25, start: 0.7, dur: 1.0 },  // E5
+      { freq: 783.99, start: 0.7, dur: 1.0 },  // G5
+    ];
+    for (const c of chord) {
+      const osc = ctx.createOscillator();
+      osc.type = 'triangle';
+      osc.frequency.value = c.freq;
+      const env = ctx.createGain();
+      env.gain.setValueAtTime(0, now + c.start);
+      env.gain.linearRampToValueAtTime(0.1, now + c.start + 0.08);
+      env.gain.exponentialRampToValueAtTime(0.001, now + c.start + c.dur);
+      osc.connect(env).connect(master);
+      osc.start(now + c.start);
+      osc.stop(now + c.start + c.dur + 0.05);
+    }
+
+    setTimeout(() => ctx.close(), 2500);
   } catch {
     // AudioContext not available — silent fallback
   }
