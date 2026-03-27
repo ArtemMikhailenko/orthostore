@@ -368,17 +368,51 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
                       ))}
                     </div>
                   </div>
-
-                  {/* CTA Button */}
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full border-2 border-stone-900 bg-stone-900 text-white px-5 py-2.5 hover:bg-transparent hover:text-stone-900 transition-all duration-300 font-medium uppercase tracking-wider text-sm mt-4 rounded-lg"
-                  >
-                    Записатися на прийом
-                  </motion.button>
                 </motion.div>
               </AnimatePresence>
+
+              {/* Navigation — mirrors doctor panel */}
+              <div className="flex items-center justify-between pt-4 mt-auto border-t-2 border-stone-200">
+                <div className="flex gap-2">
+                  {testimonials.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => {
+                        setDirection(index > activeTestimonial ? 1 : -1);
+                        setActiveTestimonial(index);
+                      }}
+                      className={cn(
+                        'h-1 transition-all duration-300 rounded-full',
+                        activeTestimonial === index
+                          ? 'w-8 bg-stone-900'
+                          : 'w-1 bg-stone-300 hover:bg-stone-500'
+                      )}
+                      aria-label={`Перейти до клініки ${index + 1}`}
+                    />
+                  ))}
+                </div>
+
+                <div className="flex gap-2">
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={prevTestimonial}
+                    className="w-8 h-8 border-2 border-stone-900 flex items-center justify-center hover:bg-stone-900 hover:text-white transition-all rounded-lg"
+                    aria-label="Попередня клініка"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={nextTestimonial}
+                    className="w-8 h-8 border-2 border-stone-900 flex items-center justify-center hover:bg-stone-900 hover:text-white transition-all rounded-lg"
+                    aria-label="Наступна клініка"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </motion.button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

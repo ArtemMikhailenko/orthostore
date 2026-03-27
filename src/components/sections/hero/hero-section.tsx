@@ -23,9 +23,9 @@ export function HeroSection({ className }: HeroSectionProps) {
             {/* Main Headline */}
             <div className="space-y-4">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-light text-stone-900 leading-[1.1]">
-                Професійі
+                Професійні
                 <br />
-                <span className="font-normal text-stone-900">ортодонтичні</span>
+                <span className="font-bold text-stone-900">ортодонтичні</span>
                 <br />
                 <span className="font-light text-stone-900">матеріали</span>
               </h1>

@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { 
@@ -28,69 +28,6 @@ const navigationItems = [
   {
     title: 'Каталог',
     href: '/catalog',
-    hasDropdown: true,
-    items: [
-      { title: 'ПРОПИСИ БРЕКЕТІВ', href: '/catalog?category=propysy-breketiv' },
-      { title: 'МІКРОІМПЛАНТИ', href: '/catalog?category=mikroimplanty' },
-      { 
-        title: 'МІНІ ПЛАСТИНИ', 
-        href: '/catalog?category=mini-plastyny',
-        subcategories: [
-          { title: 'міні пластини', href: '/catalog?category=mini-plastyny-mini' },
-          { title: 'щелепно-лицьова хірургія', href: '/catalog?category=shchelepno-lytsova' },
-        ]
-      },
-      { 
-        title: 'БРЕКЕТИ', 
-        href: '/catalog?category=brekety',
-        subcategories: [
-          { title: 'самолігуючі', href: '/catalog?category=samolihuyuchi' },
-          { title: 'естетичні', href: '/catalog?category=estetychni' },
-          { title: 'лігатурні', href: '/catalog?category=lihaturni' },
-        ]
-      },
-      { title: 'ЩІЧНІ ТРУБКИ ТА МОЛЯРНІ КІЛЬЦЯ', href: '/catalog?category=shchichni-molyarni' },
-      { 
-        title: 'АТАЧМЕНТИ', 
-        href: '/catalog?category=atachments',
-        subcategories: [
-          { title: 'стопори', href: '/catalog?category=stopory' },
-          { title: 'кнопки', href: '/catalog?category=knopky' },
-          { title: 'накусочні майданчики', href: '/catalog?category=nakusochni' },
-          { title: 'пружини', href: '/catalog?category=pruzhyny' },
-          { title: 'металеві лігатури', href: '/catalog?category=metalevi-lihatury' },
-        ]
-      },
-      { title: 'ДУГИ', href: '/catalog?category=duhy' },
-      { title: 'ЕЛАСТИЧНІ МАТЕРІАЛИ', href: '/catalog?category=elastychni' },
-      { title: 'ФІКСАЦІЙНІ МАТІРІАЛИ', href: '/catalog?category=fiksatsiini' },
-      { title: 'РЕТРАКТОРИ', href: '/catalog?category=retraktory' },
-      { title: 'ДЗЕРКАЛА ТА ФОТОКОНТРАСТЕРИ', href: '/catalog?category=dzerkala-foto' },
-      { title: 'ЗОВНІШНЬОРОТОВІ ПРИСТОСУВАННЯ', href: '/catalog?category=zovnishnorotovi' },
-      { title: 'ТРЕЙНЕРА ТА МИОБРЕЙСИ', href: '/catalog?category=treynera-myobreysy' },
-      { 
-        title: 'МАТЕРІАЛИ ДЛЯ ТЕХНІКІВ', 
-        href: '/catalog?category=materialy-tehnikiv',
-        subcategories: [
-          { title: 'гвинти', href: '/catalog?category=hvynty' },
-          { title: 'гвинти MSE', href: '/catalog?category=hvynty-mse' },
-          { title: 'пластини для ретенційних кап', href: '/catalog?category=plastyny-retentsiyni' },
-          { title: 'пластини для елайнерів', href: '/catalog?category=plastyny-elayneriv' },
-          { title: 'пластмасса', href: '/catalog?category=plastmassa' },
-          { title: 'відбиткові ложки', href: '/catalog?category=vidbytkovi' },
-        ]
-      },
-      { title: 'СЕПАРАЦІЙНІ ІНСТРУМЕНТИ', href: '/catalog?category=separatsiyni-instrumenty' },
-      { title: 'АКСЕСУАРИ', href: '/catalog?category=aksesuari' },
-      { 
-        title: 'ІНСТРУМЕНТИ', 
-        href: '/catalog?category=instrumenty',
-        subcategories: [
-          { title: 'ORTHOSTORE', href: '/catalog?category=orthostore' },
-          { title: 'LE MED', href: '/catalog?category=le-med' },
-        ]
-      },
-    ]
   },
   {
     title: 'Про нас',
@@ -109,7 +46,7 @@ const navigationItems = [
 // Top Bar Component
 function TopBar() {
   return (
-    <div className="hidden lg:block bg-stone-900 text-white">
+    <div className="bg-stone-900 text-white">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex justify-between items-center py-2 text-sm">
           <div className="flex items-center space-x-8">
@@ -120,8 +57,25 @@ function TopBar() {
               </span>
             </div>
             <div className="text-stone-400 text-xs">
-              ПН-ПТ: 9:00-18:00 
+              ПН-ПТ: 9:00-18:00
             </div>
+          </div>
+          {/* Social icons */}
+          <div className="flex items-center gap-2">
+            <a href="https://wa.me/380503039494" target="_blank" rel="noopener noreferrer"
+              className="w-7 h-7 bg-stone-800 rounded-full flex items-center justify-center hover:bg-green-600 transition-all duration-300"
+              title="WhatsApp">
+              <svg className="w-4 h-4" fill="white" viewBox="0 0 24 24">
+                <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23-1.48 0-2.93-.39-4.19-1.15l-.3-.17-3.12.82.83-3.04-.2-.32a8.188 8.188 0 0 1-1.26-4.38c.01-4.54 3.7-8.24 8.25-8.24M8.53 7.33c-.16 0-.43.06-.66.31-.22.25-.87.86-.87 2.07 0 1.22.89 2.39 1 2.56.14.17 1.76 2.67 4.25 3.73.59.27 1.05.42 1.41.53.59.19 1.13.16 1.56.1.48-.07 1.46-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.07-.1-.23-.16-.48-.27-.25-.14-1.47-.74-1.69-.82-.23-.08-.37-.12-.56.12-.16.25-.64.81-.78.97-.15.17-.29.19-.53.07-.26-.13-1.06-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.12-.24-.01-.39.11-.5.11-.11.27-.29.37-.44.13-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.11-.56-1.35-.76-1.84-.2-.48-.41-.42-.56-.43-.14 0-.3-.01-.46-.01z"/>
+              </svg>
+            </a>
+            <a href="https://t.me/orthostore" target="_blank" rel="noopener noreferrer"
+              className="w-7 h-7 bg-stone-800 rounded-full flex items-center justify-center hover:bg-sky-500 transition-all duration-300"
+              title="Telegram">
+              <svg className="w-4 h-4" fill="white" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+              </svg>
+            </a>
           </div>
         </div>
       </div>
@@ -241,11 +195,9 @@ function Navigation() {
                     >
                       <a
                         href={subItem.href}
-                        className={cn(
-                          "flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-stone-50 transition-colors"
-                        )}
+                        className="flex items-center justify-between px-2 py-1.5 transition-colors group/link"
                       >
-                        <span className="text-xs font-medium text-stone-900 hover:text-stone-700 transition-colors">
+                        <span className="text-xs font-medium text-stone-900 group-hover/link:underline transition-all">
                           {subItem.title}
                         </span>
                         {subItem.subcategories && (
@@ -576,16 +528,23 @@ function MobileMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
 // Main Header Component
 export function Header({ className }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
+  const lastScrollY = useRef(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      setIsScrolled(scrollTop > 10);
+      const currentY = window.scrollY;
+      setIsScrolled(currentY > 10);
+      if (currentY > lastScrollY.current && currentY > 80) {
+        setIsHidden(true);
+      } else if (currentY < lastScrollY.current) {
+        setIsHidden(false);
+      }
+      lastScrollY.current = currentY;
     };
-
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -603,18 +562,23 @@ export function Header({ className }: HeaderProps) {
 
   return (
     <>
-      <TopBar />
-      
-      {/* Main Header */}
-      <header
-        className={cn(
-          'sticky top-0 z-50 bg-white transition-all duration-300',
-          isScrolled 
-            ? 'shadow-lg border-b border-stone-200 backdrop-blur-sm bg-white/95' 
-            : 'border-b border-stone-100',
-          className
-        )}
-      >
+      {/* Scroll-hide wrapper: slides up on scroll down, reappears on scroll up */}
+      <div className={cn('fixed top-0 left-0 right-0 z-50 transition-transform duration-300', isHidden ? '-translate-y-full' : 'translate-y-0')}>
+        {/* TopBar — desktop only */}
+        <div className="hidden lg:block">
+          <TopBar />
+        </div>
+
+        {/* Main Header */}
+        <header
+          className={cn(
+            'bg-white transition-all duration-300',
+            isScrolled
+              ? 'shadow-lg border-b border-stone-200 backdrop-blur-sm bg-white/95'
+              : 'border-b border-stone-100',
+            className
+          )}
+        >
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-center justify-between h-14 lg:h-16">
             
@@ -665,7 +629,11 @@ export function Header({ className }: HeaderProps) {
             </div>
           </div>
         </div>
-      </header>
+        </header>
+      </div>
+
+      {/* Spacer compensates for fixed header height */}
+      <div className="h-14 lg:h-[100px]" aria-hidden="true" />
 
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (

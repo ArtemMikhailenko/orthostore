@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getCategories, getCountries, getManufacturers, getProducts, getProduct, createOrder, getOrderHistory, type GetProductsParams } from './public';
+import { getCategories, getCountries, getManufacturers, getProducts, getProduct, createOrder, getOrderHistory, getGalleryImages, type GetProductsParams, type GalleryImage } from './public';
 import type { Category, Country, Manufacturer, ProductListResponse, ProductWithDiscounts, Order, CreateOrderRequest } from './public.types';
 
 export function useCategories() {
@@ -45,5 +45,12 @@ export function useOrderHistory(phone?: string, clientId?: string) {
     queryKey: ['orders', 'history', phone, clientId],
     queryFn: () => getOrderHistory(phone as string, clientId as string),
     enabled: Boolean(phone && clientId),
+  });
+}
+
+export function useGalleryImages() {
+  return useQuery<GalleryImage[]>({
+    queryKey: ['gallery'],
+    queryFn: getGalleryImages,
   });
 }

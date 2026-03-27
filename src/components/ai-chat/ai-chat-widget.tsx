@@ -121,18 +121,16 @@ export function AIChatWidget() {
       <button
         onClick={toggleMenu}
         className={cn(
-          'fixed bottom-6 right-6 z-50 p-3.5 rounded-full shadow-xl transition-all duration-300',
-          'bg-gradient-to-br from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700',
-          'text-white hover:scale-110 active:scale-95',
-          'flex items-center gap-2',
+          'fixed bottom-6 right-6 z-50 w-14 h-14 rounded-2xl shadow-xl transition-all duration-300',
+          'bg-stone-900 text-white',
+          'hover:scale-110 active:scale-95 flex items-center justify-center relative overflow-hidden',
           (isMenuOpen || showChat) && 'scale-0'
         )}
         aria-label="Контакти"
       >
-        <MessageCircle className="w-5 h-5" />
-        <Sparkles className="w-3.5 h-3.5 absolute -top-0.5 -right-0.5 text-yellow-300 animate-pulse" />
-        {/* Pulse Ring */}
-        <span className="absolute inset-0 rounded-full bg-sky-500 animate-ping opacity-75"></span>
+        <Phone className="w-6 h-6 relative z-10 animate-pulse" />
+        {/* Blink ring */}
+        <span className="absolute inset-0 rounded-2xl bg-stone-700 animate-ping opacity-50"></span>
       </button>
 
       {/* Contact Menu */}

@@ -58,3 +58,16 @@ export function createOrder(body: CreateOrderRequest, idempotencyKey?: string): 
 export function getOrderHistory(phone: string, clientId: string): Promise<Order[]> {
   return http<Order[]>('/orders/history', { query: { phone, clientId } });
 }
+
+// Gallery
+export type GalleryImage = {
+  _id: string;
+  imageUrl: string;
+  altI18n?: { uk?: string; en?: string };
+  sort: number;
+  isActive: boolean;
+};
+
+export function getGalleryImages(): Promise<GalleryImage[]> {
+  return http<GalleryImage[]>('/gallery');
+}

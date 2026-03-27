@@ -3,91 +3,90 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ChevronLeft, ChevronRight, Package, Star, ShoppingBag, Award } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Star, ShoppingBag, ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 
 interface PromotionsSectionProps {
   className?: string;
 }
 
-const products = [
+/* ── Top hero slider data (4 slides) ── */
+const heroSlides = [
   {
     id: 1,
     title: 'Преміум брекети зі знижкою',
-    category: '',
     description: 'Спеціальна пропозиція на самолігуючі брекет-системи преміум класу.',
-    discount: '-15%',
     oldPrice: '2 940 ₴',
     price: '2 500 ₴',
-    image: '1',
     color: 'from-yellow-300 to-yellow-400',
     badge: 'Хіт продажів',
-    features: [
-      'Знижка діє до кінця місяця',
-      'Безкоштовна доставка',
-      'Додаткові аксесуари у подарунок'
-    ]
+    features: ['Знижка діє до кінця місяця', 'Безкоштовна доставка', 'Додаткові аксесуари у подарунок'],
   },
   {
     id: 2,
     title: 'Комплект дуг 2+1',
-    category: 'СПЕЦПРОПОЗИЦІЯ',
     description: 'При покупці 2 упаковок ортодонтичних дуг - третя у подарунок',
-    discount: '33%',
     oldPrice: '',
     price: '700 ₴',
-    image: '2',
     color: 'from-yellow-300 to-yellow-500',
-    badge: '2+1 у подарунок',
-    features: [
-      'Економія до 350 ₴',
-      'Всі популярні розміри',
-      'Обмежена пропозиція'
-    ]
+    badge: 'Хіт продажів',
+    features: ['Економія до 350 ₴', 'Всі популярні розміри', 'Обмежена пропозиція'],
   },
   {
     id: 3,
     title: 'Лігатури зі знижкою',
-    category: 'РОЗПРОДАЖ',
     description: 'Додаткові товари або знижка 5-8% на весь асортимент лігатур та еластиків',
-    discount: 'до -8%',
     oldPrice: '130 ₴',
     price: 'від 120 ₴',
-    image: '3',
     color: 'from-yellow-400 to-yellow-500',
-    badge: 'Вигідно',
-    features: [
-      'Знижка на всі кольори',
-      'Мінімальне замовлення від 5 шт',
-      'Діє 14 днів'
-    ]
+    badge: 'Хіт продажів',
+    features: ['Знижка на всі кольори', 'Мінімальне замовлення від 5 шт', 'Діє 14 днів'],
   },
   {
     id: 4,
     title: 'Стартовий набір ортодонта',
-    category: 'НОВИНКА',
     description: 'Комплексне рішення для початківців. Все необхідне в одному наборі за спеціальною ціною',
-    discount: '-20%',
     oldPrice: '1 060 ₴',
     price: '850 ₴',
-    image: '4',
     color: 'from-yellow-300 to-yellow-600',
-    badge: 'Новинка',
-    features: [
-      'Економія понад 200 ₴',
-      'Готове рішення "під ключ"',
-      'Гарантія якості'
-    ]
-  }
+    badge: 'Хіт продажів',
+    features: ['Економія понад 200 ₴', 'Готове рішення "під ключ"', 'Гарантія якості'],
+  },
 ];
 
+/* ── Bottom card grid — 12 independent products ── */
+const allProducts = [
+  { id: 101, title: 'Преміум брекети', price: '2 500 ₴', oldPrice: '2 940 ₴', discount: '-15%', color: 'from-yellow-300 to-yellow-400' },
+  { id: 102, title: 'Комплект дуг 2+1', price: '700 ₴', oldPrice: '', discount: '33%', color: 'from-yellow-300 to-yellow-500' },
+  { id: 103, title: 'Лігатури', price: 'від 120 ₴', oldPrice: '130 ₴', discount: 'до -8%', color: 'from-yellow-400 to-yellow-500' },
+  { id: 104, title: 'Стартовий набір', price: '850 ₴', oldPrice: '1 060 ₴', discount: '-20%', color: 'from-yellow-300 to-yellow-600' },
+  { id: 105, title: 'Ортодонтичний воск', price: '480 ₴', oldPrice: '600 ₴', discount: '-20%', color: 'from-yellow-200 to-yellow-400' },
+  { id: 106, title: 'Еластичні ланцюжки', price: '95 ₴', oldPrice: '120 ₴', discount: '-21%', color: 'from-yellow-300 to-yellow-400' },
+  { id: 107, title: 'Щічні трубки', price: '320 ₴', oldPrice: '380 ₴', discount: '-16%', color: 'from-yellow-300 to-yellow-500' },
+  { id: 108, title: 'Кільця моляні', price: '210 ₴', oldPrice: '250 ₴', discount: '-16%', color: 'from-yellow-400 to-yellow-500' },
+  { id: 109, title: 'NiTi дуги .014', price: '185 ₴', oldPrice: '220 ₴', discount: '-16%', color: 'from-yellow-300 to-yellow-600' },
+  { id: 110, title: 'Адгезив для брекетів', price: '540 ₴', oldPrice: '650 ₴', discount: '-17%', color: 'from-yellow-200 to-yellow-400' },
+  { id: 111, title: 'Міні-імпланти', price: '390 ₴', oldPrice: '450 ₴', discount: '-13%', color: 'from-yellow-300 to-yellow-400' },
+  { id: 112, title: 'Ретейнери комплект', price: '760 ₴', oldPrice: '900 ₴', discount: '-16%', color: 'from-yellow-300 to-yellow-500' },
+];
+
+const CARDS_PER_PAGE = 4;
+
 export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
+  /* ── Hero slider state ── */
   const [currentIndex, setCurrentIndex] = useState(0);
   const [[page, direction], setPage] = useState([0, 0]);
 
-  // Countdown timer - end of month
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  /* ── Card mini-slider state (independent) ── */
+  const [cardPage, setCardPage] = useState(0);
+  const totalCardPages = Math.ceil(allProducts.length / CARDS_PER_PAGE);
+  const visibleCards = allProducts.slice(cardPage * CARDS_PER_PAGE, cardPage * CARDS_PER_PAGE + CARDS_PER_PAGE);
 
+  /* ── Expand/collapse all 12 ── */
+  const [showAll, setShowAll] = useState(false);
+
+  /* ── Countdown timer ── */
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   useEffect(() => {
     const calculateTimeLeft = () => {
       const now = new Date();
@@ -107,9 +106,10 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
     return () => clearInterval(timer);
   }, []);
 
+  /* ── Hero slider navigation ── */
   const paginate = (newDirection: number) => {
     const newIndex = currentIndex + newDirection;
-    if (newIndex >= 0 && newIndex < products.length) {
+    if (newIndex >= 0 && newIndex < heroSlides.length) {
       setPage([page + newDirection, newDirection]);
       setCurrentIndex(newIndex);
     }
@@ -120,46 +120,42 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
     setCurrentIndex(index);
   };
 
-  const currentProduct = products[currentIndex];
+  const currentProduct = heroSlides[currentIndex];
 
   const slideVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 1000 : -1000,
+    enter: (dir: number) => ({
       opacity: 0,
-      scale: 0.8
+      y: dir > 0 ? 40 : -40,
+      scale: 0.96,
+      filter: 'blur(6px)',
     }),
     center: {
       zIndex: 1,
-      x: 0,
       opacity: 1,
-      scale: 1
+      y: 0,
+      scale: 1,
+      filter: 'blur(0px)',
     },
-    exit: (direction: number) => ({
+    exit: (dir: number) => ({
       zIndex: 0,
-      x: direction < 0 ? 1000 : -1000,
       opacity: 0,
-      scale: 0.8
-    })
+      y: dir < 0 ? 40 : -40,
+      scale: 0.96,
+      filter: 'blur(6px)',
+    }),
   };
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.1,
-        duration: 0.5
-      }
-    })
+    visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.5 } }),
   };
 
   return (
     <section className={cn('py-16 bg-stone-50 relative overflow-hidden', className)}>
       <div className="container mx-auto px-6">
-        
+
         {/* Header */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -168,18 +164,13 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
           <h2 className="text-3xl md:text-4xl font-light text-stone-900 mb-3">
             Акційні пропозиції
           </h2>
-          
-          
-          <p className="text-stone-600 max-w-3xl mx-auto border-2 border-stone-900 rounded-xl px-6 py-3">
-            Вигідні пропозиції на професійну ортодонтичну продукцію. Обмежена кількість!
-          </p>
         </motion.div>
 
-        {/* Main Slider */}
+        {/* ─── Hero Slider ─── */}
         <div className="relative mb-8">
           <div className="grid lg:grid-cols-2 gap-6 items-center">
-            
-            {/* Left: Visual Card with Animation */}
+
+            {/* Left: Animated image */}
             <div className="relative h-[450px]">
               <AnimatePresence initial={false} custom={direction}>
                 <motion.div
@@ -189,57 +180,22 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                   initial="enter"
                   animate="center"
                   exit="exit"
-                  transition={{
-                    x: { type: "spring", stiffness: 300, damping: 30 },
-                    opacity: { duration: 0.2 },
-                    scale: { duration: 0.4 }
-                  }}
+                  transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
                   className="absolute inset-0"
                 >
-                  <div 
-                    className={cn(
-                      'h-full border-2 border-stone-900 bg-gradient-to-br relative overflow-hidden rounded-2xl',
-                      currentProduct.color
-                    )}
-                  >
-                    {/* Product Image */}
+                  <div className={cn('h-full border-2 border-stone-900 bg-gradient-to-br relative overflow-hidden rounded-2xl', currentProduct.color)}>
                     <div className="absolute inset-0">
-                      <Image
-                        src="/images/Screenshot_2.png"
-                        alt={currentProduct.title}
-                        fill
-                        className="object-cover opacity-80"
-                        priority
-                      />
+                      <Image src="/images/Screenshot_2.png" alt={currentProduct.title} fill className="object-cover opacity-80" priority />
                       <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-transparent" />
                     </div>
-
-                    {/* Decorative Shapes */}
-                    
-                    
                     <motion.div
-                      animate={{ 
-                        rotate: [360, 0],
-                      }}
-                      transition={{ 
-                        duration: 15, 
-                        repeat: Infinity, 
-                        ease: "linear" 
-                      }}
+                      animate={{ rotate: [360, 0] }}
+                      transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
                       className="absolute bottom-20 left-20 w-24 h-24 rounded-full border-2 border-stone-900/20"
                     />
-
-                    {/* Top Badge */}
-                    
-                    {/* Discount Badge */}
-                    <div className="absolute top-8 right-8 bg-white border-2 border-stone-900 px-6 py-3 rounded-xl">
-                      <div className="text-3xl font-bold text-stone-900">{currentProduct.discount}</div>
-                    </div>
-
-                    {/* Bottom Info Bar */}
+                    {/* Bottom Info Bar — only badge */}
                     <div className="absolute bottom-0 left-0 right-0 bg-stone-900 text-white p-6">
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-xl font-medium">{currentProduct.title}</h3>
+                      <div className="flex items-center justify-end">
                         <div className="flex items-center gap-2 bg-yellow-400 text-stone-900 px-3 py-1 rounded-lg">
                           <Star className="w-4 h-4 fill-stone-900" />
                           <span className="text-sm font-medium">{currentProduct.badge}</span>
@@ -251,24 +207,13 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
               </AnimatePresence>
             </div>
 
-            {/* Right: Content with Stagger Animation */}
-            <motion.div
-              key={currentIndex}
-              initial="hidden"
-              animate="visible"
-              className="space-y-4"
-            >
+            {/* Right: Content */}
+            <motion.div key={currentIndex} initial="hidden" animate="visible" className="space-y-4">
               <motion.div custom={0} variants={cardVariants}>
-                
-                <h3 className="text-2xl font-light text-stone-900 mb-2">
-                  {currentProduct.title}
-                </h3>
-                <p className="text-stone-700 leading-relaxed text-sm">
-                  {currentProduct.description}
-                </p>
+                <h3 className="text-2xl font-light text-stone-900 mb-2">{currentProduct.title}</h3>
+                <p className="text-stone-700 leading-relaxed text-sm">{currentProduct.description}</p>
               </motion.div>
 
-              {/* Features List */}
               <motion.div custom={1} variants={cardVariants} className="space-y-2">
                 {currentProduct.features.map((feature, idx) => (
                   <motion.div
@@ -278,7 +223,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                     transition={{ delay: 0.3 + idx * 0.1 }}
                     className="flex items-center gap-3 p-2 border border-stone-200 bg-white rounded-lg"
                   >
-                    <div className="w-1.5 h-1.5 bg-stone-900 rounded-full flex-shrink-0"></div>
+                    <div className="w-1.5 h-1.5 bg-stone-900 rounded-full flex-shrink-0" />
                     <span className="text-stone-700 text-sm">{feature}</span>
                   </motion.div>
                 ))}
@@ -322,27 +267,18 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
               </motion.div>
 
               {/* Price & CTA */}
-              <motion.div 
-                custom={2} 
-                variants={cardVariants}
-                className="pt-3 border-t-2 border-stone-200"
-              >
+              <motion.div custom={2} variants={cardVariants} className="pt-3 border-t-2 border-stone-200">
                 <div className="flex items-baseline gap-4 mb-3">
                   <div>
                     <span className="text-lg text-stone-600 block mb-2 font-medium">Акційна ціна</span>
-                    <span className="text-4xl font-bold text-red-600">
-                      {currentProduct.price}
-                    </span>
+                    <span className="text-4xl font-bold text-red-600">{currentProduct.price}</span>
                   </div>
                   {currentProduct.oldPrice && (
                     <div className="translate-y-2">
-                      <span className="text-xl text-stone-500 line-through">
-                        {currentProduct.oldPrice}
-                      </span>
+                      <span className="text-xl text-stone-500 line-through">{currentProduct.oldPrice}</span>
                     </div>
                   )}
                 </div>
-                
                 <div className="flex gap-2">
                   <motion.button
                     whileHover={{ scale: 1.02 }}
@@ -363,58 +299,50 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
             </motion.div>
           </div>
 
-          {/* Navigation Controls */}
+          {/* Hero Navigation Controls */}
           <div className="flex items-center justify-center gap-6 mt-6">
-            {/* Previous Button */}
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => paginate(-1)}
               disabled={currentIndex === 0}
               className={cn(
-                "w-12 h-12 border-2 flex items-center justify-center transition-all duration-300 rounded-xl",
+                'w-12 h-12 border-2 flex items-center justify-center transition-all duration-300 rounded-xl',
                 currentIndex === 0
-                  ? "border-stone-300 text-stone-300 cursor-not-allowed"
-                  : "border-stone-900 bg-white hover:bg-stone-900 hover:text-white hover:border-sky-400 hover:shadow-[0_0_20px_rgba(56,189,248,0.7),0_0_40px_rgba(56,189,248,0.35),0_0_60px_rgba(56,189,248,0.15)] hover:ring-[3px] hover:ring-sky-400/60"
+                  ? 'border-stone-300 text-stone-300 cursor-not-allowed'
+                  : 'border-stone-900 bg-white hover:bg-stone-900 hover:text-white hover:border-sky-400 hover:shadow-[0_0_20px_rgba(56,189,248,0.7),0_0_40px_rgba(56,189,248,0.35)] hover:ring-[3px] hover:ring-sky-400/60'
               )}
-              aria-label="Попередній товар"
+              aria-label="Попередній слайд"
             >
               <motion.div animate={{ x: [0, -3, 0] }} transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}>
                 <ChevronLeft className="w-6 h-6" />
               </motion.div>
             </motion.button>
 
-            {/* Dots Navigation */}
             <div className="flex gap-3">
-              {products.map((product, index) => (
+              {heroSlides.map((_, index) => (
                 <motion.button
-                  key={product.id}
+                  key={index}
                   onClick={() => goToSlide(index)}
                   whileHover={{ scale: 1.2 }}
-                  className={cn(
-                    'h-2 transition-all duration-300 rounded-full',
-                    currentIndex === index 
-                      ? 'w-12 bg-stone-900' 
-                      : 'w-2 bg-stone-300 hover:bg-stone-500'
-                  )}
-                  aria-label={`Перейти до товару ${index + 1}`}
+                  className={cn('h-2 transition-all duration-300 rounded-full', currentIndex === index ? 'w-12 bg-stone-900' : 'w-2 bg-stone-300 hover:bg-stone-500')}
+                  aria-label={`Слайд ${index + 1}`}
                 />
               ))}
             </div>
 
-            {/* Next Button */}
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => paginate(1)}
-              disabled={currentIndex === products.length - 1}
+              disabled={currentIndex === heroSlides.length - 1}
               className={cn(
-                "w-12 h-12 border-2 flex items-center justify-center transition-all duration-300 rounded-xl",
-                currentIndex === products.length - 1
-                  ? "border-stone-300 text-stone-300 cursor-not-allowed"
-                  : "border-stone-900 bg-white hover:bg-stone-900 hover:text-white hover:border-sky-400 hover:shadow-[0_0_20px_rgba(56,189,248,0.7),0_0_40px_rgba(56,189,248,0.35),0_0_60px_rgba(56,189,248,0.15)] hover:ring-[3px] hover:ring-sky-400/60"
+                'w-12 h-12 border-2 flex items-center justify-center transition-all duration-300 rounded-xl',
+                currentIndex === heroSlides.length - 1
+                  ? 'border-stone-300 text-stone-300 cursor-not-allowed'
+                  : 'border-stone-900 bg-white hover:bg-stone-900 hover:text-white hover:border-sky-400 hover:shadow-[0_0_20px_rgba(56,189,248,0.7),0_0_40px_rgba(56,189,248,0.35)] hover:ring-[3px] hover:ring-sky-400/60'
               )}
-              aria-label="Наступний товар"
+              aria-label="Наступний слайд"
             >
               <motion.div animate={{ x: [0, 3, 0] }} transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}>
                 <ChevronRight className="w-6 h-6" />
@@ -423,90 +351,145 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
           </div>
         </div>
 
-        {/* All Products Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {products.map((product, index) => (
-            <motion.button
-              key={product.id}
-              onClick={() => goToSlide(index)}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -8, transition: { duration: 0.2 } }}
-              className={cn(
-                'text-left border p-6 transition-all duration-300 bg-white group rounded-xl',
-                currentIndex === index 
-                  ? 'border-sky-400/70 ring-[2.5px] ring-sky-300/50 shadow-[0_0_10px_rgba(56,189,248,0.4),0_0_25px_rgba(56,189,248,0.15),inset_0_0_8px_rgba(56,189,248,0.06)]' 
-                  : 'border-stone-300 hover:border-sky-300/40 hover:ring-[2.5px] hover:ring-sky-400/50 hover:shadow-[0_0_10px_rgba(56,189,248,0.5),0_0_25px_rgba(56,189,248,0.2)]'
-              )}
-            >
-              <div 
-                className={cn(
-                  'w-full aspect-square mb-4 border-2 bg-gradient-to-br relative overflow-hidden rounded-lg',
-                  product.color,
-                  currentIndex === index ? 'border-sky-400/50' : 'border-stone-500'
-                )}
+        {/* ─── Independent Card Section ─── */}
+        <div className="mt-4">
+          <AnimatePresence mode="wait">
+            {showAll ? (
+              /* All 12 cards grid */
+              <motion.div
+                key="all"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.4 }}
+                className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
               >
-                <Image
-                  src="/images/Screenshot_2.png"
-                  alt={product.title}
-                  fill
-                  className="object-cover opacity-70"
-                />
-                <div className="absolute inset-0 bg-gradient-to-br from-black/10 to-transparent" />
-                
-                {/* Discount Badge on Mini Card */}
-                <div className="absolute top-2 right-2 bg-stone-900 text-white px-2 py-1 text-xs font-bold z-10 rounded">
-                  {product.discount}
-                </div>
-                
-                {currentIndex === index && (
+                {allProducts.map((product, index) => (
                   <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="absolute bottom-2 left-2 w-6 h-6 bg-stone-900 text-white rounded-full flex items-center justify-center text-xs"
+                    key={product.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.04 }}
+                    whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                    className="text-left border-2 border-stone-300 p-6 bg-white group cursor-pointer hover:border-sky-400/70 hover:ring-[2px] hover:ring-sky-400/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_28px_rgba(56,189,248,0.2)] transition-all duration-300 rounded-xl"
                   >
-                    ✓
+                    <div className={cn('w-full aspect-square mb-4 border-2 border-stone-300 bg-gradient-to-br relative overflow-hidden rounded-lg', product.color)}>
+                      <Image src="/images/Screenshot_2.png" alt={product.title} fill className="object-cover opacity-70" />
+                      <div className="absolute inset-0 bg-gradient-to-br from-black/10 to-transparent" />
+                      <div className="absolute top-2 right-2 bg-stone-900 text-white px-2 py-1 text-xs font-bold z-10 rounded">
+                        {product.discount}
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <h4 className="font-medium text-stone-900 group-hover:text-stone-700 transition-colors">{product.title}</h4>
+                      <div className="flex items-baseline gap-2">
+                        <p className="text-xl font-bold text-red-600">{product.price}</p>
+                        {product.oldPrice && <p className="text-[11px] text-stone-400 line-through -translate-y-1">{product.oldPrice}</p>}
+                      </div>
+                    </div>
                   </motion.div>
-                )}
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  
+                ))}
+              </motion.div>
+            ) : (
+              /* Mini card slider — 4 per page */
+              <motion.div key="slider" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {visibleCards.map((product, index) => (
+                    <motion.div
+                      key={product.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.07 }}
+                      whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                      className="text-left border-2 border-stone-300 p-6 bg-white group cursor-pointer hover:border-sky-400/70 hover:ring-[2px] hover:ring-sky-400/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_28px_rgba(56,189,248,0.2)] transition-all duration-300 rounded-xl"
+                    >
+                      <div className={cn('w-full aspect-square mb-4 border-2 border-stone-300 bg-gradient-to-br relative overflow-hidden rounded-lg', product.color)}>
+                        <Image src="/images/Screenshot_2.png" alt={product.title} fill className="object-cover opacity-70" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-black/10 to-transparent" />
+                        <div className="absolute top-2 right-2 bg-stone-900 text-white px-2 py-1 text-xs font-bold z-10 rounded">
+                          {product.discount}
+                        </div>
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="font-medium text-stone-900 group-hover:text-stone-700 transition-colors">{product.title}</h4>
+                        <div className="flex items-baseline gap-2">
+                          <p className="text-xl font-bold text-red-600">{product.price}</p>
+                          {product.oldPrice && <p className="text-[11px] text-stone-400 line-through -translate-y-1">{product.oldPrice}</p>}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
                 </div>
-                <h4 className="font-medium text-stone-900 group-hover:text-stone-700 transition-colors">
-                  {product.title}
-                </h4>
-                <div className="flex items-baseline gap-2">
-                  <p className="text-xl font-bold text-red-600">
-                    {product.price}
-                  </p>
-                  {product.oldPrice && (
-                    <p className="text-[11px] text-stone-400 line-through -translate-y-1">
-                      {product.oldPrice}
-                    </p>
-                  )}
+
+                {/* Card slider navigation */}
+                <div className="flex items-center justify-center gap-4 mt-5">
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => setCardPage((p) => Math.max(0, p - 1))}
+                    disabled={cardPage === 0}
+                    className={cn(
+                      'w-10 h-10 border-2 flex items-center justify-center transition-all duration-300 rounded-xl',
+                      cardPage === 0
+                        ? 'border-stone-300 text-stone-300 cursor-not-allowed'
+                        : 'border-stone-900 bg-white hover:bg-stone-900 hover:text-white'
+                    )}
+                    aria-label="Попередня сторінка карток"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </motion.button>
+
+                  <div className="flex gap-2">
+                    {Array.from({ length: totalCardPages }).map((_, i) => (
+                      <motion.button
+                        key={i}
+                        onClick={() => setCardPage(i)}
+                        whileHover={{ scale: 1.2 }}
+                        className={cn('h-2 rounded-full transition-all duration-300', cardPage === i ? 'w-8 bg-stone-900' : 'w-2 bg-stone-300 hover:bg-stone-500')}
+                        aria-label={`Сторінка карток ${i + 1}`}
+                      />
+                    ))}
+                  </div>
+
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => setCardPage((p) => Math.min(totalCardPages - 1, p + 1))}
+                    disabled={cardPage === totalCardPages - 1}
+                    className={cn(
+                      'w-10 h-10 border-2 flex items-center justify-center transition-all duration-300 rounded-xl',
+                      cardPage === totalCardPages - 1
+                        ? 'border-stone-300 text-stone-300 cursor-not-allowed'
+                        : 'border-stone-900 bg-white hover:bg-stone-900 hover:text-white'
+                    )}
+                    aria-label="Наступна сторінка карток"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </motion.button>
                 </div>
-              </div>
-            </motion.button>
-          ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        {/* Bottom CTA */}
+        {/* Bottom CTA — expand / collapse */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="text-center mt-12"
+          className="text-center mt-8"
         >
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            onClick={() => setShowAll((v) => !v)}
             className="border-2 border-stone-900 px-12 py-4 hover:bg-stone-900 hover:text-white transition-all duration-300 font-medium inline-flex items-center gap-3 rounded-lg"
           >
             <ShoppingBag className="w-5 h-5" />
-            Усі акційні пропозиції
+            {showAll ? 'Згорнути' : 'Усі акційні пропозиції'}
+            <motion.span animate={{ rotate: showAll ? 180 : 0 }} transition={{ duration: 0.3 }}>
+              <ChevronDown className="w-4 h-4" />
+            </motion.span>
           </motion.button>
         </motion.div>
       </div>

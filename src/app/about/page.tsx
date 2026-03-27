@@ -1,5 +1,6 @@
 import { Award, Target, Users, Shield, TrendingUp, Heart } from 'lucide-react';
 import Image from 'next/image';
+import { GallerySection } from '@/components/pages/about/GallerySection';
 
 export default function AboutPage() {
   return (
@@ -39,35 +40,7 @@ export default function AboutPage() {
       </section>
 
       {/* Photo Gallery Section */}
-      <section className="bg-stone-50 border-y border-stone-200">
-        <div className="max-w-5xl mx-auto px-6 py-16 lg:py-20">
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Photo 1 */}
-            <div className="bg-white border-2 border-stone-200 rounded-xl overflow-hidden">
-              <div className="aspect-[3/4] bg-stone-100 relative">
-                <Image
-                  src="/images/about/about1.jpg"
-                  alt="ORTHOSTORE офіс"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            </div>
-
-            {/* Photo 2 */}
-            <div className="bg-white border-2 border-stone-200 rounded-xl overflow-hidden">
-              <div className="aspect-[3/4] bg-stone-100 relative">
-                <Image
-                  src="/images/about/about2.jpg"
-                  alt="ORTHOSTORE команда"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <GallerySection />
 
       {/* Pricing Philosophy Section */}
       <section className="max-w-5xl mx-auto px-6 py-16 lg:py-20">
