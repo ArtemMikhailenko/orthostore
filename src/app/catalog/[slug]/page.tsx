@@ -54,6 +54,7 @@ import { useCartStore } from '@/lib/cart-store';
 /* ─────── UiProduct type ─────── */
 interface UiProduct {
   id: string;
+  slug: string;
   sku: string;
   name: string;
   brand: string;
@@ -98,6 +99,7 @@ function mapApiToUi(
   const firstVariant = p.variants?.[0];
   return {
     id: (p._id as string) || p.slug,
+    slug: p.slug,
     sku: firstVariant?.sku || (p._id as string) || p.slug,
     name: title,
     brand: brandName || p.slug,
@@ -270,7 +272,7 @@ function SmartFilters({
 }
 
 /* ─────── Product Card ─────── */
-function ProductCard({ product }: { product: UiProduct }) {
+function ProductCard({ product, categorySlug }: { product: UiProduct; categorySlug: string }) {
   const [isHovered, setIsHovered] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -290,7 +292,8 @@ function ProductCard({ product }: { product: UiProduct }) {
   const StockIcon = { high: CheckCircle2, medium: Clock, low: Zap }[product.stockLevel];
 
   return (
-    <div
+    <Link
+      href={`/catalog/${categorySlug}/${product.slug}`}
       className={cn(
         'group relative bg-white overflow-hidden transition-all duration-500 cursor-pointer rounded-2xl',
         'hover:shadow-2xl hover:shadow-stone-900/10',
@@ -340,7 +343,7 @@ function ProductCard({ product }: { product: UiProduct }) {
 
         {/* Floating actions */}
         <div className={cn('absolute top-3 right-3 flex flex-col gap-2 transition-all duration-300', isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4')}>
-          <button onClick={e => { e.stopPropagation(); setIsFavorite(!isFavorite); }} className={cn('p-2 backdrop-blur-md rounded-full transition-all duration-300 shadow-lg', isFavorite ? 'bg-red-500 text-white' : 'bg-white/80 text-stone-600 hover:bg-white hover:text-red-500')}>
+          <button onClick={e => { e.preventDefault(); e.stopPropagation(); setIsFavorite(!isFavorite); }} className={cn('p-2 backdrop-blur-md rounded-full transition-all duration-300 shadow-lg', isFavorite ? 'bg-red-500 text-white' : 'bg-white/80 text-stone-600 hover:bg-white hover:text-red-500')}>
             <Heart className={cn('w-4 h-4', isFavorite && 'fill-current')} />
           </button>
           <button className="p-2 bg-white/80 backdrop-blur-md text-stone-600 hover:bg-white hover:text-stone-900 rounded-full transition-all duration-300 shadow-lg">
@@ -351,7 +354,7 @@ function ProductCard({ product }: { product: UiProduct }) {
         {/* Quick add */}
         <div className={cn('absolute bottom-0 left-0 right-0 p-4 transition-all duration-500', isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full')}>
           <button
-            onClick={e => { e.stopPropagation(); addItem({ id: product.id, sku: product.sku, name: product.name, price: product.price, imageUrl: product.imageUrl, brand: product.brand }, 1); openCart(); }}
+            onClick={e => { e.preventDefault(); e.stopPropagation(); addItem({ id: product.id, sku: product.sku, name: product.name, price: product.price, imageUrl: product.imageUrl, brand: product.brand }, 1); openCart(); }}
             className="w-full bg-stone-900 text-white py-2.5 font-medium hover:bg-stone-800 transition-all duration-300 flex items-center justify-center gap-2 rounded-xl"
           >
             <ShoppingCart className="w-4 h-4" />
@@ -410,12 +413,12 @@ function ProductCard({ product }: { product: UiProduct }) {
           </div>
         )}
       </div>
-    </div>
+    </Link>
   );
 }
 
 /* ─────── Product List Card (horizontal) ─────── */
-function ProductListCard({ product }: { product: UiProduct }) {
+function ProductListCard({ product, categorySlug }: { product: UiProduct; categorySlug: string }) {
   const addItem = useCartStore(s => s.addItem);
   const openCart = useCartStore(s => s.open);
   const discount = product.originalPrice ? Math.round((1 - product.price / product.originalPrice) * 100) : 0;
@@ -423,7 +426,7 @@ function ProductListCard({ product }: { product: UiProduct }) {
   const StockIcon = { high: CheckCircle2, medium: Clock, low: Zap }[product.stockLevel];
 
   return (
-    <div className="group flex bg-white border border-stone-200/50 hover:border-stone-300 hover:shadow-lg transition-all duration-300 overflow-hidden rounded-2xl">
+    <Link href={`/catalog/${categorySlug}/${product.slug}`} className="group flex bg-white border border-stone-200/50 hover:border-stone-300 hover:shadow-lg transition-all duration-300 overflow-hidden rounded-2xl">
       {/* Image */}
       <div className="relative w-36 sm:w-44 shrink-0 bg-stone-50 rounded-l-2xl overflow-hidden">
         {product.imageUrl ? (
@@ -472,7 +475,7 @@ function ProductListCard({ product }: { product: UiProduct }) {
             {product.originalPrice && <span className="text-xs text-stone-400 line-through">{product.originalPrice.toLocaleString()} ₴</span>}
           </div>
           <button
-            onClick={() => { addItem({ id: product.id, sku: product.sku, name: product.name, price: product.price, imageUrl: product.imageUrl, brand: product.brand }, 1); openCart(); }}
+            onClick={(e) => { e.preventDefault(); addItem({ id: product.id, sku: product.sku, name: product.name, price: product.price, imageUrl: product.imageUrl, brand: product.brand }, 1); openCart(); }}
             className="flex items-center gap-2 bg-stone-900 text-white px-4 py-2 hover:bg-stone-800 transition-colors text-sm font-medium rounded-xl"
           >
             <ShoppingCart className="w-4 h-4" />
@@ -480,7 +483,7 @@ function ProductListCard({ product }: { product: UiProduct }) {
           </button>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
@@ -680,8 +683,8 @@ export default function CategoryProductsPage() {
           )}>
             {uiProducts.map(product =>
               viewMode === 'grid'
-                ? <ProductCard key={product.id} product={product} />
-                : <ProductListCard key={product.id} product={product} />
+                ? <ProductCard key={product.id} product={product} categorySlug={slug} />
+                : <ProductListCard key={product.id} product={product} categorySlug={slug} />
             )}
           </div>
         ) : (
