@@ -20,7 +20,7 @@ export function AboutHeroSection({ className }: AboutHeroSectionProps) {
                 О компании
               </div>
               <h1 className="text-5xl md:text-6xl font-light tracking-tight text-stone-900 mb-8">
-                OrthoDent Pro
+                ORTHOSTORE
                 <br />
                 <span className="font-normal">С 2015 года</span>
               </h1>
@@ -48,7 +48,7 @@ export function AboutHeroSection({ className }: AboutHeroSectionProps) {
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center">
                 <div className="w-24 h-24 bg-stone-300 rounded-full mx-auto mb-6"></div>
-                <div className="text-stone-500">Фото команды OrthoDent Pro</div>
+                <div className="text-stone-500">Фото команды ORTHOSTORE</div>
               </div>
             </div>
             

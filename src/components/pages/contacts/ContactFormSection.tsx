@@ -76,7 +76,7 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
   };
 
   return (
-    <section className={cn('py-12 bg-stone-50', className)}>
+    <section id="contact-form" className={cn('py-12 bg-stone-50', className)}>
       <div className="max-w-4xl mx-auto px-6">
         
         <div className="text-center mb-8">

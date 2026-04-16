@@ -276,7 +276,7 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={prevTestimonial}
-                    className="w-8 h-8 border-2 border-stone-900 flex items-center justify-center hover:bg-stone-900 hover:text-white hover:border-sky-400/70 hover:shadow-[0_0_20px_rgba(56,189,248,0.7)] transition-all rounded-lg"
+                    className="w-8 h-8 border-2 border-stone-900 flex items-center justify-center hover:bg-stone-900 hover:text-white hover:border-sky-400 hover:shadow-[0_0_20px_rgba(56,189,248,0.7),0_0_40px_rgba(56,189,248,0.35)] hover:ring-[3px] hover:ring-sky-400/60 transition-all rounded-lg"
                     aria-label="Попередній"
                   >
                     <ChevronLeft className="w-4 h-4" />
@@ -285,7 +285,7 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={nextTestimonial}
-                    className="w-8 h-8 border-2 border-stone-900 flex items-center justify-center hover:bg-stone-900 hover:text-white hover:border-sky-400/70 hover:shadow-[0_0_20px_rgba(56,189,248,0.7)] transition-all rounded-lg"
+                    className="w-8 h-8 border-2 border-stone-900 flex items-center justify-center hover:bg-stone-900 hover:text-white hover:border-sky-400 hover:shadow-[0_0_20px_rgba(56,189,248,0.7),0_0_40px_rgba(56,189,248,0.35)] hover:ring-[3px] hover:ring-sky-400/60 transition-all rounded-lg"
                     aria-label="Наступний"
                   >
                     <ChevronRight className="w-4 h-4" />
@@ -397,7 +397,7 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={prevTestimonial}
-                    className="w-8 h-8 border-2 border-stone-900 flex items-center justify-center hover:bg-stone-900 hover:text-white hover:border-sky-400/70 hover:shadow-[0_0_20px_rgba(56,189,248,0.7)] transition-all rounded-lg"
+                    className="w-8 h-8 border-2 border-stone-900 flex items-center justify-center hover:bg-stone-900 hover:text-white hover:border-sky-400 hover:shadow-[0_0_20px_rgba(56,189,248,0.7),0_0_40px_rgba(56,189,248,0.35)] hover:ring-[3px] hover:ring-sky-400/60 transition-all rounded-lg"
                     aria-label="Попередня клініка"
                   >
                     <ChevronLeft className="w-4 h-4" />
@@ -406,7 +406,7 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={nextTestimonial}
-                    className="w-8 h-8 border-2 border-stone-900 flex items-center justify-center hover:bg-stone-900 hover:text-white hover:border-sky-400/70 hover:shadow-[0_0_20px_rgba(56,189,248,0.7)] transition-all rounded-lg"
+                    className="w-8 h-8 border-2 border-stone-900 flex items-center justify-center hover:bg-stone-900 hover:text-white hover:border-sky-400 hover:shadow-[0_0_20px_rgba(56,189,248,0.7),0_0_40px_rgba(56,189,248,0.35)] hover:ring-[3px] hover:ring-sky-400/60 transition-all rounded-lg"
                     aria-label="Наступна клініка"
                   >
                     <ChevronRight className="w-4 h-4" />

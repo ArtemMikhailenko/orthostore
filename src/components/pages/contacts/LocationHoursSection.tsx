@@ -97,10 +97,10 @@ export function LocationHoursSection({ className }: LocationHoursSectionProps) {
             <h3 className="text-xl font-medium text-stone-900">
               Мапа
             </h3>
-            <div className="text-sm font-semibold text-[#c8913c] tracking-wider">ORTHOSTORE</div>
             
             {/* Map Container */}
             <div className="relative">
+              <div className="text-xs font-light text-stone-500 tracking-widest uppercase mb-2">ORTHOSTORE</div>
               <div 
                 className={cn(
                   'aspect-[4/3] bg-stone-100 rounded-lg overflow-hidden transition-all duration-500',

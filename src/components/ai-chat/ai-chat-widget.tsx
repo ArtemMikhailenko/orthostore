@@ -13,7 +13,7 @@ interface Message {
 
 const INITIAL_MESSAGE: Message = {
   id: 1,
-  text: 'Вітаю! Я AI-асістент OrthoDent Pro. 🦷\n\nЯ можу допомогти вам:\n• Підібрати потрібні ортодонтичні товари\n• Розповісти про ціни та характеристики\n• Відповісти на питання про доставку\n• Порадити оптимальні варіанти\n\nЧим можу допомогти?',
+  text: 'Вітаю! Я AI-асістент ORTHOSTORE. 🦷\n\nЯ можу допомогти вам:\n• Підібрати потрібні ортодонтичні товари\n• Розповісти про ціни та характеристики\n• Відповісти на питання про доставку\n• Порадити оптимальні варіанти\n\nЧим можу допомогти?',
   sender: 'ai',
   timestamp: new Date(),
 };
@@ -319,7 +319,7 @@ export function AIChatWidget() {
               </button>
             </div>
             <div className="text-xs text-stone-400 mt-2 text-center">
-              Powered by OrthoDent AI ✨
+              Powered by ORTHOSTORE AI ✨
             </div>
           </div>
         </div>

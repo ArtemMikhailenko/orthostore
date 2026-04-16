@@ -67,7 +67,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             <div className="text-white text-lg font-bold">O</div>
           </div>
           <div>
-            <div className="font-bold text-slate-900 text-lg">OrthoDent</div>
+            <div className="font-bold text-slate-900 text-lg">ORTHOSTORE</div>
             <div className="text-sm text-slate-500">Меню навигации</div>
           </div>
         </div>
@@ -137,7 +137,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           </div>
           <div className="flex items-center gap-3 text-sm text-slate-600 px-3">
             <Mail className="w-4 h-4" />
-            <span>info@orthodent.pro</span>
+            <span>orthostore.com.ua@gmail.com</span>
           </div>
         </div>
 

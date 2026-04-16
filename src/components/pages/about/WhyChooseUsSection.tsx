@@ -45,7 +45,7 @@ export function WhyChooseUsSection({ className }: WhyChooseUsSectionProps) {
             <h2 className="text-4xl md:text-5xl font-light tracking-tight text-stone-900 mb-12">
               Почему выбирают
               <br />
-              <span className="font-normal">OrthoDent Pro</span>
+              <span className="font-normal">ORTHOSTORE</span>
             </h2>
 
             <div className="space-y-8">
@@ -86,7 +86,7 @@ export function WhyChooseUsSection({ className }: WhyChooseUsSectionProps) {
                 </div>
                 <div className="flex items-center gap-3">
                   <Mail className="w-5 h-5" />
-                  <span>info@orthodent.pro</span>
+                  <span>orthostore.com.ua@gmail.com</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <MapPin className="w-5 h-5" />

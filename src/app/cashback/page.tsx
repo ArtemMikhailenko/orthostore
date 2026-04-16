@@ -28,7 +28,7 @@ export default function CashbackPage() {
             <div className="grid md:grid-cols-3 gap-6 pt-8">
               <div className="bg-white/10 backdrop-blur-sm border border-white/20 p-6 text-center rounded-xl">
                 <Percent className="w-8 h-8 mx-auto mb-3" />
-                <div className="text-3xl font-light mb-1">до 20%</div>
+                <div className="text-3xl font-light mb-1">до 20</div>
                 <div className="text-sm text-stone-300">Максимальний кешбек</div>
               </div>
               <div className="bg-white/10 backdrop-blur-sm border border-white/20 p-6 text-center rounded-xl">
@@ -51,8 +51,8 @@ export default function CashbackPage() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8">
             <div>
-              <div className="inline-block bg-stone-900 text-white text-sm px-4 py-1 mb-4 rounded-full">
-                CASH BACK
+              <div className="inline-block bg-stone-900 text-white text-sm px-4 py-1.5 mb-4 rounded-full">
+                шукай товар з написом кешбек
               </div>
               <h2 className="text-4xl lg:text-5xl font-light text-stone-900 mb-6 leading-tight">
                 Що таке кешбек та як він працює

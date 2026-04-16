@@ -42,7 +42,7 @@ const contactMethods = [
     secondary: 'Пн-Пт 9:00-18:00',
     description: 'Швидкі відповіді на ваші питання',
     action: 'Відкрити чат',
-    href: '#'
+    href: 'https://t.me/orthostore'
   },
   {
     icon: Calendar,
@@ -51,7 +51,7 @@ const contactMethods = [
     secondary: 'За особистим записом',
     description: 'Огляд продукції та тест інструментів',
     action: 'Домовитись',
-    href: '#'
+    href: '#contact-form'
   }
 ];
 

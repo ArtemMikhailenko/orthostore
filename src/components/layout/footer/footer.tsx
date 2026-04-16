@@ -146,7 +146,7 @@ export function FooterSection({ className }: FooterSectionProps) {
         <div className="container mx-auto px-6 py-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex flex-wrap items-center gap-6 text-sm text-gray-400">
-              <span>© 2024 OrthoDent Pro. Всі права захищені.</span>
+              <span>© 2024 ORTHOSTORE. Всі права захищені.</span>
               <a href="/privacy" className="hover:text-white transition-colors">
                 Політика конфіденційності
               </a>
