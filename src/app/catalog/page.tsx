@@ -1,6 +1,6 @@
 "use client";
-import React, { useState } from "react";
-import { ArrowRight, Search, Package, ChevronRight } from "lucide-react";
+import React from "react";
+import { ArrowRight, Package } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
@@ -232,13 +232,12 @@ function PhotoCard({ cat, area }: { cat: CatItem; area: string }) {
   const isLarge = area.includes("col-span-2") && area.includes("row-span-2");
   const hasSubcats = cat.subcategories && cat.subcategories.length > 0;
   return (
-    <Link href={`/catalog/${cat.slug}`} className={cn("group relative block rounded-2xl overflow-hidden hover:scale-[1.02] transition-transform duration-300", area)}>
-      <Image src={cat.img} alt={cat.name} fill className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" sizes="(max-width:768px) 100vw, 33vw" />
+    <Link href={hasSubcats ? '#' : `/catalog/${cat.slug}`} onClick={hasSubcats ? (e: React.MouseEvent) => e.preventDefault() : undefined} className={cn("group relative block rounded-2xl overflow-hidden border border-stone-200 hover:border-[#0ea5e9]/50 hover:shadow-[0_0_20px_rgba(14,165,233,0.15)] transition-all duration-300", area)}>
+      <Image src={cat.img} alt={cat.name} fill className="object-cover group-hover:scale-105 transition-all duration-700" sizes="(max-width:768px) 100vw, 33vw" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent transition-opacity duration-500" />
       <div className={cn("relative z-10 flex flex-col justify-end h-full p-5", isLarge && "p-7")}>
         <h3 className={cn("font-semibold uppercase tracking-wider leading-tight text-white line-clamp-2", isLarge ? "text-2xl" : "text-sm")}>{cat.name}</h3>
-        <div className="flex items-center gap-2 mt-2 text-white/50 group-hover:text-sky-300 transition-colors duration-300">
-          <span className="text-[10px] font-medium tracking-[0.15em] uppercase">Переглянути</span>
+        <div className="flex items-center gap-2 mt-2 text-white/70 group-hover:text-sky-300 transition-colors duration-300">
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
         </div>
         {hasSubcats && (
@@ -254,13 +253,12 @@ function PhotoCard({ cat, area }: { cat: CatItem; area: string }) {
 function DarkCard({ cat, area }: { cat: CatItem; area: string }) {
   const hasSubcats = cat.subcategories && cat.subcategories.length > 0;
   return (
-    <Link href={`/catalog/${cat.slug}`} className={cn("group relative block rounded-2xl overflow-hidden bg-stone-900 hover:scale-[1.02] transition-transform duration-300", area)}>
-      <Image src={cat.img} alt={cat.name} fill className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105 opacity-55 group-hover:opacity-75" sizes="(max-width:768px) 100vw, 25vw" />
+    <Link href={hasSubcats ? '#' : `/catalog/${cat.slug}`} onClick={hasSubcats ? (e: React.MouseEvent) => e.preventDefault() : undefined} className={cn("group relative block rounded-2xl overflow-hidden bg-stone-900 border border-stone-700 hover:border-[#0ea5e9]/50 hover:shadow-[0_0_20px_rgba(14,165,233,0.15)] transition-all duration-300", area)}>
+      <Image src={cat.img} alt={cat.name} fill className="object-cover group-hover:scale-105 transition-all duration-700 opacity-55 group-hover:opacity-75" sizes="(max-width:768px) 100vw, 25vw" />
       <div className="absolute inset-0 bg-gradient-to-t from-stone-900/85 via-stone-900/30 to-transparent" />
       <div className="relative z-10 flex flex-col justify-end h-full p-5">
         <h3 className="font-semibold uppercase tracking-wider leading-tight text-white text-sm line-clamp-2">{cat.name}</h3>
-        <div className="flex items-center gap-2 mt-2 text-stone-400 group-hover:text-sky-300 transition-colors duration-300">
-          <span className="text-[10px] font-medium tracking-[0.15em] uppercase">Переглянути</span>
+        <div className="flex items-center gap-2 mt-2 text-white/70 group-hover:text-sky-300 transition-colors duration-300">
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
         </div>
         {hasSubcats && (
@@ -276,13 +274,12 @@ function DarkCard({ cat, area }: { cat: CatItem; area: string }) {
 function LightCard({ cat, area }: { cat: CatItem; area: string }) {
   const hasSubcats = cat.subcategories && cat.subcategories.length > 0;
   return (
-    <Link href={`/catalog/${cat.slug}`} className={cn("group relative block rounded-2xl overflow-hidden bg-stone-200 hover:scale-[1.02] transition-transform duration-300", area)}>
-      <Image src={cat.img} alt={cat.name} fill className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105 opacity-60 group-hover:opacity-85" sizes="(max-width:768px) 100vw, 25vw" />
+    <Link href={hasSubcats ? '#' : `/catalog/${cat.slug}`} onClick={hasSubcats ? (e: React.MouseEvent) => e.preventDefault() : undefined} className={cn("group relative block rounded-2xl overflow-hidden bg-stone-200 border border-stone-300 hover:border-[#0ea5e9]/50 hover:shadow-[0_0_20px_rgba(14,165,233,0.15)] transition-all duration-300", area)}>
+      <Image src={cat.img} alt={cat.name} fill className="object-cover group-hover:scale-105 transition-all duration-700 opacity-60 group-hover:opacity-85" sizes="(max-width:768px) 100vw, 25vw" />
       <div className="absolute inset-0 bg-gradient-to-t from-stone-900/70 via-stone-900/15 to-transparent" />
       <div className="relative z-10 flex flex-col justify-end h-full p-5">
         <h3 className="font-semibold uppercase tracking-wider leading-tight text-white text-sm line-clamp-2">{cat.name}</h3>
-        <div className="flex items-center gap-2 mt-2 text-white/50 group-hover:text-sky-300 transition-colors duration-300">
-          <span className="text-[10px] font-medium tracking-[0.15em] uppercase">Переглянути</span>
+        <div className="flex items-center gap-2 mt-2 text-white/70 group-hover:text-sky-300 transition-colors duration-300">
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
         </div>
         {hasSubcats && (
@@ -298,13 +295,12 @@ function LightCard({ cat, area }: { cat: CatItem; area: string }) {
 function AccentCard({ cat, area }: { cat: CatItem; area: string }) {
   const hasSubcats = cat.subcategories && cat.subcategories.length > 0;
   return (
-    <Link href={`/catalog/${cat.slug}`} className={cn("group relative block rounded-2xl overflow-hidden bg-sky-950 hover:scale-[1.02] transition-transform duration-300", area)}>
-      <Image src={cat.img} alt={cat.name} fill className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105 opacity-55 group-hover:opacity-80" sizes="(max-width:768px) 100vw, 25vw" />
-      <div className="absolute inset-0 bg-gradient-to-t from-sky-950/90 via-sky-950/25 to-transparent group-hover:from-sky-950/70 transition-all duration-500" />
+    <Link href={hasSubcats ? '#' : `/catalog/${cat.slug}`} onClick={hasSubcats ? (e: React.MouseEvent) => e.preventDefault() : undefined} className={cn("group relative block rounded-2xl overflow-hidden bg-stone-900 border border-stone-700 hover:border-[#0ea5e9]/50 hover:shadow-[0_0_20px_rgba(14,165,233,0.15)] transition-all duration-300", area)}>
+      <Image src={cat.img} alt={cat.name} fill className="object-cover group-hover:scale-105 transition-all duration-700 opacity-55 group-hover:opacity-80" sizes="(max-width:768px) 100vw, 25vw" />
+      <div className="absolute inset-0 bg-gradient-to-t from-stone-900/90 via-stone-900/25 to-transparent group-hover:from-stone-900/70 transition-all duration-500" />
       <div className="relative z-10 flex flex-col justify-end h-full p-5">
         <h3 className="font-semibold uppercase tracking-wider leading-tight text-white text-sm line-clamp-2">{cat.name}</h3>
-        <div className="flex items-center gap-2 mt-2 text-sky-300/60 group-hover:text-sky-300 transition-colors duration-300">
-          <span className="text-[10px] font-medium tracking-[0.15em] uppercase">Переглянути</span>
+        <div className="flex items-center gap-2 mt-2 text-white/70 group-hover:text-sky-300 transition-colors duration-300">
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
         </div>
         {hasSubcats && (
@@ -330,14 +326,6 @@ function CategoryCard({ cat, index }: { cat: CatItem; index: number }) {
 
 /* ─── Main Catalog Page ─── */
 export default function CatalogPage() {
-  const [search, setSearch] = useState("");
-
-  const filtered = React.useMemo(() => {
-    if (!search.trim()) return ALL_CATEGORIES;
-    const q = search.toLowerCase();
-    return ALL_CATEGORIES.filter(c => c.name.toLowerCase().includes(q));
-  }, [search]);
-
   return (
     <div className="min-h-screen bg-white">
 
@@ -350,47 +338,24 @@ export default function CatalogPage() {
             <span className="text-stone-600">Каталог</span>
           </div>
 
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-            <div>
-              <h1 className="text-4xl lg:text-5xl font-light text-stone-900 tracking-tight">
-                Каталог продукції
-              </h1>
-              <p className="text-stone-500 mt-2 text-lg font-light">
-                Оберіть категорію для перегляду товарів
-              </p>
-            </div>
-
-            <div className="relative w-full lg:w-80">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
-              <input
-                type="text"
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                placeholder="Пошук категорій..."
-                className="w-full pl-11 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] focus:border-transparent transition-all placeholder:text-stone-400"
-              />
-            </div>
+          <div>
+            <h1 className="text-4xl lg:text-5xl font-light text-stone-900 tracking-tight">
+              Каталог продукції
+            </h1>
+            <p className="text-stone-500 mt-2 text-lg font-light">
+              Оберіть категорію для перегляду товарів
+            </p>
           </div>
         </div>
       </div>
 
       {/* Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        {filtered.length > 0 ? (
-          <div className="grid grid-cols-2 lg:grid-cols-4 grid-flow-row-dense gap-3 auto-rows-[180px] sm:auto-rows-[200px]">
-            {filtered.map((cat, i) => (
-              <CategoryCard key={cat.slug} cat={cat} index={i} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-20">
-            <div className="w-20 h-20 bg-stone-100 rounded-2xl flex items-center justify-center mx-auto mb-5">
-              <Package className="w-10 h-10 text-stone-400" />
-            </div>
-            <h3 className="text-xl font-light text-stone-900 mb-2">Категорій не знайдено</h3>
-            <p className="text-stone-500 text-sm">Спробуйте змінити пошуковий запит</p>
-          </div>
-        )}
+        <div className="grid grid-cols-2 lg:grid-cols-4 grid-flow-row-dense gap-3 auto-rows-[180px] sm:auto-rows-[200px]">
+          {ALL_CATEGORIES.map((cat, i) => (
+            <CategoryCard key={cat.slug} cat={cat} index={i} />
+          ))}
+        </div>
       </div>
     </div>
   );

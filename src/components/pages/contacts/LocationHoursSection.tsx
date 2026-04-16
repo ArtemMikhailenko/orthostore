@@ -97,6 +97,7 @@ export function LocationHoursSection({ className }: LocationHoursSectionProps) {
             <h3 className="text-xl font-medium text-stone-900">
               Мапа
             </h3>
+            <div className="text-sm font-semibold text-[#c8913c] tracking-wider">ORTHOSTORE</div>
             
             {/* Map Container */}
             <div className="relative">
@@ -110,7 +111,7 @@ export function LocationHoursSection({ className }: LocationHoursSectionProps) {
                   <div className="absolute inset-0 flex items-center justify-center">
                     <button
                       onClick={() => setIsMapLoaded(true)}
-                      className="bg-stone-900 text-white px-6 py-3 rounded-lg hover:bg-stone-800 transition-colors flex items-center gap-2"
+                      className="bg-stone-900 text-white px-6 py-3 rounded-lg hover:bg-white hover:text-stone-900 border-2 border-stone-900 transition-all duration-300 flex items-center gap-2"
                     >
                       <MapPin className="w-5 h-5" />
                       Завантажити карту

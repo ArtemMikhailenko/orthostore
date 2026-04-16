@@ -107,14 +107,13 @@ export function CartDrawer() {
             href="/checkout"
             onClick={close}
             className={cn(
-              'w-full inline-flex items-center justify-center gap-2 bg-stone-900 text-white py-3 rounded-lg font-medium transition-all duration-300 group relative overflow-hidden',
-              'hover:gap-3 hover:shadow-xl hover:shadow-stone-900/30 hover:scale-[1.02]',
-              'before:absolute before:inset-0 before:bg-gradient-to-r before:from-stone-800 before:to-stone-900 before:opacity-0 before:transition-opacity hover:before:opacity-100',
+              'w-full inline-flex items-center justify-center gap-2 bg-stone-900 text-white py-3 rounded-lg font-medium transition-all duration-300 border-2 border-stone-900',
+              'hover:bg-white hover:text-stone-900',
               items.length === 0 && 'opacity-50 pointer-events-none'
             )}
           >
-            <span className="relative z-10">Перейти до оформлення</span>
-            <ArrowRight className="w-4 h-4 relative z-10 transition-transform group-hover:translate-x-1" />
+            <span>Перейти до оформлення</span>
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </aside>

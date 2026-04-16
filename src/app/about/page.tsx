@@ -55,7 +55,7 @@ export default function AboutPage() {
             {/* Budget Segment */}
             <div className="bg-white p-8 border-2 border-stone-200 rounded-xl transition-all duration-300 hover:border-sky-300/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_30px_rgba(56,189,248,0.2)]">
               <div className="flex items-start gap-6">
-                <span className="text-5xl font-bold text-stone-900">01</span>
+                <span className="text-5xl font-light text-stone-400">01</span>
                 <div className="space-y-2">
                   <h3 className="text-xl font-medium text-stone-900">
                     Бюджетний сегмент
@@ -70,7 +70,7 @@ export default function AboutPage() {
             {/* Mid Segment */}
             <div className="bg-white p-8 border-2 border-stone-200 rounded-xl transition-all duration-300 hover:border-sky-300/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_30px_rgba(56,189,248,0.2)]">
               <div className="flex items-start gap-6">
-                <span className="text-5xl font-bold text-stone-900">02</span>
+                <span className="text-5xl font-light text-stone-400">02</span>
                 <div className="space-y-2">
                   <h3 className="text-xl font-medium text-stone-900">
                     Середній ціновий клас
@@ -85,7 +85,7 @@ export default function AboutPage() {
             {/* Premium Segment */}
             <div className="bg-white p-8 border-2 border-stone-200 rounded-xl transition-all duration-300 hover:border-sky-300/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_30px_rgba(56,189,248,0.2)]">
               <div className="flex items-start gap-6">
-                <span className="text-5xl font-bold text-stone-900">03</span>
+                <span className="text-5xl font-light text-stone-400">03</span>
                 <div className="space-y-2">
                   <h3 className="text-xl font-medium text-stone-900">
                     Преміум сегмент

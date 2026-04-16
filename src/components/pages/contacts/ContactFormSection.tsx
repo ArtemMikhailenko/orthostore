@@ -26,7 +26,6 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const subjectOptions = [
-    { value: '', label: 'Оберіть тему' },
     { value: 'consultation', label: 'Консультація з продукції' },
     { value: 'order', label: 'Замовлення матеріалів' },
     { value: 'partnership', label: 'Партнерство' },
@@ -89,7 +88,7 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
           </p>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-[0_0_0_1px_rgba(186,230,253,0.7)]">
+        <div className="bg-white p-6 rounded-lg border border-stone-200">
           {!isSubmitted ? (
             <div className="space-y-4">
               <div className="grid md:grid-cols-2 gap-4">
@@ -103,7 +102,7 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full p-3 border-2 border-sky-300/80 rounded-lg shadow-[inset_0_0_0_1px_rgba(255,255,255,0.95),0_0_0_1px_rgba(186,230,253,0.75)] focus:border-sky-500 focus:ring-2 focus:ring-sky-300/90 focus:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.95),0_0_0_2px_rgba(125,211,252,0.5),0_0_0_5px_rgba(125,211,252,0.18)] transition-all text-sm"
+                    className="w-full p-3 border-2 border-stone-300 rounded-lg hover:border-sky-400 hover:shadow-[0_0_12px_rgba(56,189,248,0.3)] focus:border-sky-500 focus:ring-2 focus:ring-sky-300/90 focus:shadow-[0_0_12px_rgba(56,189,248,0.5)] transition-all text-sm"
                     placeholder="Введіть ваше ім'я"
                   />
                 </div>
@@ -117,7 +116,7 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full p-3 border-2 border-sky-300/80 rounded-lg shadow-[inset_0_0_0_1px_rgba(255,255,255,0.95),0_0_0_1px_rgba(186,230,253,0.75)] focus:border-sky-500 focus:ring-2 focus:ring-sky-300/90 focus:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.95),0_0_0_2px_rgba(125,211,252,0.5),0_0_0_5px_rgba(125,211,252,0.18)] transition-all text-sm"
+                    className="w-full p-3 border-2 border-stone-300 rounded-lg hover:border-sky-400 hover:shadow-[0_0_12px_rgba(56,189,248,0.3)] focus:border-sky-500 focus:ring-2 focus:ring-sky-300/90 focus:shadow-[0_0_12px_rgba(56,189,248,0.5)] transition-all text-sm"
                     placeholder="your@email.com"
                   />
                 </div>
@@ -133,7 +132,7 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full p-3 border-2 border-sky-300/80 rounded-lg shadow-[inset_0_0_0_1px_rgba(255,255,255,0.95),0_0_0_1px_rgba(186,230,253,0.75)] focus:border-sky-500 focus:ring-2 focus:ring-sky-300/90 focus:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.95),0_0_0_2px_rgba(125,211,252,0.5),0_0_0_5px_rgba(125,211,252,0.18)] transition-all text-sm"
+                    className="w-full p-3 border-2 border-stone-300 rounded-lg hover:border-sky-400 hover:shadow-[0_0_12px_rgba(56,189,248,0.3)] focus:border-sky-500 focus:ring-2 focus:ring-sky-300/90 focus:shadow-[0_0_12px_rgba(56,189,248,0.5)] transition-all text-sm"
                     placeholder="+38 (000) 000-00-00"
                   />
                 </div>
@@ -147,10 +146,10 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
                       type="button"
                       onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                       className={cn(
-                        "w-full p-3 border-2 rounded-lg transition-all text-sm text-left bg-white flex items-center justify-between shadow-[inset_0_0_0_1px_rgba(255,255,255,0.95),0_0_0_1px_rgba(186,230,253,0.75)]",
+                        "w-full p-3 border-2 rounded-lg transition-all text-sm text-left bg-white flex items-center justify-between",
                         isDropdownOpen 
-                          ? "border-sky-500 ring-2 ring-sky-300/80 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.95),0_0_0_2px_rgba(125,211,252,0.5),0_0_0_5px_rgba(125,211,252,0.18)]" 
-                          : "border-sky-300/80",
+                          ? "border-sky-500 ring-2 ring-sky-300/80 shadow-[0_0_12px_rgba(56,189,248,0.5)]" 
+                          : "border-stone-300 hover:border-sky-400 hover:shadow-[0_0_12px_rgba(56,189,248,0.3)]",
                         !formData.subject && "text-stone-500"
                       )}
                     >
@@ -197,7 +196,7 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
                   onChange={handleChange}
                   required
                   rows={4}
-                  className="w-full p-3 border-2 border-sky-300/80 rounded-lg shadow-[inset_0_0_0_1px_rgba(255,255,255,0.95),0_0_0_1px_rgba(186,230,253,0.75)] focus:border-sky-500 focus:ring-2 focus:ring-sky-300/90 focus:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.95),0_0_0_2px_rgba(125,211,252,0.5),0_0_0_5px_rgba(125,211,252,0.18)] transition-all resize-none text-sm"
+                  className="w-full p-3 border-2 border-stone-300 rounded-lg hover:border-sky-400 hover:shadow-[0_0_12px_rgba(56,189,248,0.3)] focus:border-sky-500 focus:ring-2 focus:ring-sky-300/90 focus:shadow-[0_0_12px_rgba(56,189,248,0.5)] transition-all resize-none text-sm"
                   placeholder="Розкажіть детальніше про ваші потреби..."
                 />
               </div>
@@ -214,7 +213,7 @@ export function ContactFormSection({ className }: ContactFormSectionProps) {
                     'px-6 py-2.5 rounded-lg font-medium transition-all duration-300 flex items-center gap-2 text-sm',
                     isSubmitting
                       ? 'bg-stone-400 text-white cursor-not-allowed'
-                      : 'bg-stone-900 text-white border-2 border-stone-900 hover:bg-white hover:text-stone-900 hover:shadow-[0_0_24px_rgba(56,189,248,0.3)] hover:gap-3'
+                      : 'bg-stone-900 text-white border-2 border-stone-900 hover:bg-white hover:text-stone-900 hover:gap-3'
                   )}
                 >
                   {isSubmitting ? (

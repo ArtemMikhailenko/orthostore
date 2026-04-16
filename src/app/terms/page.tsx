@@ -22,26 +22,26 @@ export default function TermsPage() {
       <section className="bg-stone-50 border-b-2 border-stone-200">
         <div className="max-w-4xl mx-auto px-6 py-16 lg:py-24">
           <div className="text-center space-y-6">
-            <div className="inline-flex items-center gap-2 bg-white border-2 border-stone-200 px-4 py-2 text-sm">
+            <div className="inline-flex items-center gap-2 bg-white border-2 border-stone-200 px-4 py-2 text-sm rounded-full">
               <Scale className="w-4 h-4" />
               <span>Юридичний документ</span>
             </div>
             
             <h1 className="text-4xl lg:text-6xl font-light">
               Публічний договір<br />
-              <span className="font-medium">(Оферта)</span>
+              <span className="font-medium">(оферта)</span>
             </h1>
             
             <p className="text-lg text-stone-600 max-w-2xl mx-auto">
-              на замовлення, купівлю-продаж і доставку товарів
+              на замовлення, купівлю-продаж та доставку товарів
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-              <button className="inline-flex items-center gap-2 bg-stone-900 text-white px-6 py-3 border-2 border-stone-900 hover:bg-white hover:text-stone-900 transition-colors rounded-lg">
+              <button className="inline-flex items-center gap-2 bg-stone-900 text-white px-6 py-3 border-2 border-stone-900 hover:bg-white hover:text-stone-900 transition-colors rounded-xl">
                 <Download className="w-5 h-5" />
                 Завантажити PDF
               </button>
-              <button className="inline-flex items-center gap-2 bg-white text-stone-900 px-6 py-3 border-2 border-stone-200 hover:border-stone-900 transition-colors rounded-lg">
+              <button className="inline-flex items-center gap-2 bg-white text-stone-900 px-6 py-3 border-2 border-stone-200 hover:border-stone-900 transition-colors rounded-xl">
                 <FileText className="w-5 h-5" />
                 Версія для друку
               </button>
@@ -54,24 +54,24 @@ export default function TermsPage() {
       <section className="border-b-2 border-stone-200">
         <div className="max-w-4xl mx-auto px-6 py-12">
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="text-center p-6 border-2 border-stone-200 bg-stone-50">
+            <div className="text-center p-6 border-2 border-stone-200 bg-stone-50 rounded-xl">
               <Shield className="w-8 h-8 mx-auto mb-3 text-stone-900" />
               <div className="font-medium mb-1">Захист прав</div>
               <div className="text-sm text-stone-600">Відповідно до ЦКУ</div>
             </div>
-            <div className="text-center p-6 border-2 border-stone-200 bg-stone-50">
+            <div className="text-center p-6 border-2 border-stone-200 bg-stone-50 rounded-xl">
               <FileCheck className="w-8 h-8 mx-auto mb-3 text-stone-900" />
               <div className="font-medium mb-1">Електронна форма</div>
               <div className="text-sm text-stone-600">Юридична сила</div>
             </div>
-            <div className="text-center p-6 border-2 border-stone-200 bg-stone-50">
+            <div className="text-center p-6 border-2 border-stone-200 bg-stone-50 rounded-xl">
               <CheckCircle className="w-8 h-8 mx-auto mb-3 text-stone-900" />
               <div className="font-medium mb-1">Публічний характер</div>
               <div className="text-sm text-stone-600">Однакові умови</div>
             </div>
           </div>
           
-          <div className="mt-8 p-6 border-2 border-stone-900 bg-stone-50">
+          <div className="mt-8 p-6 border-2 border-stone-900 bg-stone-50 rounded-xl">
             <p className="text-sm text-stone-700 leading-relaxed">
               <span className="font-medium text-stone-900">Шановний Користувачу!</span> Перед здійсненням замовлення товарів на даному сайті та в соціальних мережах Продавця, просимо уважно ознайомитись з умовами цього Договору. Здійснюючи замовлення, Ви підтверджуєте свою повну згоду з усіма положеннями цієї оферти.
             </p>
@@ -88,7 +88,7 @@ export default function TermsPage() {
               <a
                 key={section.id}
                 href={`#section-${section.id}`}
-                className="flex items-start gap-3 p-4 border-2 border-stone-200 bg-white hover:border-stone-900 transition-colors group"
+                className="flex items-start gap-3 p-4 border-2 border-stone-200 bg-white hover:border-stone-900 transition-colors group rounded-xl"
               >
                 <span className="text-2xl font-light text-stone-400 group-hover:text-stone-900 transition-colors">
                   {section.id}
@@ -360,10 +360,10 @@ export default function TermsPage() {
             Наша команда готова відповісти на будь-які питання та надати додаткову інформацію щодо умов співпраці
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="/contacts" className="inline-flex items-center gap-2 bg-stone-900 text-white px-6 py-3 border-2 border-stone-900 hover:bg-white hover:text-stone-900 transition-colors rounded-lg">
+            <a href="/contacts" className="inline-flex items-center gap-2 bg-stone-900 text-white px-6 py-3 border-2 border-stone-900 hover:bg-white hover:text-stone-900 transition-colors rounded-xl">
               Зв'язатись з нами
             </a>
-            <button className="inline-flex items-center gap-2 bg-white text-stone-900 px-6 py-3 border-2 border-stone-200 hover:border-stone-900 transition-colors rounded-lg">
+            <button className="inline-flex items-center gap-2 bg-white text-stone-900 px-6 py-3 border-2 border-stone-200 hover:bg-stone-900 hover:text-white hover:border-stone-900 transition-colors rounded-xl">
               <Download className="w-5 h-5" />
               Завантажити договір
             </button>

@@ -102,7 +102,7 @@ export function FooterSection({ className }: FooterSectionProps) {
             <img
               src="/logo-balls.png"
               alt="ORTHOSTORE"
-              className="w-72 h-auto object-contain drop-shadow-lg"
+              className="w-72 h-auto object-contain"
             />
             <span className="text-xl font-bold tracking-widest text-white">ORTHOSTORE</span>
           </div>

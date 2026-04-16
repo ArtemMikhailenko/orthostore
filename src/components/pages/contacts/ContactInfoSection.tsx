@@ -61,9 +61,10 @@ export function ContactInfoSection({ className }: ContactInfoSectionProps) {
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {contactMethods.map((method, index) => (
-            <div 
-              key={index} 
-              className="bg-white p-6 group hover:shadow-lg transition-all duration-300 cursor-pointer rounded-xl"
+            <a 
+              key={index}
+              href={method.href}
+              className="bg-white p-6 group hover:shadow-lg transition-all duration-300 cursor-pointer rounded-xl block"
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
@@ -88,14 +89,13 @@ export function ContactInfoSection({ className }: ContactInfoSectionProps) {
                   </p>
                 </div>
                 
-                <a 
-                  href={method.href}
+                <span 
                   className="inline-flex items-center gap-2 text-stone-900 font-medium text-sm group-hover:gap-3 transition-all duration-300"
                 >
                   {method.action}
-                </a>
+                </span>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>

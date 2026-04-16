@@ -39,7 +39,7 @@ export default function ReturnsPage() {
               Згідно з чинним законодавством України (згідно з додатком №3 постанови Кабінету Міністрів України від 19.03.1994 № 172 «Про реалізацію окремих положень Закону України «Про захист прав споживачів», п. 16 наказу Міністерства охорони здоров'я України від 10.07.2005 № 360 «Порядок відпуску лікарських засобів і виробів медичного призначення з аптек та їх структурних підрозділів»), товари, придбані в інтернет-магазині ORTHOSTORE:
             </p>
             <div className="bg-stone-900 p-4 mt-4 rounded-2xl">
-              <p className="text-white font-medium">
+              <p className="text-white font-medium text-center">
                 НЕ ПІДЛЯГАЮТЬ ОБМІНУ (ПОВЕРНЕННЮ), ЯКЩО ВОНИ НАЛЕЖНОЇ ЯКОСТІ.
               </p>
             </div>
@@ -69,7 +69,7 @@ export default function ReturnsPage() {
               <div className="flex items-start gap-3">
                 <div className="w-1.5 h-1.5 bg-stone-900 rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-stone-700">
-                  Товар має бути в оригінальній упаковці, без слідів використання, збережені товарний вигляд, споживчі властивості, пломби, ярлики, упаковка придбаного товару
+                  Товар має бути в оригінальній упаковці, без слідів використання, збережений товарний вигляд, споживчі властивості, пломби, ярлики, упаковка придбаного товару
                 </p>
               </div>
             </div>
@@ -110,7 +110,7 @@ export default function ReturnsPage() {
               <Package className="w-6 h-6 flex-shrink-0 mt-1" />
               <div className="space-y-4 w-full">
                 <h3 className="text-xl lg:text-2xl font-light">
-                  Заміна товару з браком?
+                  Заміна товару з браком
                 </h3>
                 
                 <div className="space-y-3 text-stone-200">
@@ -142,45 +142,45 @@ export default function ReturnsPage() {
           </div>
 
           <div className="space-y-4">
-            <div className="bg-red-50 border-2 border-red-200 border-l-[5px] border-l-red-400 p-6 rounded-2xl">
+            <div className="bg-sky-50 border-2 border-sky-200 border-l-[5px] border-l-sky-400 p-6 rounded-2xl">
               <div className="flex items-start gap-3">
-                <div className="w-1.5 h-1.5 bg-red-600 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-1.5 h-1.5 bg-sky-600 rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-stone-900">
                   Пройшло більше 14 днів
                 </p>
               </div>
             </div>
 
-            <div className="bg-red-50 border-2 border-red-200 border-l-[5px] border-l-red-400 p-6 rounded-2xl">
+            <div className="bg-sky-50 border-2 border-sky-200 border-l-[5px] border-l-sky-400 p-6 rounded-2xl">
               <div className="flex items-start gap-3">
-                <div className="w-1.5 h-1.5 bg-red-600 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-1.5 h-1.5 bg-sky-600 rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-stone-900">
                   Товаром користувалися, тобто він вже не новий, терміни експлуатації не мають значення
                 </p>
               </div>
             </div>
 
-            <div className="bg-red-50 border-2 border-red-200 border-l-[5px] border-l-red-400 p-6 rounded-2xl">
+            <div className="bg-sky-50 border-2 border-sky-200 border-l-[5px] border-l-sky-400 p-6 rounded-2xl">
               <div className="flex items-start gap-3">
-                <div className="w-1.5 h-1.5 bg-red-600 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-1.5 h-1.5 bg-sky-600 rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-stone-900">
                   При поверненні і перевірці якості товару, виявлені дефекти (тріщини, подряпини, відколи, механічні ушкодження за винятком прихованих виробничих дефектів)
                 </p>
               </div>
             </div>
 
-            <div className="bg-red-50 border-2 border-red-200 border-l-[5px] border-l-red-400 p-6 rounded-2xl">
+            <div className="bg-sky-50 border-2 border-sky-200 border-l-[5px] border-l-sky-400 p-6 rounded-2xl">
               <div className="flex items-start gap-3">
-                <div className="w-1.5 h-1.5 bg-red-600 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-1.5 h-1.5 bg-sky-600 rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-stone-900">
                   Товар до нас повернувся в НЕ заводській упаковці або в неповній комплектації
                 </p>
               </div>
             </div>
 
-            <div className="bg-red-50 border-2 border-red-200 border-l-[5px] border-l-red-400 p-6 rounded-2xl">
+            <div className="bg-sky-50 border-2 border-sky-200 border-l-[5px] border-l-sky-400 p-6 rounded-2xl">
               <div className="flex items-start gap-3">
-                <div className="w-1.5 h-1.5 bg-red-600 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-1.5 h-1.5 bg-sky-600 rounded-full mt-2 flex-shrink-0"></div>
                 <p className="text-stone-900">
                   Не представлено пакет документів, який йшов разом з товаром
                 </p>

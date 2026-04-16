@@ -22,7 +22,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/lib/cart-store';
 import { useAuthStore } from '@/lib/auth-store';
-import { apiCreateOrder, apiValidatePromoCode } from '@/lib/api/auth';
+import { apiCreateOrder } from '@/lib/api/auth';
 import { getClientId } from '@/lib/client-id';
 
 const DELIVERY_METHODS = [
@@ -39,6 +39,7 @@ const DELIVERY_METHODS = [
     name: 'Нова Пошта (кур\'єр)',
     description: 'Доставка за адресою',
     price: 100,
+    priceRegion: 200,
     time: '1-2 дні',
     icon: Truck,
   },
@@ -98,11 +99,7 @@ export default function CheckoutPage() {
   const [npWarehouseLoading, setNpWarehouseLoading] = useState(false);
   const [npShowWarehouseSuggestions, setNpShowWarehouseSuggestions] = useState(false);
 
-  // Promo code state
-  const [promoCode, setPromoCode] = useState('');
-  const [promoApplied, setPromoApplied] = useState<{ code: string; type: 'percent' | 'fixed'; value: number; name: string } | null>(null);
-  const [promoLoading, setPromoLoading] = useState(false);
-  const [promoError, setPromoError] = useState<string | null>(null);
+
 
   // Pre-fill form from customer profile
   useEffect(() => {
@@ -126,12 +123,12 @@ export default function CheckoutPage() {
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const deliveryPrice = DELIVERY_METHODS.find(m => m.id === selectedDelivery)?.price || 0;
-  const discount = promoApplied
-    ? promoApplied.type === 'percent'
-      ? Math.round(subtotal * promoApplied.value / 100)
-      : promoApplied.value
-    : 0;
-  const total = subtotal + deliveryPrice - discount;
+  const isKyiv = formData.city.toLowerCase().includes('київ') || formData.city.toLowerCase().includes('kyiv');
+  const courierMethod = DELIVERY_METHODS.find(m => m.id === 'nova-poshta-courier') as typeof DELIVERY_METHODS[0] & { priceRegion?: number };
+  const actualDeliveryPrice = selectedDelivery === 'nova-poshta-courier' && !isKyiv && courierMethod?.priceRegion
+    ? courierMethod.priceRegion
+    : deliveryPrice;
+  const total = subtotal + actualDeliveryPrice;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -468,7 +465,7 @@ export default function CheckoutPage() {
                             <div className="font-medium text-stone-900">{method.name}</div>
                             <div className="text-sm text-stone-500">{method.description}</div>
                             {method.id === 'nova-poshta-courier' && (
-                              <div className="text-xs text-amber-600 mt-0.5">Тільки по Києву та Київській області</div>
+                              <div className="text-xs text-stone-500 mt-0.5">100 ₴ Київ / 200 ₴ область</div>
                             )}
                           </div>
                           <div className="text-right">
@@ -484,6 +481,10 @@ export default function CheckoutPage() {
                       );
                     })}
                   </div>
+
+                  <Link href="/delivery" className="inline-flex items-center gap-1 text-sm text-stone-500 hover:text-stone-900 transition-colors">
+                    Детальніше про доставку та оплату <ChevronRight className="w-4 h-4" />
+                  </Link>
 
                   {/* NP City autocomplete */}
                   <div className="relative">
@@ -695,61 +696,6 @@ export default function CheckoutPage() {
                     })}
                   </div>
 
-                  {/* Promo code */}
-                  <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">
-                      Промокод
-                    </label>
-                    {promoApplied ? (
-                      <div className="flex items-center gap-3 p-3 bg-sky-50 border border-sky-300 rounded-xl">
-                        <div className="flex-1 text-sm">
-                          <span className="font-semibold text-sky-800">{promoApplied.code}</span>
-                          <span className="text-sky-600 ml-2">— {promoApplied.name}</span>
-                          <div className="text-sky-700 font-medium">
-                            Знижка: {promoApplied.type === 'percent' ? `${promoApplied.value}%` : `${promoApplied.value} ₴`}
-                          </div>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => { setPromoApplied(null); setPromoCode(''); setPromoError(null); }}
-                          className="text-xs text-stone-500 hover:text-red-600 underline"
-                        >
-                          Видалити
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          value={promoCode}
-                          onChange={(e) => { setPromoCode(e.target.value.toUpperCase()); setPromoError(null); }}
-                          onKeyDown={(e) => e.key === 'Enter' && promoCode.trim() && (async () => {
-                            setPromoLoading(true); setPromoError(null);
-                            try { const r = await apiValidatePromoCode(promoCode.trim()); setPromoApplied(r); }
-                            catch (err: unknown) { setPromoError(err instanceof Error ? err.message : 'Невірний промокод'); }
-                            finally { setPromoLoading(false); }
-                          })()}
-                          placeholder="Введіть промокод..."
-                          className="flex-1 px-4 py-3 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent uppercase"
-                        />
-                        <button
-                          type="button"
-                          disabled={!promoCode.trim() || promoLoading}
-                          onClick={async () => {
-                            setPromoLoading(true); setPromoError(null);
-                            try { const r = await apiValidatePromoCode(promoCode.trim()); setPromoApplied(r); }
-                            catch (err: unknown) { setPromoError(err instanceof Error ? err.message : 'Невірний промокод'); }
-                            finally { setPromoLoading(false); }
-                          }}
-                          className="px-5 py-3 bg-stone-900 text-white rounded-xl border border-stone-900 hover:bg-white hover:text-stone-900 transition-colors font-medium disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2"
-                        >
-                          {promoLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Застосувати'}
-                        </button>
-                      </div>
-                    )}
-                    {promoError && <p className="mt-1.5 text-sm text-red-600">{promoError}</p>}
-                  </div>
-
                   <div>
                     <label className="block text-sm font-medium text-stone-700 mb-2">
                       Коментар до замовлення
@@ -843,10 +789,9 @@ export default function CheckoutPage() {
                               title: item.name,
                               options: {},
                             })),
-                            deliveryFee: deliveryPrice,
+                            deliveryFee: actualDeliveryPrice,
                             name: fullName || undefined,
                             comment: formData.comment || undefined,
-                            promoCode: promoApplied?.code || undefined,
                           },
                           idempotencyKey
                         );
@@ -955,16 +900,9 @@ export default function CheckoutPage() {
                   <div className="flex justify-between text-stone-600">
                     <span>Доставка:</span>
                     <span className="font-medium">
-                      {deliveryPrice === 0 ? 'Безкоштовно' : `${deliveryPrice} ₴`}
+                      {actualDeliveryPrice === 0 ? 'Безкоштовно' : `${actualDeliveryPrice} ₴`}
                     </span>
                   </div>
-
-                  {discount > 0 && (
-                    <div className="flex justify-between text-sky-700">
-                      <span>Знижка ({promoApplied?.code}):</span>
-                      <span className="font-medium">-{discount.toLocaleString()} ₴</span>
-                    </div>
-                  )}
 
                   <div className="border-t border-stone-200 pt-4">
                     <div className="flex justify-between items-center">

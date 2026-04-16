@@ -50,6 +50,7 @@ export interface Product {
   priceMax: number;
   optionsSummary: Record<string, Array<string | number>>;
   isActive: boolean;
+  isNew?: boolean;
   createdAt?: string | null;
   updatedAt?: string | null;
 }

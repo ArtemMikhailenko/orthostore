@@ -33,7 +33,7 @@ export default function CashbackPage() {
               </div>
               <div className="bg-white/10 backdrop-blur-sm border border-white/20 p-6 text-center rounded-xl">
                 <Wallet className="w-8 h-8 mx-auto mb-3" />
-                <div className="text-3xl font-light mb-1">0 грн</div>
+                <div className="text-3xl font-light mb-1">0 ₴</div>
                 <div className="text-sm text-stone-300">Вартість підключення</div>
               </div>
               <div className="bg-white/10 backdrop-blur-sm border border-white/20 p-6 text-center rounded-xl">
@@ -80,7 +80,7 @@ export default function CashbackPage() {
 
           {/* Visual Cards/Money Section */}
           <div className="space-y-6">
-            <div className="relative bg-stone-50 border-2 border-stone-200 overflow-hidden group hover:border-stone-900 transition-all rounded-xl">
+            <div className="relative bg-stone-50 border-2 border-stone-200 overflow-hidden rounded-xl">
               <div className="aspect-[16/10] bg-gradient-to-br from-stone-900 via-stone-800 to-stone-700 flex items-center justify-center p-8">
                 <div className="text-center space-y-4 text-white">
                   <Coins className="w-20 h-20 mx-auto opacity-90" />
@@ -90,7 +90,7 @@ export default function CashbackPage() {
               </div>
             </div>
 
-            <div className="relative bg-stone-50 border-2 border-stone-200 overflow-hidden group hover:border-stone-900 transition-all rounded-xl">
+            <div className="relative bg-stone-50 border-2 border-stone-200 overflow-hidden rounded-xl">
               <div className="aspect-[16/10] bg-gradient-to-br from-stone-100 to-stone-50 flex items-center justify-center p-8">
                 <div className="text-center space-y-4">
                   <CreditCard className="w-20 h-20 text-stone-900 mx-auto" />
@@ -108,7 +108,7 @@ export default function CashbackPage() {
         <div className="max-w-6xl mx-auto px-6 py-16 lg:py-24">
           <div className="text-center mb-16">
             <h2 className="text-4xl lg:text-5xl font-light text-stone-900 mb-4">
-              Як працює кешбек?
+              Як працює кешбек
             </h2>
             <p className="text-xl text-stone-600">
               Заробляйте з кожної покупки
@@ -131,18 +131,14 @@ export default function CashbackPage() {
             </div>
           </div>
 
-          <div className="bg-white p-8 border-2 border-stone-200 rounded-xl">
-            <div className="flex items-start gap-4">
-              <TrendingUp className="w-8 h-8 text-stone-900 flex-shrink-0 mt-1" />
-              <div className="space-y-3">
-                <h3 className="text-xl font-medium text-stone-900">
-                  За рік — відчутна сума
-                </h3>
-                <p className="text-stone-700 leading-relaxed">
-                  На перший погляд замало, але за рік утворюється сума, яка вас в будь-якому випадку порадує.
-                </p>
-              </div>
-            </div>
+          <div className="bg-white p-8 border-2 border-stone-200 rounded-xl text-center">
+            <TrendingUp className="w-8 h-8 text-stone-900 mx-auto mb-4" />
+            <h3 className="text-xl font-medium text-stone-900 mb-3">
+              За рік — відчутна сума
+            </h3>
+            <p className="text-stone-700 leading-relaxed max-w-xl mx-auto">
+              На перший погляд замало, але за рік утворюється сума, яка вас в будь-якому випадку порадує.
+            </p>
           </div>
         </div>
       </section>
@@ -267,7 +263,7 @@ export default function CashbackPage() {
                 </p>
                 <div className="bg-white/5 p-4 text-center rounded">
                   <p className="text-white">
-                    Наприклад, ми визначили <span className="font-bold">10 товарів</span> на які при купівлі нараховується КЕШБЕК <span className="font-bold text-2xl">20%</span>
+                    Наприклад, ми визначили <span>10 товарів</span> на які при купівлі нараховується КЕШБЕК <span className="text-2xl">20%</span>
                   </p>
                 </div>
               </div>

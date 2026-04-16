@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight, Star, ShoppingBag, ChevronDown } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface PromotionsSectionProps {
   className?: string;
@@ -20,7 +21,11 @@ const heroSlides = [
     price: '2 500 ₴',
     color: 'from-yellow-300 to-yellow-400',
     badge: 'Хіт продажів',
-    features: ['Знижка діє до кінця місяця', 'Безкоштовна доставка', 'Додаткові аксесуари у подарунок'],
+    features: [
+      { text: 'Знижка діє до кінця місяця' },
+      { text: 'Безкоштовна доставка', href: '/delivery' },
+      { text: 'Додаткові аксесуари у подарунок', href: '/promotions' },
+    ],
   },
   {
     id: 2,
@@ -30,7 +35,11 @@ const heroSlides = [
     price: '700 ₴',
     color: 'from-yellow-300 to-yellow-500',
     badge: 'Хіт продажів',
-    features: ['Економія до 350 ₴', 'Всі популярні розміри', 'Обмежена пропозиція'],
+    features: [
+      { text: 'Економія до 350 ₴' },
+      { text: 'Всі популярні розміри' },
+      { text: 'Обмежена пропозиція' },
+    ],
   },
   {
     id: 3,
@@ -40,7 +49,11 @@ const heroSlides = [
     price: 'від 120 ₴',
     color: 'from-yellow-400 to-yellow-500',
     badge: 'Хіт продажів',
-    features: ['Знижка на всі кольори', 'Мінімальне замовлення від 5 шт', 'Діє 14 днів'],
+    features: [
+      { text: 'Знижка на всі кольори' },
+      { text: 'Мінімальне замовлення від 5 шт' },
+      { text: 'Діє 14 днів' },
+    ],
   },
   {
     id: 4,
@@ -50,7 +63,25 @@ const heroSlides = [
     price: '850 ₴',
     color: 'from-yellow-300 to-yellow-600',
     badge: 'Хіт продажів',
-    features: ['Економія понад 200 ₴', 'Готове рішення "під ключ"', 'Гарантія якості'],
+    features: [
+      { text: 'Економія понад 200 ₴' },
+      { text: 'Готове рішення "під ключ"' },
+      { text: 'Гарантія якості' },
+    ],
+  },
+  {
+    id: 5,
+    title: 'Набір для фіксації брекетів',
+    description: 'Комплект адгезивних матеріалів преміум якості для надійної фіксації будь-яких брекет-систем',
+    oldPrice: '1 800 ₴',
+    price: '1 450 ₴',
+    color: 'from-yellow-200 to-yellow-400',
+    badge: 'Хіт продажів',
+    features: [
+      { text: 'Знижка 20% при покупці набору' },
+      { text: 'Безкоштовна доставка', href: '/delivery' },
+      { text: 'Повна інструкція в комплекті' },
+    ],
   },
 ];
 
@@ -215,18 +246,21 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
               </motion.div>
 
               <motion.div custom={1} variants={cardVariants} className="space-y-2">
-                {currentProduct.features.map((feature, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.3 + idx * 0.1 }}
-                    className="flex items-center gap-3 p-2 border border-stone-200 bg-white rounded-lg"
-                  >
-                    <div className="w-1.5 h-1.5 bg-stone-900 rounded-full flex-shrink-0" />
-                    <span className="text-stone-700 text-sm">{feature}</span>
-                  </motion.div>
-                ))}
+                {currentProduct.features.map((feature, idx) => {
+                  const content = (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.3 + idx * 0.1 }}
+                      className={cn("flex items-center gap-3 p-2 border border-stone-200 bg-white rounded-lg", feature.href && "hover:border-sky-400 hover:bg-sky-50 cursor-pointer transition-colors")}
+                    >
+                      <div className="w-1.5 h-1.5 bg-stone-900 rounded-full flex-shrink-0" />
+                      <span className="text-stone-700 text-sm">{feature.text}</span>
+                    </motion.div>
+                  );
+                  return feature.href ? <Link key={idx} href={feature.href}>{content}</Link> : content;
+                })}
               </motion.div>
 
               {/* Countdown Timer */}
@@ -290,7 +324,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="border-2 border-stone-300 px-4 py-4 hover:border-stone-900 transition-colors duration-300 font-medium rounded-lg text-sm"
+                    className="border-2 border-stone-300 px-4 py-4 hover:border-stone-900 hover:bg-stone-900 hover:text-white transition-all duration-300 font-medium rounded-lg text-sm"
                   >
                     Деталі
                   </motion.button>
@@ -365,29 +399,27 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                 className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
               >
                 {allProducts.map((product, index) => (
-                  <motion.div
-                    key={product.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.04 }}
-                    whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                    className="text-left border-2 border-stone-300 p-6 bg-white group cursor-pointer hover:border-sky-400/70 hover:ring-[2px] hover:ring-sky-400/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_28px_rgba(56,189,248,0.2)] transition-all duration-300 rounded-xl"
-                  >
-                    <div className={cn('w-full aspect-square mb-4 border-2 border-stone-300 bg-gradient-to-br relative overflow-hidden rounded-lg', product.color)}>
-                      <Image src="/images/Screenshot_2.png" alt={product.title} fill className="object-cover opacity-70" />
-                      <div className="absolute inset-0 bg-gradient-to-br from-black/10 to-transparent" />
-                      <div className="absolute top-2 right-2 bg-stone-900 text-white px-2 py-1 text-xs font-bold z-10 rounded">
-                        {product.discount}
+                  <Link key={product.id} href={`/catalog/brekety`}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.04 }}
+                      whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                      className="text-left border-2 border-stone-300 p-6 bg-white group cursor-pointer hover:border-sky-400/70 hover:ring-[2px] hover:ring-sky-400/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_28px_rgba(56,189,248,0.2)] transition-all duration-300 rounded-xl"
+                    >
+                      <div className={cn('w-full aspect-square mb-4 border-2 border-stone-300 bg-gradient-to-br relative overflow-hidden rounded-lg', product.color)}>
+                        <Image src="/images/Screenshot_2.png" alt={product.title} fill className="object-cover opacity-70" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-black/10 to-transparent" />
                       </div>
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className="font-medium text-stone-900 group-hover:text-stone-700 transition-colors">{product.title}</h4>
-                      <div className="flex items-baseline gap-2">
-                        <p className="text-xl font-bold text-red-600">{product.price}</p>
-                        {product.oldPrice && <p className="text-[11px] text-stone-400 line-through -translate-y-1">{product.oldPrice}</p>}
+                      <div className="space-y-1">
+                        <h4 className="font-medium text-stone-900 text-lg group-hover:text-stone-700 transition-colors">{product.title}</h4>
+                        <div className="flex items-baseline gap-2">
+                          <p className="text-3xl font-bold text-red-600">{product.price}</p>
+                          {product.oldPrice && <p className="text-sm text-stone-400 line-through">{product.oldPrice}</p>}
+                        </div>
                       </div>
-                    </div>
-                  </motion.div>
+                    </motion.div>
+                  </Link>
                 ))}
               </motion.div>
             ) : (
@@ -395,29 +427,27 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
               <motion.div key="slider" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   {visibleCards.map((product, index) => (
-                    <motion.div
-                      key={product.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.07 }}
-                      whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                      className="text-left border-2 border-stone-300 p-6 bg-white group cursor-pointer hover:border-sky-400/70 hover:ring-[2px] hover:ring-sky-400/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_28px_rgba(56,189,248,0.2)] transition-all duration-300 rounded-xl"
-                    >
-                      <div className={cn('w-full aspect-square mb-4 border-2 border-stone-300 bg-gradient-to-br relative overflow-hidden rounded-lg', product.color)}>
-                        <Image src="/images/Screenshot_2.png" alt={product.title} fill className="object-cover opacity-70" />
-                        <div className="absolute inset-0 bg-gradient-to-br from-black/10 to-transparent" />
-                        <div className="absolute top-2 right-2 bg-stone-900 text-white px-2 py-1 text-xs font-bold z-10 rounded">
-                          {product.discount}
+                    <Link key={product.id} href={`/catalog/brekety`}>
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.07 }}
+                        whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                        className="text-left border-2 border-stone-300 p-6 bg-white group cursor-pointer hover:border-sky-400/70 hover:ring-[2px] hover:ring-sky-400/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_28px_rgba(56,189,248,0.2)] transition-all duration-300 rounded-xl"
+                      >
+                        <div className={cn('w-full aspect-square mb-4 border-2 border-stone-300 bg-gradient-to-br relative overflow-hidden rounded-lg', product.color)}>
+                          <Image src="/images/Screenshot_2.png" alt={product.title} fill className="object-cover opacity-70" />
+                          <div className="absolute inset-0 bg-gradient-to-br from-black/10 to-transparent" />
                         </div>
-                      </div>
-                      <div className="space-y-1">
-                        <h4 className="font-medium text-stone-900 group-hover:text-stone-700 transition-colors">{product.title}</h4>
-                        <div className="flex items-baseline gap-2">
-                          <p className="text-xl font-bold text-red-600">{product.price}</p>
-                          {product.oldPrice && <p className="text-[11px] text-stone-400 line-through -translate-y-1">{product.oldPrice}</p>}
+                        <div className="space-y-1">
+                          <h4 className="font-medium text-stone-900 text-lg group-hover:text-stone-700 transition-colors">{product.title}</h4>
+                          <div className="flex items-baseline gap-2">
+                            <p className="text-3xl font-bold text-red-600">{product.price}</p>
+                            {product.oldPrice && <p className="text-sm text-stone-400 line-through">{product.oldPrice}</p>}
+                          </div>
                         </div>
-                      </div>
-                    </motion.div>
+                      </motion.div>
+                    </Link>
                   ))}
                 </div>
 
@@ -432,7 +462,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                       'w-10 h-10 border-2 flex items-center justify-center transition-all duration-300 rounded-xl',
                       cardPage === 0
                         ? 'border-stone-300 text-stone-300 cursor-not-allowed'
-                        : 'border-stone-900 bg-white hover:bg-stone-900 hover:text-white'
+                        : 'border-stone-900 bg-white hover:bg-stone-900 hover:text-white hover:border-sky-400 hover:shadow-[0_0_20px_rgba(56,189,248,0.7),0_0_40px_rgba(56,189,248,0.35)] hover:ring-[3px] hover:ring-sky-400/60'
                     )}
                     aria-label="Попередня сторінка карток"
                   >
@@ -460,7 +490,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                       'w-10 h-10 border-2 flex items-center justify-center transition-all duration-300 rounded-xl',
                       cardPage === totalCardPages - 1
                         ? 'border-stone-300 text-stone-300 cursor-not-allowed'
-                        : 'border-stone-900 bg-white hover:bg-stone-900 hover:text-white'
+                        : 'border-stone-900 bg-white hover:bg-stone-900 hover:text-white hover:border-sky-400 hover:shadow-[0_0_20px_rgba(56,189,248,0.7),0_0_40px_rgba(56,189,248,0.35)] hover:ring-[3px] hover:ring-sky-400/60'
                     )}
                     aria-label="Наступна сторінка карток"
                   >

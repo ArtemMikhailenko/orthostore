@@ -45,7 +45,7 @@ export default function WarrantyPage() {
           <div className="bg-stone-50 p-8 lg:p-10 rounded-lg">
             <p className="text-base lg:text-lg text-stone-700 leading-relaxed">
               Під гарантійним терміном визначено зобов'язання виробника або продавця усунути дефекти, 
-              що виникли не з вини покупця, протягом певного терміну, зазвичай від 12 до 36 місяців, 
+              що виникли не з вини покупця, протягом певного терміну, зазвичай 12 місяців, 
               залежно від типу інструменту або апаратів згідно з номенклатурою.
             </p>
           </div>
@@ -116,7 +116,7 @@ export default function WarrantyPage() {
             </p>
             <a 
               href="tel:+380503039494"
-              className="inline-flex items-center gap-3 bg-stone-900 text-white px-8 py-4 font-medium hover:bg-stone-800 transition-all duration-300 rounded-lg"
+              className="inline-flex items-center gap-3 bg-stone-900 text-white px-8 py-4 font-medium hover:bg-white hover:text-stone-900 border-2 border-stone-900 transition-all duration-300 rounded-lg"
             >
               <Phone className="w-5 h-5" />
               +380 50 303 94 94

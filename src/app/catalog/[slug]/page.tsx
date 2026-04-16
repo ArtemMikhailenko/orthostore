@@ -88,7 +88,7 @@ function mapApiToUi(
   const price = (p as any).priceMinFinal ?? p.priceMin ?? 0;
   const originalPrice =
     p.priceMin && (p as any).priceMinFinal && (p as any).priceMinFinal < p.priceMin ? p.priceMin : undefined;
-  const isNew = p.createdAt ? Date.now() - new Date(p.createdAt).getTime() < 1000 * 60 * 60 * 24 * 30 : false;
+  const isNew = (p as any).isNew ?? (p.createdAt ? Date.now() - new Date(p.createdAt).getTime() < 1000 * 60 * 60 * 24 * 30 : false);
   const image = p.images?.[0] ?? '';
   const mId = p.manufacturerIds?.[0];
   const brandName = (mId && lookups.manufacturers.get(mId)) || '';

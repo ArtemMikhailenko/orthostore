@@ -404,9 +404,9 @@ export default function ProductDetailPage() {
     );
   }
 
-  const isNew = product.createdAt
+  const isNew = product.isNew ?? (product.createdAt
     ? Date.now() - new Date(product.createdAt).getTime() < 1000 * 60 * 60 * 24 * 30
-    : false;
+    : false);
   const isPopular = product.tags?.includes("popular");
   const isBestseller = product.tags?.includes("stock");
 

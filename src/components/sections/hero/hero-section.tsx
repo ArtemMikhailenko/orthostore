@@ -25,7 +25,7 @@ export function HeroSection({ className }: HeroSectionProps) {
               <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-light text-stone-900 leading-[1.1]">
                 Професійні
                 <br />
-                <span className="font-bold text-stone-900">ортодонтичні</span>
+                <span className="font-light text-stone-900">ортодонтичні</span>
                 <br />
                 <span className="font-light text-stone-900">матеріали</span>
               </h1>
@@ -70,7 +70,7 @@ export function HeroSection({ className }: HeroSectionProps) {
             <div className="flex flex-col sm:flex-row gap-4 pt-2">
               <Link 
                 href="/catalog"
-                className="inline-flex items-center justify-center bg-stone-900 text-white px-8 lg:px-10 py-3.5 lg:py-4 font-medium hover:bg-stone-800 transition-all duration-300 text-sm lg:text-base rounded-lg"
+                className="inline-flex items-center justify-center bg-stone-900 text-white px-8 lg:px-10 py-3.5 lg:py-4 font-medium border-2 border-stone-900 hover:bg-white hover:text-stone-900 transition-all duration-300 text-sm lg:text-base rounded-lg"
               >
                 Каталог продукції
               </Link>
