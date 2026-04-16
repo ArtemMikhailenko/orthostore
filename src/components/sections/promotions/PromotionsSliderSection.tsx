@@ -1,18 +1,60 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight, Star, ShoppingBag, ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { http } from '@/lib/api/client';
 
 interface PromotionsSectionProps {
   className?: string;
 }
 
-/* ── Top hero slider data (4 slides) ── */
-const heroSlides = [
+type PromoSlideFeature = { text: string; href?: string };
+
+type PromoSlideApi = {
+  _id: string;
+  title: string;
+  description?: string;
+  price?: string;
+  oldPrice?: string;
+  badge?: string;
+  imageUrl?: string;
+  color?: string;
+  features: PromoSlideFeature[];
+  linkUrl?: string;
+  sortOrder: number;
+  isActive: boolean;
+};
+
+type HeroSlide = {
+  id: string | number;
+  title: string;
+  description: string;
+  oldPrice: string;
+  price: string;
+  color: string;
+  badge: string;
+  features: PromoSlideFeature[];
+  imageUrl?: string;
+  linkUrl?: string;
+};
+
+type CardProduct = {
+  id: string | number;
+  title: string;
+  price: string;
+  oldPrice: string;
+  discount: string;
+  color: string;
+  imageUrl?: string;
+  linkUrl?: string;
+};
+
+/* ── Fallback hero slider data ── */
+const fallbackHeroSlides: HeroSlide[] = [
   {
     id: 1,
     title: 'Преміум брекети зі знижкою',
@@ -85,8 +127,8 @@ const heroSlides = [
   },
 ];
 
-/* ── Bottom card grid — 12 independent products ── */
-const allProducts = [
+/* ── Fallback bottom card grid ── */
+const fallbackProducts: CardProduct[] = [
   { id: 101, title: 'Преміум брекети', price: '2 500 ₴', oldPrice: '2 940 ₴', discount: '-15%', color: 'from-yellow-300 to-yellow-400' },
   { id: 102, title: 'Комплект дуг 2+1', price: '700 ₴', oldPrice: '', discount: '33%', color: 'from-yellow-300 to-yellow-500' },
   { id: 103, title: 'Лігатури', price: 'від 120 ₴', oldPrice: '130 ₴', discount: 'до -8%', color: 'from-yellow-400 to-yellow-500' },
@@ -101,12 +143,69 @@ const allProducts = [
   { id: 112, title: 'Ретейнери комплект', price: '760 ₴', oldPrice: '900 ₴', discount: '-16%', color: 'from-yellow-300 to-yellow-500' },
 ];
 
+function calcDiscount(price?: string, oldPrice?: string): string {
+  if (!price || !oldPrice) return '';
+  const p = parseFloat(price.replace(/[^\d.,]/g, '').replace(',', '.'));
+  const op = parseFloat(oldPrice.replace(/[^\d.,]/g, '').replace(',', '.'));
+  if (!p || !op || op <= p) return '';
+  return `-${Math.round(((op - p) / op) * 100)}%`;
+}
+
 const CARDS_PER_PAGE = 4;
 
 export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
+  /* ── API data ── */
+  const [apiSlides, setApiSlides] = useState<PromoSlideApi[] | null>(null);
+
+  useEffect(() => {
+    http<PromoSlideApi[]>('/promo-slides')
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) setApiSlides(data);
+      })
+      .catch(() => {
+        // silently fall back to hardcoded data
+      });
+  }, []);
+
+  const heroSlides: HeroSlide[] = useMemo(() => {
+    if (!apiSlides) return fallbackHeroSlides;
+    return apiSlides.map((s) => ({
+      id: s._id,
+      title: s.title,
+      description: s.description || '',
+      oldPrice: s.oldPrice || '',
+      price: s.price || '',
+      color: s.color || 'from-yellow-300 to-yellow-400',
+      badge: s.badge || '',
+      features: s.features || [],
+      imageUrl: s.imageUrl,
+      linkUrl: s.linkUrl,
+    }));
+  }, [apiSlides]);
+
+  const allProducts: CardProduct[] = useMemo(() => {
+    if (!apiSlides) return fallbackProducts;
+    return apiSlides.map((s) => ({
+      id: s._id,
+      title: s.title,
+      price: s.price || '',
+      oldPrice: s.oldPrice || '',
+      discount: calcDiscount(s.price, s.oldPrice),
+      color: s.color || 'from-yellow-300 to-yellow-400',
+      imageUrl: s.imageUrl,
+      linkUrl: s.linkUrl,
+    }));
+  }, [apiSlides]);
+
   /* ── Hero slider state ── */
   const [currentIndex, setCurrentIndex] = useState(0);
   const [[page, direction], setPage] = useState([0, 0]);
+
+  // Reset index when slides change from API
+  useEffect(() => {
+    setCurrentIndex(0);
+    setPage([0, 0]);
+  }, [apiSlides]);
 
   /* ── Card mini-slider state (independent) ── */
   const [cardPage, setCardPage] = useState(0);
@@ -216,7 +315,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                 >
                   <div className={cn('h-full border-2 border-stone-900 bg-gradient-to-br relative overflow-hidden rounded-2xl', currentProduct.color)}>
                     <div className="absolute inset-0">
-                      <Image src="/images/Screenshot_2.png" alt={currentProduct.title} fill className="object-cover opacity-80" priority />
+                      <Image src={currentProduct.imageUrl || '/images/Screenshot_2.png'} alt={currentProduct.title} fill className="object-cover opacity-80" priority />
                       <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-transparent" />
                     </div>
                     <motion.div
@@ -399,7 +498,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                 className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
               >
                 {allProducts.map((product, index) => (
-                  <Link key={product.id} href={`/catalog/brekety`}>
+                  <Link key={product.id} href={product.linkUrl || '/catalog/brekety'}>
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -408,7 +507,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                       className="text-left border-2 border-stone-300 p-6 bg-white group cursor-pointer hover:border-sky-400/70 hover:ring-[2px] hover:ring-sky-400/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_28px_rgba(56,189,248,0.2)] transition-all duration-300 rounded-xl"
                     >
                       <div className={cn('w-full aspect-square mb-4 border-2 border-stone-300 bg-gradient-to-br relative overflow-hidden rounded-lg', product.color)}>
-                        <Image src="/images/Screenshot_2.png" alt={product.title} fill className="object-cover opacity-70" />
+                        <Image src={product.imageUrl || '/images/Screenshot_2.png'} alt={product.title} fill className="object-cover opacity-70" />
                         <div className="absolute inset-0 bg-gradient-to-br from-black/10 to-transparent" />
                       </div>
                       <div className="space-y-1">
@@ -427,7 +526,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
               <motion.div key="slider" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   {visibleCards.map((product, index) => (
-                    <Link key={product.id} href={`/catalog/brekety`}>
+                    <Link key={product.id} href={product.linkUrl || '/catalog/brekety'}>
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -436,7 +535,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                         className="text-left border-2 border-stone-300 p-6 bg-white group cursor-pointer hover:border-sky-400/70 hover:ring-[2px] hover:ring-sky-400/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_28px_rgba(56,189,248,0.2)] transition-all duration-300 rounded-xl"
                       >
                         <div className={cn('w-full aspect-square mb-4 border-2 border-stone-300 bg-gradient-to-br relative overflow-hidden rounded-lg', product.color)}>
-                          <Image src="/images/Screenshot_2.png" alt={product.title} fill className="object-cover opacity-70" />
+                          <Image src={product.imageUrl || '/images/Screenshot_2.png'} alt={product.title} fill className="object-cover opacity-70" />
                           <div className="absolute inset-0 bg-gradient-to-br from-black/10 to-transparent" />
                         </div>
                         <div className="space-y-1">
