@@ -11,10 +11,13 @@ import {
   useCategories,
   useCountries,
   useProducts,
+  useProductReviews,
+  useCreateReview,
 } from "@/lib/api/hooks";
 import type { ProductWithDiscounts, ProductVariantWithDiscounts } from "@/lib/api/public.types";
 import { pickI18n } from "@/snippets/i18n";
 import { useCartStore } from "@/lib/cart-store";
+import { getAccessToken } from "@/lib/api/auth";
 import {
   ChevronLeft,
   ChevronRight,
@@ -281,10 +284,19 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [activeTab, setActiveTab] = useState<"description" | "attributes" | "delivery">("description");
+  const [activeTab, setActiveTab] = useState<"description" | "attributes" | "delivery" | "reviews">("description");
 
   const addItem = useCartStore((s) => s.addItem);
   const openCart = useCartStore((s) => s.open);
+
+  // Reviews state
+  const { data: reviews = [] } = useProductReviews(productSlug);
+  const createReviewMutation = useCreateReview(productSlug);
+  const [reviewName, setReviewName] = useState("");
+  const [reviewRating, setReviewRating] = useState(0);
+  const [reviewHover, setReviewHover] = useState(0);
+  const [reviewComment, setReviewComment] = useState("");
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
 
   // Lookup maps
   const manufacturerMap = useMemo(() => {
@@ -473,6 +485,36 @@ export default function ProductDetailPage() {
               {title}
             </h1>
 
+            {/* Rating summary */}
+            {((product as any).ratingCount > 0) && (
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => setActiveTab("reviews")}
+              >
+                <div className="flex items-center gap-0.5">
+                  {Array.from({ length: 5 }, (_, i) => {
+                    const val = (product as any).ratingAvg ?? 0;
+                    const filled = i < Math.floor(val);
+                    const half = !filled && i < val;
+                    return (
+                      <Star
+                        key={i}
+                        className={cn(
+                          "w-4 h-4",
+                          filled ? "text-amber-400 fill-amber-400" : half ? "text-amber-400 fill-amber-200" : "text-stone-300 fill-stone-100"
+                        )}
+                      />
+                    );
+                  })}
+                </div>
+                <span className="text-sm text-stone-500">
+                  {((product as any).ratingAvg as number).toFixed(1)} ({(product as any).ratingCount} відгук{
+                    (product as any).ratingCount === 1 ? "" : (product as any).ratingCount < 5 ? "и" : "ів"
+                  })
+                </span>
+              </div>
+            )}
+
             {/* SKU + actions */}
             <div className="flex items-center gap-4 text-sm text-stone-500">
               {variant && (
@@ -609,6 +651,7 @@ export default function ProductDetailPage() {
                 { key: "description", label: "Опис" },
                 { key: "attributes", label: "Характеристики" },
                 { key: "delivery", label: "Доставка та оплата" },
+                { key: "reviews", label: `Відгуки${reviews.length > 0 ? ` (${reviews.length})` : ""}` },
               ] as const
             ).map((tab) => (
               <button
@@ -820,6 +863,128 @@ export default function ProductDetailPage() {
                     умови збереження товарного вигляду та упаковки.
                   </p>
                 </div>
+              </div>
+            )}
+
+            {/* Reviews tab */}
+            {activeTab === "reviews" && (
+              <div className="space-y-8 max-w-2xl">
+                {/* Existing reviews list */}
+                {reviews.length > 0 && (
+                  <div className="space-y-4">
+                    {reviews.map((r: any) => (
+                      <div key={r._id} className="bg-stone-50 rounded-2xl p-5 space-y-2">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium text-stone-900 text-sm">{r.authorName}</span>
+                            {r.source === "admin" && (
+                              <span className="text-[10px] bg-stone-200 text-stone-600 px-2 py-0.5 rounded-full">Магазин</span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-0.5">
+                            {Array.from({ length: 5 }, (_, i) => (
+                              <Star
+                                key={i}
+                                className={cn(
+                                  "w-3.5 h-3.5",
+                                  i < r.rating ? "text-amber-400 fill-amber-400" : "text-stone-300 fill-stone-100"
+                                )}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                        {r.comment && (
+                          <p className="text-sm text-stone-700 leading-relaxed">{r.comment}</p>
+                        )}
+                        <p className="text-[11px] text-stone-400">
+                          {new Date(r.createdAt).toLocaleDateString("uk-UA")}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Review form */}
+                {reviewSubmitted ? (
+                  <div className="bg-green-50 border border-green-200 rounded-2xl p-6 text-center space-y-2">
+                    <div className="text-2xl">🙏</div>
+                    <p className="font-medium text-stone-900">Дякуємо!</p>
+                    <p className="text-sm text-stone-500">Відгук надіслано на перевірку</p>
+                  </div>
+                ) : (
+                  <div className="bg-stone-50 rounded-2xl p-6 space-y-5">
+                    <h3 className="font-medium text-stone-900">Залишити відгук</h3>
+
+                    {/* Star picker */}
+                    <div className="space-y-1.5">
+                      <p className="text-xs text-stone-500">Ваша оцінка</p>
+                      <div className="flex items-center gap-1">
+                        {Array.from({ length: 5 }, (_, i) => (
+                          <button
+                            key={i}
+                            type="button"
+                            onMouseEnter={() => setReviewHover(i + 1)}
+                            onMouseLeave={() => setReviewHover(0)}
+                            onClick={() => setReviewRating(i + 1)}
+                            className="transition-transform active:scale-90"
+                          >
+                            <Star
+                              className={cn(
+                                "w-7 h-7 transition-colors",
+                                i < (reviewHover || reviewRating)
+                                  ? "text-amber-400 fill-amber-400"
+                                  : "text-stone-300 fill-stone-100"
+                              )}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Name */}
+                    <div className="space-y-1.5">
+                      <label className="text-xs text-stone-500">Ваше ім'я</label>
+                      <input
+                        type="text"
+                        maxLength={120}
+                        value={reviewName}
+                        onChange={(e) => setReviewName(e.target.value)}
+                        placeholder="Ім'я"
+                        className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-stone-900 bg-white placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-300"
+                      />
+                    </div>
+
+                    {/* Comment */}
+                    <div className="space-y-1.5">
+                      <label className="text-xs text-stone-500">Коментар (необов'язково)</label>
+                      <textarea
+                        rows={3}
+                        maxLength={1200}
+                        value={reviewComment}
+                        onChange={(e) => setReviewComment(e.target.value)}
+                        placeholder="Поділіться враженнями від товару..."
+                        className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-stone-900 bg-white placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-300 resize-none"
+                      />
+                    </div>
+
+                    <button
+                      type="button"
+                      disabled={reviewRating === 0 || !reviewName.trim() || createReviewMutation.isPending}
+                      onClick={async () => {
+                        if (reviewRating === 0 || !reviewName.trim()) return;
+                        const token = getAccessToken() ?? undefined;
+                        await createReviewMutation.mutateAsync({
+                          dto: { authorName: reviewName.trim(), rating: reviewRating, comment: reviewComment.trim() || undefined },
+                          token,
+                        });
+                        setReviewSubmitted(true);
+                      }}
+                      className="w-full bg-stone-900 text-white rounded-xl py-3 text-sm font-medium hover:bg-stone-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      {createReviewMutation.isPending ? "Надсилаємо…" : "Надіслати відгук"}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>

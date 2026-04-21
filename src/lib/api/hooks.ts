@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getCategories, getCountries, getManufacturers, getProducts, getProduct, createOrder, getOrderHistory, getGalleryImages, type GetProductsParams, type GalleryImage } from './public';
+import { getCategories, getCountries, getManufacturers, getProducts, getProduct, createOrder, getOrderHistory, getGalleryImages, getProductReviews, createProductReview, type GetProductsParams, type GalleryImage, type ProductReview, type CreateReviewDto } from './public';
 import type { Category, Country, Manufacturer, ProductListResponse, ProductWithDiscounts, Order, CreateOrderRequest } from './public.types';
 
 export function useCategories() {
@@ -52,5 +52,23 @@ export function useGalleryImages() {
   return useQuery<GalleryImage[]>({
     queryKey: ['gallery'],
     queryFn: getGalleryImages,
+  });
+}
+
+export function useProductReviews(idOrSlug: string | undefined) {
+  return useQuery<ProductReview[]>({
+    queryKey: ['product-reviews', idOrSlug],
+    queryFn: () => getProductReviews(idOrSlug as string),
+    enabled: Boolean(idOrSlug),
+  });
+}
+
+export function useCreateReview(idOrSlug: string) {
+  const qc = useQueryClient();
+  return useMutation<{ message: string }, Error, { dto: CreateReviewDto; token?: string }>({
+    mutationFn: ({ dto, token }) => createProductReview(idOrSlug, dto, token),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['product-reviews', idOrSlug] });
+    },
   });
 }

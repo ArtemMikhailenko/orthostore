@@ -71,3 +71,35 @@ export type GalleryImage = {
 export function getGalleryImages(): Promise<GalleryImage[]> {
   return http<GalleryImage[]>('/gallery');
 }
+
+// Reviews
+export type ProductReview = {
+  _id: string;
+  authorName: string;
+  rating: number;
+  comment?: string;
+  source: 'customer' | 'admin';
+  createdAt: string;
+};
+
+export interface CreateReviewDto {
+  authorName: string;
+  rating: number;
+  comment?: string;
+}
+
+export function getProductReviews(idOrSlug: string): Promise<ProductReview[]> {
+  return http<ProductReview[]>(`/products/${encodeURIComponent(idOrSlug)}/reviews`);
+}
+
+export function createProductReview(
+  idOrSlug: string,
+  dto: CreateReviewDto,
+  token?: string,
+): Promise<{ message: string }> {
+  return http<{ message: string }>(`/products/${encodeURIComponent(idOrSlug)}/reviews`, {
+    method: 'POST',
+    body: dto,
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+  });
+}
