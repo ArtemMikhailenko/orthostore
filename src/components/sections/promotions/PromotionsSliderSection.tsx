@@ -29,6 +29,17 @@ type PromoSlideApi = {
   isActive: boolean;
 };
 
+type PromotionsPageContent = {
+  sectionTitle?: string;
+  countdownLabel?: string;
+  countdownSublabel?: string;
+  priceLabel?: string;
+  orderBtnText?: string;
+  detailsBtnText?: string;
+  showAllBtnText?: string;
+  collapseBtnText?: string;
+};
+
 type HeroSlide = {
   id: string | number;
   title: string;
@@ -156,6 +167,7 @@ const CARDS_PER_PAGE = 4;
 export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
   /* ── API data ── */
   const [apiSlides, setApiSlides] = useState<PromoSlideApi[] | null>(null);
+  const [pageContent, setPageContent] = useState<PromotionsPageContent>({});
 
   useEffect(() => {
     http<PromoSlideApi[]>('/promo-slides')
@@ -165,7 +177,13 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
       .catch(() => {
         // silently fall back to hardcoded data
       });
+    http<PromotionsPageContent>('/pages/promotions-section')
+      .then((data) => setPageContent(data ?? {}))
+      .catch(() => {});
   }, []);
+
+  const t = (key: keyof PromotionsPageContent, fallback: string) =>
+    pageContent[key] || fallback;
 
   const heroSlides: HeroSlide[] = useMemo(() => {
     if (!apiSlides) return fallbackHeroSlides;
@@ -292,7 +310,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
           className="text-center mb-10"
         >
           <h2 className="text-3xl md:text-4xl font-light text-stone-900 mb-3">
-            Акційні пропозиції
+            {t('sectionTitle', 'Акційні пропозиції')}
           </h2>
         </motion.div>
 
@@ -370,8 +388,8 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-xs text-stone-600 uppercase tracking-wider mb-1 font-medium">До кінця акції</div>
-                    <div className="text-[10px] text-stone-500">Встигніть замовити!</div>
+                    <div className="text-xs text-stone-600 uppercase tracking-wider mb-1 font-medium">{t('countdownLabel', 'До кінця акції')}</div>
+                    <div className="text-[10px] text-stone-500">{t('countdownSublabel', 'Встигніть замовити!')}</div>
                   </div>
                   <div className="flex items-center gap-2">
                     {[
@@ -403,7 +421,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
               <motion.div custom={2} variants={cardVariants} className="pt-3 border-t-2 border-stone-200">
                 <div className="flex items-baseline gap-4 mb-3">
                   <div>
-                    <span className="text-lg text-stone-600 block mb-2 font-medium">Акційна ціна</span>
+                    <span className="text-lg text-stone-600 block mb-2 font-medium">{t('priceLabel', 'Акційна ціна')}</span>
                     <span className="text-4xl font-bold text-red-600">{currentProduct.price}</span>
                   </div>
                   {currentProduct.oldPrice && (
@@ -418,14 +436,14 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                     whileTap={{ scale: 0.95 }}
                     className="flex-1 border-2 border-stone-900 bg-stone-900 text-white px-4 py-4 hover:bg-transparent hover:text-stone-900 transition-colors duration-300 font-medium rounded-lg text-sm"
                   >
-                    Замовити зараз
+                    {t('orderBtnText', 'Замовити зараз')}
                   </motion.button>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="border-2 border-stone-300 px-4 py-4 hover:border-stone-900 hover:bg-stone-900 hover:text-white transition-all duration-300 font-medium rounded-lg text-sm"
                   >
-                    Деталі
+                    {t('detailsBtnText', 'Деталі')}
                   </motion.button>
                 </div>
               </motion.div>
@@ -615,7 +633,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
             className="border-2 border-stone-900 px-12 py-4 hover:bg-stone-900 hover:text-white transition-all duration-300 font-medium inline-flex items-center gap-3 rounded-lg"
           >
             <ShoppingBag className="w-5 h-5" />
-            {showAll ? 'Згорнути' : 'Усі акційні пропозиції'}
+            {showAll ? t('collapseBtnText', 'Згорнути') : t('showAllBtnText', 'Усі акційні пропозиції')}
             <motion.span animate={{ rotate: showAll ? 180 : 0 }} transition={{ duration: 0.3 }}>
               <ChevronDown className="w-4 h-4" />
             </motion.span>
