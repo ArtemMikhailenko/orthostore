@@ -103,3 +103,7 @@ export function createProductReview(
     headers: token ? { Authorization: `Bearer ${token}` } : undefined,
   });
 }
+
+export function getPageContent(key: string): Promise<Record<string, unknown>> {
+  return http<Record<string, unknown>>(`/pages/${encodeURIComponent(key)}`);
+}

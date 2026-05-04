@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getCategories, getCountries, getManufacturers, getProducts, getProduct, createOrder, getOrderHistory, getGalleryImages, getProductReviews, createProductReview, type GetProductsParams, type GalleryImage, type ProductReview, type CreateReviewDto } from './public';
+import { getCategories, getCountries, getManufacturers, getProducts, getProduct, createOrder, getOrderHistory, getGalleryImages, getProductReviews, createProductReview, getPageContent, type GetProductsParams, type GalleryImage, type ProductReview, type CreateReviewDto } from './public';
 import type { Category, Country, Manufacturer, ProductListResponse, ProductWithDiscounts, Order, CreateOrderRequest } from './public.types';
 
 export function useCategories() {
@@ -70,5 +70,13 @@ export function useCreateReview(idOrSlug: string) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['product-reviews', idOrSlug] });
     },
+  });
+}
+
+export function usePageContent(key: string) {
+  return useQuery<Record<string, unknown>>({
+    queryKey: ['page-content', key],
+    queryFn: () => getPageContent(key),
+    staleTime: 5 * 60 * 1000,
   });
 }

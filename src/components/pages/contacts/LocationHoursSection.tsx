@@ -9,23 +9,39 @@ import {
   Car,
 } from 'lucide-react';
 
-
+interface WorkingHour {
+  day: string;
+  hours: string;
+}
 
 // Location & Hours Section
 interface LocationHoursSectionProps {
   className?: string;
+  address?: string;
+  workingHours?: WorkingHour[];
+  howToGetMetro?: string;
+  howToGetTransport?: string;
+  howToGetParking?: string;
+  destinationUrl?: string;
+  openMapUrl?: string;
+  embedMapUrl?: string;
 }
 
-export function LocationHoursSection({ className }: LocationHoursSectionProps) {
+export function LocationHoursSection({
+  className,
+  address = 'м. Київ, вул. Саксаганського, 54/56',
+  workingHours = [
+    { day: "Понеділок-П'ятниця", hours: '9:00 - 18:00' },
+    { day: 'Субота-Неділя', hours: 'Замовлення онлайн' },
+  ],
+  howToGetMetro = 'Метро: Університет (10 хв), Палац Спорту (10 хв), Площа Українських Героїв (10 хв)',
+  howToGetTransport = 'Громадський транспорт: 3, 69, 14, 171 (зупинка - готель Кооператор) від метро Палац Спорту',
+  howToGetParking = 'Парковка: доступна біля офісу',
+  destinationUrl = 'https://www.google.com/maps/dir/?api=1&destination=50.4391,30.51573',
+  openMapUrl = 'https://www.google.com/maps/search/?api=1&query=%D0%B2%D1%83%D0%BB.%20%D0%A1%D0%B0%D0%BA%D1%81%D0%B0%D0%B3%D0%B0%D0%BD%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE%2054%2F56%2C%20%D0%9A%D0%B8%D1%97%D0%B2',
+  embedMapUrl = 'https://maps.google.com/maps?q=%D0%B2%D1%83%D0%BB.+%D0%A1%D0%B0%D0%BA%D1%81%D0%B0%D0%B3%D0%B0%D0%BD%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE+54/56,+%D0%9A%D0%B8%D1%97%D0%B2&z=17&output=embed',
+}: LocationHoursSectionProps) {
   const [isMapLoaded, setIsMapLoaded] = useState(false);
-  const destinationUrl = 'https://www.google.com/maps/dir/?api=1&destination=50.4391,30.51573';
-  const openMapUrl = 'https://www.google.com/maps/search/?api=1&query=%D0%B2%D1%83%D0%BB.%20%D0%A1%D0%B0%D0%BA%D1%81%D0%B0%D0%B3%D0%B0%D0%BD%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE%2054%2F56%2C%20%D0%9A%D0%B8%D1%97%D0%B2';
-  const embedMapUrl = 'https://maps.google.com/maps?q=%D0%B2%D1%83%D0%BB.+%D0%A1%D0%B0%D0%BA%D1%81%D0%B0%D0%B3%D0%B0%D0%BD%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE+54/56,+%D0%9A%D0%B8%D1%97%D0%B2&z=17&output=embed';
-
-  const workingHours = [
-    { day: 'Понеділок-П\'ятниця', hours: '9:00 - 18:00', isToday: true },
-    { day: 'Субота-Неділя', hours: 'Замовлення онлайн', isToday: false }
-  ];
 
   return (
     <section className={cn('py-16 bg-white', className)}>
@@ -42,9 +58,7 @@ export function LocationHoursSection({ className }: LocationHoursSectionProps) {
                 <div className="flex items-start gap-4">
                   <MapPin className="w-6 h-6 text-stone-600 mt-1 flex-shrink-0" />
                   <div>
-                    <div className="font-medium text-stone-900">
-                      м. Київ, вул. Саксаганського, 54/56
-                    </div>
+                    <div className="font-medium text-stone-900">{address}</div>
                   </div>
                 </div>
               </div>
@@ -61,7 +75,7 @@ export function LocationHoursSection({ className }: LocationHoursSectionProps) {
                     key={index} 
                     className={cn(
                       'flex justify-between items-center p-4 rounded-lg transition-colors',
-                      schedule.isToday ? 'bg-stone-100' : 'bg-stone-50'
+                      index === 0 ? 'bg-stone-100' : 'bg-stone-50'
                     )}
                   >
                     <div className="flex items-center gap-3">
@@ -70,7 +84,7 @@ export function LocationHoursSection({ className }: LocationHoursSectionProps) {
                     </div>
                     <span className={cn(
                       'font-medium',
-                      schedule.isToday ? 'text-stone-900' : 'text-stone-600'
+                      index === 0 ? 'text-stone-900' : 'text-stone-600'
                     )}>
                       {schedule.hours}
                     </span>
@@ -85,9 +99,24 @@ export function LocationHoursSection({ className }: LocationHoursSectionProps) {
                 Як добратись
               </h4>
               <div className="space-y-2 text-sm text-stone-600">
-                <div className="flex items-center gap-2"><TrainFront className="w-4 h-4 text-stone-500 flex-shrink-0" /> Метро: Університет (10 хв), Палац Спорту (10 хв), Площа Українських Героїв (10 хв)</div>
-                <div className="flex items-center gap-2"><Bus className="w-4 h-4 text-stone-500 flex-shrink-0" /> Громадський транспорт: 3, 69, 14, 171 (зупинка - готель Кооператор) від метро Палац Спорту</div>
-                <div className="flex items-center gap-2"><Car className="w-4 h-4 text-stone-500 flex-shrink-0" /> Парковка: доступна біля офісу</div>
+                {howToGetMetro && (
+                  <div className="flex items-center gap-2">
+                    <TrainFront className="w-4 h-4 text-stone-500 flex-shrink-0" />
+                    {howToGetMetro}
+                  </div>
+                )}
+                {howToGetTransport && (
+                  <div className="flex items-center gap-2">
+                    <Bus className="w-4 h-4 text-stone-500 flex-shrink-0" />
+                    {howToGetTransport}
+                  </div>
+                )}
+                {howToGetParking && (
+                  <div className="flex items-center gap-2">
+                    <Car className="w-4 h-4 text-stone-500 flex-shrink-0" />
+                    {howToGetParking}
+                  </div>
+                )}
               </div>
             </div>
           </div>

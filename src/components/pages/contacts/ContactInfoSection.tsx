@@ -10,15 +10,32 @@ import {
 
 } from 'lucide-react';
 
+export interface ContactMethod {
+  type: string;
+  title: string;
+  primary: string;
+  secondary: string;
+  description: string;
+  action: string;
+  href: string;
+}
 
 // Contact Information Cards
 interface ContactInfoSectionProps {
   className?: string;
+  contactMethods?: ContactMethod[];
 }
 
-const contactMethods = [
+const iconMap: Record<string, React.ElementType> = {
+  phone: Phone,
+  email: Mail,
+  chat: MessageCircle,
+  meeting: Calendar,
+};
+
+const defaultContactMethods: ContactMethod[] = [
   {
-    icon: Phone,
+    type: 'phone',
     title: 'Телефон',
     primary: '+38 050 303 94 94',
     secondary: 'Пн-Пт 9:00-18:00',
@@ -27,16 +44,16 @@ const contactMethods = [
     href: 'tel:+380503039494'
   },
   {
-    icon: Mail,
+    type: 'email',
     title: 'Email',
     primary: 'orthostore.com.ua@gmail.com',
     secondary: '',
-    description: 'Відправте запрос - в найближчий час ми з вами зв\'яжемось',
+    description: "Відправте запрос - в найближчий час ми з вами зв'яжемось",
     action: 'Написати',
     href: 'mailto:orthostore.com.ua@gmail.com'
   },
   {
-    icon: MessageCircle,
+    type: 'chat',
     title: 'Онлайн-чат',
     primary: 'Миттєва підтримка',
     secondary: 'Пн-Пт 9:00-18:00',
@@ -45,7 +62,7 @@ const contactMethods = [
     href: 'https://t.me/orthostore'
   },
   {
-    icon: Calendar,
+    type: 'meeting',
     title: 'Зустріч',
     primary: 'Особистий візит',
     secondary: 'За особистим записом',
@@ -55,48 +72,51 @@ const contactMethods = [
   }
 ];
 
-export function ContactInfoSection({ className }: ContactInfoSectionProps) {
+export function ContactInfoSection({ className, contactMethods = defaultContactMethods }: ContactInfoSectionProps) {
   return (
     <section id="contact-methods" className={cn('py-16 bg-stone-50', className)}>
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {contactMethods.map((method, index) => (
-            <a 
-              key={index}
-              href={method.href}
-              className="bg-white p-6 group hover:shadow-lg transition-all duration-300 cursor-pointer rounded-xl block"
-            >
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="w-12 h-12 bg-stone-100 rounded-xl flex items-center justify-center group-hover:bg-stone-900 group-hover:text-white transition-all duration-300">
-                    <method.icon className="w-6 h-6" />
+          {contactMethods.map((method, index) => {
+            const Icon = iconMap[method.type] ?? Phone;
+            return (
+              <a 
+                key={index}
+                href={method.href}
+                className="bg-white p-6 group hover:shadow-lg transition-all duration-300 cursor-pointer rounded-xl block"
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="w-12 h-12 bg-stone-100 rounded-xl flex items-center justify-center group-hover:bg-stone-900 group-hover:text-white transition-all duration-300">
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-stone-400 group-hover:text-stone-900 group-hover:translate-x-1 transition-all duration-300" />
                   </div>
-                  <ArrowRight className="w-4 h-4 text-stone-400 group-hover:text-stone-900 group-hover:translate-x-1 transition-all duration-300" />
+                  
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-medium text-stone-900">
+                      {method.title}
+                    </h3>
+                    <div className="text-stone-900 font-medium">
+                      {method.primary}
+                    </div>
+                    <div className="text-sm text-stone-600">
+                      {method.secondary}
+                    </div>
+                    <p className="text-sm text-stone-600 leading-relaxed">
+                      {method.description}
+                    </p>
+                  </div>
+                  
+                  <span 
+                    className="inline-flex items-center gap-2 text-stone-900 font-medium text-sm group-hover:gap-3 transition-all duration-300"
+                  >
+                    {method.action}
+                  </span>
                 </div>
-                
-                <div className="space-y-2">
-                  <h3 className="text-lg font-medium text-stone-900">
-                    {method.title}
-                  </h3>
-                  <div className="text-stone-900 font-medium">
-                    {method.primary}
-                  </div>
-                  <div className="text-sm text-stone-600">
-                    {method.secondary}
-                  </div>
-                  <p className="text-sm text-stone-600 leading-relaxed">
-                    {method.description}
-                  </p>
-                </div>
-                
-                <span 
-                  className="inline-flex items-center gap-2 text-stone-900 font-medium text-sm group-hover:gap-3 transition-all duration-300"
-                >
-                  {method.action}
-                </span>
-              </div>
-            </a>
-          ))}
+              </a>
+            );
+          })}
         </div>
       </div>
     </section>

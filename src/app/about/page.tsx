@@ -1,118 +1,96 @@
-import { Award, Target, Users, Shield, TrendingUp, Heart } from 'lucide-react';
-import Image from 'next/image';
 import { GallerySection } from '@/components/pages/about/GallerySection';
+import { getPageContent } from '@/lib/api/public';
 
-export default function AboutPage() {
+type Segment = { number: string; title: string; desc: string };
+
+export default async function AboutPage() {
+  const data = await getPageContent('about').catch(() => ({} as Record<string, unknown>));
+
+  const heroTitle = (data.heroTitle as string) ?? 'ORTHOSTORE – ВСЕ ДЛЯ СУЧАСНОЇ ОРТОДОНТІЇ';
+  const heroSubtitle =
+    (data.heroSubtitle as string) ??
+    'Ваш надійний партнер у сфері ортодонтичної продукції з 2015 року';
+  const story = (data.story as string[]) ?? [];
+  const pricingIntro = (data.pricingIntro as string) ?? '';
+  const segments = (data.segments as Segment[]) ?? [];
+  const ctaTitle = (data.ctaTitle as string) ?? 'З нами зручно, легко та швидко!';
+  const ctaSubtitle =
+    (data.ctaSubtitle as string) ?? 'Щиро дякуємо за довіру до ORTHOSTORE!';
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="bg-stone-50 border-b border-stone-200">
         <div className="max-w-5xl mx-auto px-6 py-16 lg:py-24">
           <div className="text-center space-y-6">
-            <h1 className="text-3xl lg:text-5xl font-light text-stone-900">
-              ORTHOSTORE – ВСЕ ДЛЯ СУЧАСНОЇ ОРТОДОНТІЇ
-            </h1>
+            <h1 className="text-3xl lg:text-5xl font-light text-stone-900">{heroTitle}</h1>
             <p className="text-lg text-stone-600 max-w-2xl mx-auto leading-relaxed">
-              Ваш надійний партнер у сфері ортодонтичної продукції з 2015 року
+              {heroSubtitle}
             </p>
           </div>
         </div>
       </section>
 
       {/* Main Story Section */}
-      <section className="max-w-5xl mx-auto px-6 py-16 lg:py-20">
-        <div className="space-y-12">
-          <div className="space-y-6 text-base lg:text-lg text-stone-700 leading-relaxed">
-            <p className="text-xl lg:text-2xl font-light text-stone-900">
-              ORTHOSTORE – ЦЕ НАДІЙНИЙ ПАРТНЕР З ГАЛУЗІ ОРТОДОНТИЧНОЇ ПРОДУКЦІЇ.
-            </p>
-            <p>
-              Ми вийшли на цей ринок в 2015 році з головною метою – задовільнити Ваші потреби в якісній ортодонтичній продукції. Ми не просто пропонуємо товари — ми ділимося тим, у що справді віримо.
-            </p>
-            <p>
-              Ми постійно стежимо за інноваціями в сфері ортодонтії та підберемо Вам найкращий варіант з широкого асортименту ортодонтичної продукції та інструментів. Надаємо індивідуальний підхід до кожного клієнта, проконсультуємо, допоможемо в виборі ідеального варіанта.
-            </p>
-            <p>
-              Ми з повагою ставимося як до великих компаній, цінуємо їхній досвід і готові поставити будь-яку кількість ортодонтичної продукції, так і до кожного лікаря, який бажає працювати з нами. Інтернет-магазин ортодонтичної продукції ORTHOSTORE слідкує за іноваціями у своїй сфері діяльності і пропонує продукцію високої якості від провідних світових брендів.
-            </p>
+      {story.length > 0 && (
+        <section className="max-w-5xl mx-auto px-6 py-16 lg:py-20">
+          <div className="space-y-12">
+            <div className="space-y-6 text-base lg:text-lg text-stone-700 leading-relaxed">
+              {story.map((para, i) => (
+                <p key={i} className={i === 0 ? 'text-xl lg:text-2xl font-light text-stone-900' : undefined}>
+                  {para}
+                </p>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Photo Gallery Section */}
       <GallerySection />
 
       {/* Pricing Philosophy Section */}
-      <section className="max-w-5xl mx-auto px-6 py-16 lg:py-20">
-        <div className="space-y-12">
-          <div className="space-y-6 text-base lg:text-lg text-stone-700 leading-relaxed">
-            <p>
-              Для постійних клієнтів передбачені знижки, подарунки та інші приємні сюрпризи. В умовах кризи і нестабільності наш магазин підтримує лояльну цінову політику щоб і професіонал і молодий фахівець знайшли необхідну продукцію на будь-який бюджет.
-            </p>
+      {(pricingIntro || segments.length > 0) && (
+        <section className="max-w-5xl mx-auto px-6 py-16 lg:py-20">
+          <div className="space-y-12">
+            {pricingIntro && (
+              <div className="space-y-6 text-base lg:text-lg text-stone-700 leading-relaxed">
+                <p>{pricingIntro}</p>
+              </div>
+            )}
+
+            {segments.length > 0 && (
+              <div className="space-y-6">
+                {segments.map((seg, i) => (
+                  <div
+                    key={i}
+                    className="bg-white p-8 border-2 border-stone-200 rounded-xl transition-all duration-300 hover:border-sky-300/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_30px_rgba(56,189,248,0.2)]"
+                  >
+                    <div className="flex items-start gap-6">
+                      <span className="text-5xl font-light text-stone-400">{seg.number}</span>
+                      <div className="space-y-2">
+                        <h3 className="text-xl font-medium text-stone-900">{seg.title}</h3>
+                        <p className="text-stone-600 leading-relaxed">{seg.desc}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-
-          <div className="space-y-6">
-            {/* Budget Segment */}
-            <div className="bg-white p-8 border-2 border-stone-200 rounded-xl transition-all duration-300 hover:border-sky-300/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_30px_rgba(56,189,248,0.2)]">
-              <div className="flex items-start gap-6">
-                <span className="text-5xl font-light text-stone-400">01</span>
-                <div className="space-y-2">
-                  <h3 className="text-xl font-medium text-stone-900">
-                    Бюджетний сегмент
-                  </h3>
-                  <p className="text-stone-600 leading-relaxed">
-                    Товари з достатніми для роботи характеристиками за доступними цінами.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Mid Segment */}
-            <div className="bg-white p-8 border-2 border-stone-200 rounded-xl transition-all duration-300 hover:border-sky-300/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_30px_rgba(56,189,248,0.2)]">
-              <div className="flex items-start gap-6">
-                <span className="text-5xl font-light text-stone-400">02</span>
-                <div className="space-y-2">
-                  <h3 className="text-xl font-medium text-stone-900">
-                    Середній ціновий клас
-                  </h3>
-                  <p className="text-stone-600 leading-relaxed">
-                    Оптимальне співвідношенням ціна-якість для щоденної практики.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Premium Segment */}
-            <div className="bg-white p-8 border-2 border-stone-200 rounded-xl transition-all duration-300 hover:border-sky-300/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_30px_rgba(56,189,248,0.2)]">
-              <div className="flex items-start gap-6">
-                <span className="text-5xl font-light text-stone-400">03</span>
-                <div className="space-y-2">
-                  <h3 className="text-xl font-medium text-stone-900">
-                    Преміум сегмент
-                  </h3>
-                  <p className="text-stone-600 leading-relaxed">
-                    Для фахівців найвищого рівня, які мають високі вимоги до функціоналу і надійності матеріалів і інструментів.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Final CTA */}
       <section className="bg-stone-100">
         <div className="max-w-3xl mx-auto px-6 py-16 lg:py-20 text-center">
           <div className="space-y-6">
-            <h2 className="text-3xl lg:text-5xl font-light text-stone-900">
-              З нами зручно, легко та швидко!
-            </h2>
-            <p className="text-xl text-stone-600 font-medium">
-              Щиро дякуємо за довіру до ORTHOSTORE!
-            </p>
+            <h2 className="text-3xl lg:text-5xl font-light text-stone-900">{ctaTitle}</h2>
+            <p className="text-xl text-stone-600 font-medium">{ctaSubtitle}</p>
           </div>
         </div>
       </section>
     </div>
   );
 }
+
