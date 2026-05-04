@@ -38,6 +38,8 @@ type PromotionsPageContent = {
   detailsBtnText?: string;
   showAllBtnText?: string;
   collapseBtnText?: string;
+  sliderIds?: string[];
+  gridIds?: string[];
 };
 
 type HeroSlide = {
@@ -187,7 +189,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
 
   const heroSlides: HeroSlide[] = useMemo(() => {
     if (!apiSlides) return fallbackHeroSlides;
-    return apiSlides.map((s) => ({
+    const mapped = apiSlides.map((s) => ({
       id: s._id,
       title: s.title,
       description: s.description || '',
@@ -199,11 +201,16 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
       imageUrl: s.imageUrl,
       linkUrl: s.linkUrl,
     }));
-  }, [apiSlides]);
+    const ids = pageContent.sliderIds;
+    if (ids && ids.length > 0) {
+      return ids.map((id) => mapped.find((s) => s.id === id)).filter(Boolean) as HeroSlide[];
+    }
+    return mapped;
+  }, [apiSlides, pageContent]);
 
   const allProducts: CardProduct[] = useMemo(() => {
     if (!apiSlides) return fallbackProducts;
-    return apiSlides.map((s) => ({
+    const mapped = apiSlides.map((s) => ({
       id: s._id,
       title: s.title,
       price: s.price || '',
@@ -213,7 +220,12 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
       imageUrl: s.imageUrl,
       linkUrl: s.linkUrl,
     }));
-  }, [apiSlides]);
+    const ids = pageContent.gridIds;
+    if (ids && ids.length > 0) {
+      return ids.map((id) => mapped.find((p) => p.id === id)).filter(Boolean) as CardProduct[];
+    }
+    return mapped;
+  }, [apiSlides, pageContent]);
 
   /* ── Hero slider state ── */
   const [currentIndex, setCurrentIndex] = useState(0);
