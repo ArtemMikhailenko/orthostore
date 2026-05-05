@@ -232,7 +232,7 @@ function PhotoCard({ cat, area }: { cat: CatItem; area: string }) {
   const isLarge = area.includes("col-span-2") && area.includes("row-span-2");
   const hasSubcats = cat.subcategories && cat.subcategories.length > 0;
   return (
-    <Link href={hasSubcats ? '#' : `/catalog/${cat.slug}`} onClick={hasSubcats ? (e: React.MouseEvent) => e.preventDefault() : undefined} className={cn("group relative block rounded-2xl overflow-hidden border border-stone-200 hover:border-[#0ea5e9]/50 hover:shadow-[0_0_20px_rgba(14,165,233,0.15)] transition-all duration-300", area)}>
+    <Link href={hasSubcats ? '#' : `/catalog/${cat.slug}`} onClick={hasSubcats ? (e: React.MouseEvent) => e.preventDefault() : undefined} className={cn("group relative block rounded-2xl overflow-hidden border border-stone-200 hover:border-sky-400 hover:ring-[3px] hover:ring-sky-400/50 hover:shadow-[0_0_20px_rgba(56,189,248,0.6),0_0_40px_rgba(56,189,248,0.25)] transition-all duration-300", area)}>
       <Image src={cat.img} alt={cat.name} fill className="object-cover group-hover:scale-105 transition-all duration-700" sizes="(max-width:768px) 100vw, 33vw" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent transition-opacity duration-500" />
       <div className={cn("relative z-10 flex flex-col justify-end h-full p-5", isLarge && "p-7")}>
@@ -244,7 +244,6 @@ function PhotoCard({ cat, area }: { cat: CatItem; area: string }) {
           <SubcategoryTags subcategories={cat.subcategories!} parentSlug={cat.slug} variant="dark" />
         )}
       </div>
-      <div className="absolute bottom-0 left-0 right-0 h-[3px] w-0 bg-gradient-to-r from-[#0ea5e9] to-sky-300 group-hover:w-full transition-all duration-500 z-20" />
     </Link>
   );
 }
@@ -253,7 +252,7 @@ function PhotoCard({ cat, area }: { cat: CatItem; area: string }) {
 function DarkCard({ cat, area }: { cat: CatItem; area: string }) {
   const hasSubcats = cat.subcategories && cat.subcategories.length > 0;
   return (
-    <Link href={hasSubcats ? '#' : `/catalog/${cat.slug}`} onClick={hasSubcats ? (e: React.MouseEvent) => e.preventDefault() : undefined} className={cn("group relative block rounded-2xl overflow-hidden bg-stone-900 border border-stone-700 hover:border-[#0ea5e9]/50 hover:shadow-[0_0_20px_rgba(14,165,233,0.15)] transition-all duration-300", area)}>
+    <Link href={hasSubcats ? '#' : `/catalog/${cat.slug}`} onClick={hasSubcats ? (e: React.MouseEvent) => e.preventDefault() : undefined} className={cn("group relative block rounded-2xl overflow-hidden bg-stone-900 border border-stone-700 hover:border-sky-400 hover:ring-[3px] hover:ring-sky-400/50 hover:shadow-[0_0_20px_rgba(56,189,248,0.6),0_0_40px_rgba(56,189,248,0.25)] transition-all duration-300", area)}>
       <Image src={cat.img} alt={cat.name} fill className="object-cover group-hover:scale-105 transition-all duration-700 opacity-55 group-hover:opacity-75" sizes="(max-width:768px) 100vw, 25vw" />
       <div className="absolute inset-0 bg-gradient-to-t from-stone-900/85 via-stone-900/30 to-transparent" />
       <div className="relative z-10 flex flex-col justify-end h-full p-5">
@@ -265,7 +264,6 @@ function DarkCard({ cat, area }: { cat: CatItem; area: string }) {
           <SubcategoryTags subcategories={cat.subcategories!} parentSlug={cat.slug} variant="dark" />
         )}
       </div>
-      <div className="absolute bottom-0 left-0 right-0 h-[3px] w-0 bg-gradient-to-r from-[#0ea5e9] to-sky-300 group-hover:w-full transition-all duration-500 z-20" />
     </Link>
   );
 }
@@ -274,7 +272,7 @@ function DarkCard({ cat, area }: { cat: CatItem; area: string }) {
 function LightCard({ cat, area }: { cat: CatItem; area: string }) {
   const hasSubcats = cat.subcategories && cat.subcategories.length > 0;
   return (
-    <Link href={hasSubcats ? '#' : `/catalog/${cat.slug}`} onClick={hasSubcats ? (e: React.MouseEvent) => e.preventDefault() : undefined} className={cn("group relative block rounded-2xl overflow-hidden bg-stone-200 border border-stone-300 hover:border-[#0ea5e9]/50 hover:shadow-[0_0_20px_rgba(14,165,233,0.15)] transition-all duration-300", area)}>
+    <Link href={hasSubcats ? '#' : `/catalog/${cat.slug}`} onClick={hasSubcats ? (e: React.MouseEvent) => e.preventDefault() : undefined} className={cn("group relative block rounded-2xl overflow-hidden bg-stone-200 border border-stone-300 hover:border-sky-400 hover:ring-[3px] hover:ring-sky-400/50 hover:shadow-[0_0_20px_rgba(56,189,248,0.6),0_0_40px_rgba(56,189,248,0.25)] transition-all duration-300", area)}>
       <Image src={cat.img} alt={cat.name} fill className="object-cover group-hover:scale-105 transition-all duration-700 opacity-60 group-hover:opacity-85" sizes="(max-width:768px) 100vw, 25vw" />
       <div className="absolute inset-0 bg-gradient-to-t from-stone-900/70 via-stone-900/15 to-transparent" />
       <div className="relative z-10 flex flex-col justify-end h-full p-5">
@@ -286,7 +284,6 @@ function LightCard({ cat, area }: { cat: CatItem; area: string }) {
           <SubcategoryTags subcategories={cat.subcategories!} parentSlug={cat.slug} variant="dark" />
         )}
       </div>
-      <div className="absolute bottom-0 left-0 right-0 h-[3px] w-0 bg-gradient-to-r from-[#0ea5e9] to-sky-300 group-hover:w-full transition-all duration-500 z-20" />
     </Link>
   );
 }
@@ -295,7 +292,7 @@ function LightCard({ cat, area }: { cat: CatItem; area: string }) {
 function AccentCard({ cat, area }: { cat: CatItem; area: string }) {
   const hasSubcats = cat.subcategories && cat.subcategories.length > 0;
   return (
-    <Link href={hasSubcats ? '#' : `/catalog/${cat.slug}`} onClick={hasSubcats ? (e: React.MouseEvent) => e.preventDefault() : undefined} className={cn("group relative block rounded-2xl overflow-hidden bg-stone-900 border border-stone-700 hover:border-[#0ea5e9]/50 hover:shadow-[0_0_20px_rgba(14,165,233,0.15)] transition-all duration-300", area)}>
+    <Link href={hasSubcats ? '#' : `/catalog/${cat.slug}`} onClick={hasSubcats ? (e: React.MouseEvent) => e.preventDefault() : undefined} className={cn("group relative block rounded-2xl overflow-hidden bg-stone-900 border border-stone-700 hover:border-sky-400 hover:ring-[3px] hover:ring-sky-400/50 hover:shadow-[0_0_20px_rgba(56,189,248,0.6),0_0_40px_rgba(56,189,248,0.25)] transition-all duration-300", area)}>
       <Image src={cat.img} alt={cat.name} fill className="object-cover group-hover:scale-105 transition-all duration-700 opacity-55 group-hover:opacity-80" sizes="(max-width:768px) 100vw, 25vw" />
       <div className="absolute inset-0 bg-gradient-to-t from-stone-900/90 via-stone-900/25 to-transparent group-hover:from-stone-900/70 transition-all duration-500" />
       <div className="relative z-10 flex flex-col justify-end h-full p-5">
@@ -307,7 +304,6 @@ function AccentCard({ cat, area }: { cat: CatItem; area: string }) {
           <SubcategoryTags subcategories={cat.subcategories!} parentSlug={cat.slug} variant="dark" />
         )}
       </div>
-      <div className="absolute bottom-0 left-0 right-0 h-[3px] w-0 bg-gradient-to-r from-[#0ea5e9] to-sky-300 group-hover:w-full transition-all duration-500 z-20" />
     </Link>
   );
 }
