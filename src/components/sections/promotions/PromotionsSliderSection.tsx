@@ -433,16 +433,16 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.4 }}
-                className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+                className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-stretch"
               >
                 {allProducts.map((product, index) => (
-                  <Link key={product.id} href={product.linkUrl || '/catalog/brekety'}>
+                  <Link key={product.id} href={product.linkUrl || '/catalog/brekety'} className="flex">
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.04 }}
                       whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                      className="text-left border-2 border-stone-300 p-6 bg-white group cursor-pointer hover:border-sky-400/70 hover:ring-[2px] hover:ring-sky-400/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_28px_rgba(56,189,248,0.2)] transition-all duration-300 rounded-xl"
+                      className="flex flex-col w-full text-left border-2 border-stone-300 p-6 bg-white group cursor-pointer hover:border-sky-400/70 hover:ring-[2px] hover:ring-sky-400/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_28px_rgba(56,189,248,0.2)] transition-all duration-300 rounded-xl"
                     >
                       <div className={cn('w-full aspect-square mb-4 border-2 border-stone-300 bg-gradient-to-br relative overflow-hidden rounded-lg', product.color)}>
                         <Image src={product.imageUrl || '/images/Screenshot_2.png'} alt={product.title} fill className="object-cover opacity-70" />
@@ -462,15 +462,15 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
             ) : (
               /* Mini card slider — 4 per page */
               <motion.div key="slider" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
                   {visibleCards.map((product, index) => (
-                    <Link key={product.id} href={product.linkUrl || '/catalog/brekety'}>
+                    <Link key={product.id} href={product.linkUrl || '/catalog/brekety'} className="flex">
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.07 }}
                         whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                        className="text-left border-2 border-stone-300 p-6 bg-white group cursor-pointer hover:border-sky-400/70 hover:ring-[2px] hover:ring-sky-400/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_28px_rgba(56,189,248,0.2)] transition-all duration-300 rounded-xl"
+                        className="flex flex-col w-full text-left border-2 border-stone-300 p-6 bg-white group cursor-pointer hover:border-sky-400/70 hover:ring-[2px] hover:ring-sky-400/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_28px_rgba(56,189,248,0.2)] transition-all duration-300 rounded-xl"
                       >
                         <div className={cn('w-full aspect-square mb-4 border-2 border-stone-300 bg-gradient-to-br relative overflow-hidden rounded-lg', product.color)}>
                           <Image src={product.imageUrl || '/images/Screenshot_2.png'} alt={product.title} fill className="object-cover opacity-70" />
