@@ -183,7 +183,7 @@ export default function OrderStatusPage() {
           </div>
 
           {/* Status Badge */}
-          <div className={cn('inline-flex items-center gap-2 px-4 py-2 border rounded-full', statusInfo.bgColor, statusInfo.borderColor)}>
+          <div className={cn('inline-flex items-center gap-2 px-4 py-2 border rounded-xl', statusInfo.bgColor, statusInfo.borderColor)}>
             <StatusIcon className={cn('w-5 h-5', statusInfo.color)} />
             <span className={cn('font-medium', statusInfo.color)}>{statusInfo.label}</span>
           </div>
@@ -468,17 +468,17 @@ export default function OrderStatusPage() {
               <div className="p-6 space-y-3">
                 <Link
                   href="/catalog"
-                  className="flex items-center justify-between p-3 hover:bg-stone-50 transition-colors group"
+                  className="flex items-center justify-between p-3 rounded-xl hover:bg-stone-100 hover:text-stone-900 transition-colors group"
                 >
-                  <span className="text-stone-700 group-hover:text-stone-900">Продовжити покупки</span>
-                  <ArrowLeft className="w-4 h-4 text-stone-400 group-hover:text-stone-600 rotate-180" />
+                  <span className="text-stone-700 group-hover:text-stone-900 font-medium">Продовжити покупки</span>
+                  <ArrowLeft className="w-4 h-4 text-stone-400 group-hover:text-stone-900 rotate-180 transition-colors" />
                 </Link>
                 <Link
                   href="/profile/orders"
-                  className="flex items-center justify-between p-3 hover:bg-stone-50 transition-colors group"
+                  className="flex items-center justify-between p-3 rounded-xl hover:bg-stone-100 hover:text-stone-900 transition-colors group"
                 >
-                  <span className="text-stone-700 group-hover:text-stone-900">Всі замовлення</span>
-                  <Package className="w-4 h-4 text-stone-400 group-hover:text-stone-600" />
+                  <span className="text-stone-700 group-hover:text-stone-900 font-medium">Всі замовлення</span>
+                  <Package className="w-4 h-4 text-stone-400 group-hover:text-stone-900 transition-colors" />
                 </Link>
               </div>
             </div>
