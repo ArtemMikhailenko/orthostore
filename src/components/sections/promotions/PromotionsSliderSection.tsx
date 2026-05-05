@@ -66,95 +66,9 @@ type CardProduct = {
   linkUrl?: string;
 };
 
-/* ── Fallback hero slider data ── */
-const fallbackHeroSlides: HeroSlide[] = [
-  {
-    id: 1,
-    title: 'Преміум брекети зі знижкою',
-    description: 'Спеціальна пропозиція на самолігуючі брекет-системи преміум класу.',
-    oldPrice: '2 940 ₴',
-    price: '2 500 ₴',
-    color: 'from-yellow-300 to-yellow-400',
-    badge: 'Хіт продажів',
-    features: [
-      { text: 'Знижка діє до кінця місяця' },
-      { text: 'Безкоштовна доставка', href: '/delivery' },
-      { text: 'Додаткові аксесуари у подарунок', href: '/promotions' },
-    ],
-  },
-  {
-    id: 2,
-    title: 'Комплект дуг 2+1',
-    description: 'При покупці 2 упаковок ортодонтичних дуг - третя у подарунок',
-    oldPrice: '',
-    price: '700 ₴',
-    color: 'from-yellow-300 to-yellow-500',
-    badge: 'Хіт продажів',
-    features: [
-      { text: 'Економія до 350 ₴' },
-      { text: 'Всі популярні розміри' },
-      { text: 'Обмежена пропозиція' },
-    ],
-  },
-  {
-    id: 3,
-    title: 'Лігатури зі знижкою',
-    description: 'Додаткові товари або знижка 5-8% на весь асортимент лігатур та еластиків',
-    oldPrice: '130 ₴',
-    price: 'від 120 ₴',
-    color: 'from-yellow-400 to-yellow-500',
-    badge: 'Хіт продажів',
-    features: [
-      { text: 'Знижка на всі кольори' },
-      { text: 'Мінімальне замовлення від 5 шт' },
-      { text: 'Діє 14 днів' },
-    ],
-  },
-  {
-    id: 4,
-    title: 'Стартовий набір ортодонта',
-    description: 'Комплексне рішення для початківців. Все необхідне в одному наборі за спеціальною ціною',
-    oldPrice: '1 060 ₴',
-    price: '850 ₴',
-    color: 'from-yellow-300 to-yellow-600',
-    badge: 'Хіт продажів',
-    features: [
-      { text: 'Економія понад 200 ₴' },
-      { text: 'Готове рішення "під ключ"' },
-      { text: 'Гарантія якості' },
-    ],
-  },
-  {
-    id: 5,
-    title: 'Набір для фіксації брекетів',
-    description: 'Комплект адгезивних матеріалів преміум якості для надійної фіксації будь-яких брекет-систем',
-    oldPrice: '1 800 ₴',
-    price: '1 450 ₴',
-    color: 'from-yellow-200 to-yellow-400',
-    badge: 'Хіт продажів',
-    features: [
-      { text: 'Знижка 20% при покупці набору' },
-      { text: 'Безкоштовна доставка', href: '/delivery' },
-      { text: 'Повна інструкція в комплекті' },
-    ],
-  },
-];
-
-/* ── Fallback bottom card grid ── */
-const fallbackProducts: CardProduct[] = [
-  { id: 101, title: 'Преміум брекети', price: '2 500 ₴', oldPrice: '2 940 ₴', discount: '-15%', color: 'from-yellow-300 to-yellow-400' },
-  { id: 102, title: 'Комплект дуг 2+1', price: '700 ₴', oldPrice: '', discount: '33%', color: 'from-yellow-300 to-yellow-500' },
-  { id: 103, title: 'Лігатури', price: 'від 120 ₴', oldPrice: '130 ₴', discount: 'до -8%', color: 'from-yellow-400 to-yellow-500' },
-  { id: 104, title: 'Стартовий набір', price: '850 ₴', oldPrice: '1 060 ₴', discount: '-20%', color: 'from-yellow-300 to-yellow-600' },
-  { id: 105, title: 'Ортодонтичний воск', price: '480 ₴', oldPrice: '600 ₴', discount: '-20%', color: 'from-yellow-200 to-yellow-400' },
-  { id: 106, title: 'Еластичні ланцюжки', price: '95 ₴', oldPrice: '120 ₴', discount: '-21%', color: 'from-yellow-300 to-yellow-400' },
-  { id: 107, title: 'Щічні трубки', price: '320 ₴', oldPrice: '380 ₴', discount: '-16%', color: 'from-yellow-300 to-yellow-500' },
-  { id: 108, title: 'Кільця моляні', price: '210 ₴', oldPrice: '250 ₴', discount: '-16%', color: 'from-yellow-400 to-yellow-500' },
-  { id: 109, title: 'NiTi дуги .014', price: '185 ₴', oldPrice: '220 ₴', discount: '-16%', color: 'from-yellow-300 to-yellow-600' },
-  { id: 110, title: 'Адгезив для брекетів', price: '540 ₴', oldPrice: '650 ₴', discount: '-17%', color: 'from-yellow-200 to-yellow-400' },
-  { id: 111, title: 'Міні-імпланти', price: '390 ₴', oldPrice: '450 ₴', discount: '-13%', color: 'from-yellow-300 to-yellow-400' },
-  { id: 112, title: 'Ретейнери комплект', price: '760 ₴', oldPrice: '900 ₴', discount: '-16%', color: 'from-yellow-300 to-yellow-500' },
-];
+/* ── Fallbacks ── */
+const fallbackHeroSlides: HeroSlide[] = [];
+const fallbackProducts: CardProduct[] = [];
 
 function calcDiscount(price?: string, oldPrice?: string): string {
   if (!price || !oldPrice) return '';
