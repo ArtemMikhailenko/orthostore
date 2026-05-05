@@ -73,6 +73,7 @@ interface UiProduct {
   stockLevel: 'high' | 'medium' | 'low';
   certification: string[];
   imageUrl: string;
+  cashbackPercent: number;
 }
 
 function mapApiToUi(
@@ -118,6 +119,7 @@ function mapApiToUi(
     stockLevel: 'high',
     certification: [],
     imageUrl: image,
+    cashbackPercent: (p as any).cashbackPercent ?? 0,
   };
 }
 
@@ -339,6 +341,11 @@ function ProductCard({ product, categorySlug }: { product: UiProduct; categorySl
             </div>
           )}
           {discount > 0 && <div className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">-{discount}%</div>}
+          {product.cashbackPercent > 0 && (
+            <div className="flex items-center gap-1 bg-emerald-600 text-white px-2 py-1 rounded-full text-xs font-medium">
+              <Zap className="w-3 h-3" />Кешбек {product.cashbackPercent}%
+            </div>
+          )}
         </div>
 
         {/* Floating actions */}
@@ -447,6 +454,11 @@ function ProductListCard({ product, categorySlug }: { product: UiProduct; catego
             </div>
           )}
           {discount > 0 && <div className="bg-red-500 text-white px-1.5 py-0.5 rounded-full text-[10px] font-bold">-{discount}%</div>}
+          {product.cashbackPercent > 0 && (
+            <div className="flex items-center gap-1 bg-emerald-600 text-white px-1.5 py-0.5 rounded-full text-[10px] font-medium">
+              <Zap className="w-2.5 h-2.5" />{product.cashbackPercent}%
+            </div>
+          )}
         </div>
       </div>
 

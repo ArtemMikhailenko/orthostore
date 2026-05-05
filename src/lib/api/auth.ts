@@ -16,6 +16,7 @@ export interface Customer {
   createdAt: string | null;
   updatedAt: string | null;
   lastLoginAt: string | null;
+  cashbackBalance?: number;
 }
 
 export interface AuthTokens {
@@ -94,6 +95,7 @@ export interface CreateOrderPayload {
   name?: string;
   comment?: string;
   promoCode?: string;
+  cashbackAmountToUse?: number;
 }
 
 /* ─── Token storage helpers ─── */

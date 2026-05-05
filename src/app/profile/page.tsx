@@ -15,6 +15,7 @@ import {
   LogOut,
   ChevronRight,
   ShieldCheck,
+  Zap,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -193,6 +194,22 @@ export default function ProfilePage() {
                 <div className="text-sm text-stone-500">Ім&apos;я та email</div>
               </div>
               <ChevronRight className="w-5 h-5 text-stone-300 group-hover:text-stone-900 group-hover:translate-x-1 transition-all duration-300" />
+            </Link>
+
+            <Link
+              href="/cashback"
+              className="flex items-center gap-4 bg-emerald-50 border border-emerald-200 p-5 rounded-2xl hover:border-emerald-300 hover:shadow-md transition-all duration-300 group"
+            >
+              <div className="w-12 h-12 bg-gradient-to-br from-emerald-100 to-emerald-50 rounded-xl flex items-center justify-center shrink-0 group-hover:from-emerald-600 group-hover:to-emerald-500 transition-all duration-300 shadow-sm">
+                <Zap className="w-5 h-5 text-emerald-600 group-hover:text-white transition-colors duration-300" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-medium text-stone-900">Кешбек</div>
+                <div className="text-sm text-emerald-700 font-semibold">
+                  {(customer?.cashbackBalance ?? 0).toFixed(2)} ₴ на рахунку
+                </div>
+              </div>
+              <ChevronRight className="w-5 h-5 text-emerald-300 group-hover:text-emerald-600 group-hover:translate-x-1 transition-all duration-300" />
             </Link>
 
             <Link

@@ -16,6 +16,7 @@ import {
   ArrowLeft,
   AlertCircle,
   Loader2,
+  Zap,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -105,6 +106,10 @@ export default function CheckoutPage() {
   const [promoLoading, setPromoLoading] = useState(false);
   const [promoError, setPromoError] = useState<string | null>(null);
 
+  // Cashback state
+  const [cashbackToUse, setCashbackToUse] = useState(0);
+  const availableCashback = isAuthenticated ? (customer?.cashbackBalance ?? 0) : 0;
+
   // Pre-fill form from customer profile
   useEffect(() => {
     if (customer) {
@@ -137,7 +142,8 @@ export default function CheckoutPage() {
       ? Math.round(subtotal * promoApplied.value / 100)
       : promoApplied.value
     : 0;
-  const total = subtotal + actualDeliveryPrice - discount;
+  const cashbackDiscount = Math.min(cashbackToUse, availableCashback, Math.max(0, subtotal + actualDeliveryPrice - discount));
+  const total = subtotal + actualDeliveryPrice - discount - cashbackDiscount;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -857,6 +863,7 @@ export default function CheckoutPage() {
                             name: fullName || undefined,
                             comment: formData.comment || undefined,
                             promoCode: promoApplied?.code || undefined,
+                            cashbackAmountToUse: cashbackDiscount > 0 ? cashbackDiscount : undefined,
                           },
                           idempotencyKey
                         );
@@ -976,6 +983,13 @@ export default function CheckoutPage() {
                     </div>
                   )}
 
+                  {cashbackDiscount > 0 && (
+                    <div className="flex justify-between text-emerald-700">
+                      <span className="flex items-center gap-1"><Zap className="w-3.5 h-3.5" />Кешбек:</span>
+                      <span className="font-medium">-{cashbackDiscount.toLocaleString()} ₴</span>
+                    </div>
+                  )}
+
                   <div className="border-t border-stone-200 pt-4">
                     <div className="flex justify-between items-center">
                       <span className="text-lg font-semibold text-stone-900">Всього:</span>
@@ -986,6 +1000,57 @@ export default function CheckoutPage() {
                   </div>
                 </div>
               </div>
+
+              {/* Cashback spending */}
+              {availableCashback > 0 && (
+                <div className="bg-emerald-50 border border-emerald-200 rounded-2xl overflow-hidden">
+                  <div className="flex items-center gap-3 p-4 border-b border-emerald-200">
+                    <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center">
+                      <Zap className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <div className="font-semibold text-emerald-900 text-sm">Кешбек</div>
+                      <div className="text-xs text-emerald-700">Доступно: {availableCashback.toFixed(2)} ₴</div>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <label className="block text-xs font-medium text-emerald-800 mb-2">
+                      Списати кешбек (₴)
+                    </label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={availableCashback}
+                      step={1}
+                      value={cashbackToUse || ''}
+                      onChange={(e) => {
+                        const v = Math.max(0, Math.min(availableCashback, Number(e.target.value) || 0));
+                        setCashbackToUse(v);
+                      }}
+                      placeholder={`Макс. ${availableCashback.toFixed(2)}`}
+                      className="w-full px-3 py-2 border border-emerald-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white text-sm"
+                    />
+                    <div className="flex gap-2 mt-2">
+                      <button
+                        type="button"
+                        onClick={() => setCashbackToUse(Math.min(availableCashback, subtotal + actualDeliveryPrice - discount))}
+                        className="flex-1 text-xs py-1.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+                      >
+                        Списати все
+                      </button>
+                      {cashbackToUse > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => setCashbackToUse(0)}
+                          className="flex-1 text-xs py-1.5 border border-emerald-300 text-emerald-700 rounded-lg hover:bg-emerald-100 transition-colors"
+                        >
+                          Скасувати
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Benefits */}
               <div className="bg-gradient-to-br from-stone-900 to-stone-800 rounded-2xl p-6 text-white">

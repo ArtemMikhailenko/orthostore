@@ -51,6 +51,8 @@ export interface Product {
   optionsSummary: Record<string, Array<string | number>>;
   isActive: boolean;
   isNew?: boolean;
+  /** Cashback percentage configured for this product (0 = none) */
+  cashbackPercent?: number;
   createdAt?: string | null;
   updatedAt?: string | null;
 }

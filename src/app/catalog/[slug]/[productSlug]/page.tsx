@@ -473,6 +473,12 @@ export default function ProductDetailPage() {
                   -{discount}%
                 </div>
               )}
+              {(product as any).cashbackPercent > 0 && (
+                <div className="flex items-center gap-1 bg-emerald-600 text-white px-3 py-1 rounded-full text-xs font-medium">
+                  <Zap className="w-3 h-3" />
+                  Кешбек {(product as any).cashbackPercent}%
+                </div>
+              )}
               {brandName && (
                 <span className="text-sm text-stone-500 font-medium bg-stone-100 px-3 py-1 rounded-full">
                   {brandName}
@@ -640,6 +646,28 @@ export default function ProductDetailPage() {
                 <span className="text-[10px] text-stone-500 mt-0.5">14 днів</span>
               </div>
             </div>
+
+            {/* Cashback info */}
+            {(product as any).cashbackPercent > 0 && (
+              <div className="flex items-start gap-3 bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                <div className="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center shrink-0">
+                  <Zap className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <div className="font-semibold text-emerald-800 text-sm">
+                    Кешбек {(product as any).cashbackPercent}% з цього товару
+                  </div>
+                  <div className="text-emerald-700 text-xs mt-0.5">
+                    Після завершення замовлення на ваш рахунок буде зараховано{' '}
+                    <span className="font-bold">
+                      {variant ? Math.round((variant.priceFinal ?? variant.price) * (product as any).cashbackPercent / 100) : '?'} ₴
+                    </span>
+                    . Накопичений кешбек можна витратити на наступні покупки.{' '}
+                    <a href="/cashback" className="underline hover:text-emerald-900">Докладніше</a>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
