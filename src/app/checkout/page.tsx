@@ -89,6 +89,10 @@ export default function CheckoutPage() {
     comment: '',
   });
 
+  // Courier zone state (only Kyiv / Kyiv region)
+  const [courierZone, setCourierZone] = useState<'kyiv' | 'region' | ''>('');
+  const [courierSettlement, setCourierSettlement] = useState('');
+
   // Nova Poshta autocomplete state
   const [npCityQuery, setNpCityQuery] = useState('');
   const [npCitySuggestions, setNpCitySuggestions] = useState<Array<{Present: string; Ref: string; DeliveryCity: string}>>([]);
@@ -132,10 +136,8 @@ export default function CheckoutPage() {
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const deliveryPrice = DELIVERY_METHODS.find(m => m.id === selectedDelivery)?.price || 0;
-  const isKyiv = formData.city.toLowerCase().includes('київ') || formData.city.toLowerCase().includes('kyiv');
-  const courierMethod = DELIVERY_METHODS.find(m => m.id === 'nova-poshta-courier') as typeof DELIVERY_METHODS[0] & { priceRegion?: number };
-  const actualDeliveryPrice = selectedDelivery === 'nova-poshta-courier' && !isKyiv && courierMethod?.priceRegion
-    ? courierMethod.priceRegion
+  const actualDeliveryPrice = selectedDelivery === 'nova-poshta-courier'
+    ? (courierZone === 'region' ? 200 : 100)
     : deliveryPrice;
   const discount = promoApplied
     ? promoApplied.type === 'percent'
@@ -210,7 +212,8 @@ export default function CheckoutPage() {
         return formData.firstName && formData.lastName && formData.phone;
       case 'delivery':
         if (selectedDelivery === 'nova-poshta') return !!(formData.city && formData.address);
-        if (selectedDelivery === 'nova-poshta-courier') return !!(formData.city && formData.address);
+        if (selectedDelivery === 'nova-poshta-courier')
+          return courierZone !== '' && !!formData.address && (courierZone !== 'region' || !!courierSettlement);
         return !!(selectedDelivery && formData.city);
       case 'payment':
         return selectedPayment;
@@ -501,7 +504,8 @@ export default function CheckoutPage() {
                     Детальніше про доставку та оплату <ChevronRight className="w-4 h-4" />
                   </Link>
 
-                  {/* NP City autocomplete */}
+                  {/* NP City autocomplete — only for Нова Пошта відділення */}
+                  {selectedDelivery !== 'nova-poshta-courier' && (
                   <div className="relative">
                     <label className="block text-sm font-medium text-stone-700 mb-2">
                       Місто *
@@ -549,6 +553,7 @@ export default function CheckoutPage() {
                       </div>
                     )}
                   </div>
+                  )}
 
                   {/* Warehouse selector for відділення */}
                   {selectedDelivery === 'nova-poshta' && npCityRef && (
@@ -600,20 +605,75 @@ export default function CheckoutPage() {
                     </div>
                   )}
 
-                  {/* Manual address for courier */}
-                  {selectedDelivery === 'nova-poshta-courier' && npCityRef && (
-                    <div>
-                      <label className="block text-sm font-medium text-stone-700 mb-2">
-                        Адреса доставки
-                      </label>
-                      <input
-                        type="text"
-                        name="address"
-                        value={formData.address}
-                        onChange={handleInputChange}
-                        placeholder="вул. Назва, номер будинку, кв."
-                        className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
-                      />
+                  {/* Courier zone + address */}
+                  {selectedDelivery === 'nova-poshta-courier' && (
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-stone-700 mb-2">Зона доставки *</label>
+                        <div className="grid grid-cols-2 gap-3">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setCourierZone('kyiv');
+                              setCourierSettlement('');
+                              setFormData(prev => ({ ...prev, city: 'Київ' }));
+                            }}
+                            className={`flex items-center justify-between px-4 py-3 border-2 rounded-xl transition-all ${
+                              courierZone === 'kyiv'
+                                ? 'border-sky-500 bg-sky-50 text-sky-900'
+                                : 'border-stone-200 bg-white text-stone-700 hover:border-stone-400'
+                            }`}
+                          >
+                            <span className="font-medium">Київ</span>
+                            <span className="text-sm font-semibold">100 ₴</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setCourierZone('region');
+                              setFormData(prev => ({ ...prev, city: '' }));
+                            }}
+                            className={`flex items-center justify-between px-4 py-3 border-2 rounded-xl transition-all ${
+                              courierZone === 'region'
+                                ? 'border-sky-500 bg-sky-50 text-sky-900'
+                                : 'border-stone-200 bg-white text-stone-700 hover:border-stone-400'
+                            }`}
+                          >
+                            <span className="font-medium">Київська обл.</span>
+                            <span className="text-sm font-semibold">200 ₴</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {courierZone === 'region' && (
+                        <div>
+                          <label className="block text-sm font-medium text-stone-700 mb-2">Населений пункт *</label>
+                          <input
+                            type="text"
+                            value={courierSettlement}
+                            onChange={(e) => {
+                              setCourierSettlement(e.target.value);
+                              setFormData(prev => ({ ...prev, city: e.target.value + ', Київська область' }));
+                            }}
+                            placeholder="с. Бровари / м. Бориспіль..."
+                            className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+                          />
+                        </div>
+                      )}
+
+                      {courierZone !== '' && (
+                        <div>
+                          <label className="block text-sm font-medium text-stone-700 mb-2">Вулиця, будинок, квартира *</label>
+                          <input
+                            type="text"
+                            name="address"
+                            value={formData.address}
+                            onChange={handleInputChange}
+                            placeholder="вул. Хрещатик, 1, кв. 5"
+                            className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+                          />
+                        </div>
+                      )}
                     </div>
                   )}
 
