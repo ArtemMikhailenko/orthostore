@@ -169,16 +169,20 @@ const CARDS_PER_PAGE = 4;
 export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
   /* ── API data ── */
   const [apiSlides, setApiSlides] = useState<PromoSlideApi[] | null>(null);
+  const [apiGridSlides, setApiGridSlides] = useState<PromoSlideApi[] | null>(null);
   const [pageContent, setPageContent] = useState<PromotionsPageContent>({});
 
   useEffect(() => {
-    http<PromoSlideApi[]>('/promo-slides')
+    http<PromoSlideApi[]>('/promo-slides?slot=slider')
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) setApiSlides(data);
       })
-      .catch(() => {
-        // silently fall back to hardcoded data
-      });
+      .catch(() => {});
+    http<PromoSlideApi[]>('/promo-slides?slot=grid')
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) setApiGridSlides(data);
+      })
+      .catch(() => {});
     http<PromotionsPageContent>('/pages/promotions-section')
       .then((data) => setPageContent(data ?? {}))
       .catch(() => {});
@@ -189,7 +193,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
 
   const heroSlides: HeroSlide[] = useMemo(() => {
     if (!apiSlides) return fallbackHeroSlides;
-    const mapped = apiSlides.map((s) => ({
+    return apiSlides.slice(0, 5).map((s) => ({
       id: s._id,
       title: s.title,
       description: s.description || '',
@@ -201,16 +205,11 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
       imageUrl: s.imageUrl,
       linkUrl: s.linkUrl,
     }));
-    const ids = pageContent.sliderIds;
-    if (ids && ids.length > 0) {
-      return ids.map((id) => mapped.find((s) => s.id === id)).filter(Boolean) as HeroSlide[];
-    }
-    return mapped;
-  }, [apiSlides, pageContent]);
+  }, [apiSlides]);
 
   const allProducts: CardProduct[] = useMemo(() => {
-    if (!apiSlides) return fallbackProducts;
-    const mapped = apiSlides.map((s) => ({
+    if (!apiGridSlides) return fallbackProducts;
+    return apiGridSlides.map((s) => ({
       id: s._id,
       title: s.title,
       price: s.price || '',
@@ -220,12 +219,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
       imageUrl: s.imageUrl,
       linkUrl: s.linkUrl,
     }));
-    const ids = pageContent.gridIds;
-    if (ids && ids.length > 0) {
-      return ids.map((id) => mapped.find((p) => p.id === id)).filter(Boolean) as CardProduct[];
-    }
-    return mapped;
-  }, [apiSlides, pageContent]);
+  }, [apiGridSlides]);
 
   /* ── Hero slider state ── */
   const [currentIndex, setCurrentIndex] = useState(0);

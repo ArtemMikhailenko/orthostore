@@ -7,6 +7,7 @@ const nextConfig = {
         { protocol: 'https', hostname: 'backend-dentistry.onrender.com' },
         { protocol: 'https', hostname: 'images.unsplash.com' },
         { protocol: 'https', hostname: 'orthostore.com.ua' },
+        { protocol: 'https', hostname: 'placehold.co' },
       ],
     },
   };
