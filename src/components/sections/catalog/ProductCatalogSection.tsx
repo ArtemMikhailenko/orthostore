@@ -1,30 +1,45 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { ArrowRight, Quote, Star, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
+import { http } from '@/lib/api/client';
 
 interface AboutExpertiseSectionProps {
   className?: string;
 }
 
-const testimonials = [
+type Testimonial = {
+  id: number;
+  doctorName: string;
+  doctorPosition: string;
+  doctorClinic: string;
+  doctorDescription: string;
+  doctorImage: string;
+  clinicName: string;
+  clinicLocation: string;
+  clinicPhone: string;
+  clinicDescription: string;
+  clinicServices: string[];
+  clinicImage: string;
+};
+
+const defaultTestimonials: Testimonial[] = [
   {
     id: 1,
-    // Left side - ORTHOSTORE recommends doctors
-    doctorName: "Др. Олена Кравченко",
-    doctorPosition: "Головний лікар, ортодонт",
-    doctorClinic: "Smile Clinic, Київ",
+    doctorName: "Владислава",
+    doctorPosition: "Засновниця клініки, ортодонт",
+    doctorClinic: "Ортодонтична клініка, Дрогобич",
     doctorDescription: "Працюємо з ORTHOSTORE більше 5 років. Завжди якісна продукція, швидка доставка та професійна підтримка. Рекомендуємо як надійного партнера.",
-    doctorImage: "1",
-    
-    // Right side - Recommended for patients
-    clinicName: "Smile Clinic",
-    clinicLocation: "вул. Хрещатик, 25, Київ",
-    clinicDescription: "Сучасна стоматологічна клініка з повним циклом ортодонтичного лікування. Використовують найсучасніше обладнання та матеріали.",
-    clinicServices: ["Брекет-системи", "Елайнери", "Дитяча ортодонтія"],
-    clinicImage: "1"
+    doctorImage: "/images/doctors/doctors.jpeg",
+    clinicName: "Ортодонтична клініка",
+    clinicLocation: "вул. Данила Галицького, 5/1, Дрогобич, 82200",
+    clinicPhone: "+38 (096) 632 62 64",
+    clinicDescription: "Ми пропонуємо індивідуальний підхід до кожного пацієнта, використовуємо сучасні технології та матеріали. Спеціалізуємося на лікуванні дітей та дорослих, встановленні брекет-систем, ретенційних апаратів та коригуванні прикусу за допомогою невидимих брекетів.",
+    clinicServices: ["Брекет-системи", "Невидимі брекети", "Дитяча ортодонтія"],
+    clinicImage: "/images/doctors/likarnya.jpeg"
   },
   {
     id: 2,
@@ -32,13 +47,13 @@ const testimonials = [
     doctorPosition: "Ортодонт-практик",
     doctorClinic: "DentPro, Львів",
     doctorDescription: "ORTHOSTORE - це гарантія якості. Замовляю у них всі матеріали для своєї практики. Особливо вражає асортимент преміум-брендів.",
-    doctorImage: "2",
-    
+    doctorImage: "",
     clinicName: "DentPro",
     clinicLocation: "пр. Свободи, 12, Львів",
+    clinicPhone: "",
     clinicDescription: "Клініка європейського рівня з фокусом на естетичній стоматології та ортодонтії. Індивідуальний підхід до кожного пацієнта.",
     clinicServices: ["Естетична ортодонтія", "Invisalign", "3D-діагностика"],
-    clinicImage: "2"
+    clinicImage: ""
   },
   {
     id: 3,
@@ -46,13 +61,13 @@ const testimonials = [
     doctorPosition: "Стоматолог-ортодонт",
     doctorClinic: "Perfect Smile, Одеса",
     doctorDescription: "Співпраця з ORTHOSTORE дозволила нам вийти на новий рівень обслуговування. Завжди актуальні новинки ринку та конкурентні ціни.",
-    doctorImage: "3",
-    
+    doctorImage: "",
     clinicName: "Perfect Smile",
     clinicLocation: "Дерибасівська, 8, Одеса",
+    clinicPhone: "",
     clinicDescription: "Провідний центр ортодонтичного лікування на півдні України. Застосовуємо інноваційні методики та сучасні технології.",
     clinicServices: ["Лінгвальні брекети", "Швидка ортодонтія", "Консультації онлайн"],
-    clinicImage: "3"
+    clinicImage: ""
   }
 ];
 
@@ -85,6 +100,17 @@ const expertise = [
 export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps) {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [direction, setDirection] = useState(0);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(defaultTestimonials);
+
+  useEffect(() => {
+    http<{ testimonials?: Testimonial[] }>('/pages/homepage-doctors')
+      .then((data) => {
+        if (Array.isArray(data?.testimonials) && data.testimonials.length > 0) {
+          setTestimonials(data.testimonials);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const nextTestimonial = () => {
     setDirection(1);
@@ -217,14 +243,25 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
                 >
                   {/* Doctor Photo */}
                   <div className="aspect-video border-2 border-stone-200 bg-stone-50 flex items-center justify-center relative overflow-hidden mb-3 rounded-lg">
-                    <div className="absolute inset-0 bg-gradient-to-br from-stone-100 to-stone-200"></div>
-                    <div className="relative z-10 text-center">
-                      <div className="w-16 h-16 border-2 border-stone-900 bg-white mx-auto flex items-center justify-center rounded-lg">
-                        <span className="text-xl font-bold text-stone-900">
-                          {currentTestimonial.doctorName.split(' ')[1]?.[0] || 'О'}
-                        </span>
-                      </div>
-                    </div>
+                    {currentTestimonial.doctorImage ? (
+                      <Image
+                        src={currentTestimonial.doctorImage}
+                        alt={currentTestimonial.doctorName}
+                        fill
+                        className="object-cover object-top"
+                      />
+                    ) : (
+                      <>
+                        <div className="absolute inset-0 bg-gradient-to-br from-stone-100 to-stone-200"></div>
+                        <div className="relative z-10 text-center">
+                          <div className="w-16 h-16 border-2 border-stone-900 bg-white mx-auto flex items-center justify-center rounded-lg">
+                            <span className="text-xl font-bold text-stone-900">
+                              {currentTestimonial.doctorName.split(' ')[1]?.[0] || currentTestimonial.doctorName[0] || 'О'}
+                            </span>
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
 
                   {/* Doctor Info */}
@@ -327,15 +364,22 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
                 >
                   {/* Clinic Photo */}
                   <div className="aspect-video border-2 border-stone-900 bg-stone-900 flex items-center justify-center relative overflow-hidden mb-3 rounded-lg">
-                    <div className="absolute inset-0 bg-gradient-to-br from-stone-800 to-stone-900"></div>
-                    <div className="relative z-10 text-center text-white">
-                      <div className="text-xl font-light mb-1">
-                        {currentTestimonial.clinicName}
-                      </div>
-                      <div className="text-xs text-stone-400">
-                        Стоматологічна клініка
-                      </div>
-                    </div>
+                    {currentTestimonial.clinicImage ? (
+                      <Image
+                        src={currentTestimonial.clinicImage}
+                        alt={currentTestimonial.clinicName}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <>
+                        <div className="absolute inset-0 bg-gradient-to-br from-stone-800 to-stone-900"></div>
+                        <div className="relative z-10 text-center text-white">
+                          <div className="text-xl font-light mb-1">{currentTestimonial.clinicName}</div>
+                          <div className="text-xs text-stone-400">Стоматологічна клініка</div>
+                        </div>
+                      </>
+                    )}
                   </div>
 
                   {/* Clinic Info */}
@@ -348,6 +392,13 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
                         <MapPin className="w-4 h-4 flex-shrink-0" />
                         <span>{currentTestimonial.clinicLocation}</span>
                       </p>
+                      {currentTestimonial.clinicPhone && (
+                        <p className="text-stone-600 text-sm mt-1">
+                          <a href={`tel:${currentTestimonial.clinicPhone.replace(/\s/g, '')}`} className="hover:text-stone-900 transition-colors">
+                            {currentTestimonial.clinicPhone}
+                          </a>
+                        </p>
+                      )}
                     </div>
 
                     <div className="w-8 h-px bg-stone-300"></div>

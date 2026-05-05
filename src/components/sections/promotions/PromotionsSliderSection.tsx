@@ -235,7 +235,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
         </motion.div>
 
         {/* ─── Hero Slider ─── */}
-        <div className="relative mb-8">
+        {heroSlides.length > 0 && currentProduct && <div className="relative mb-8">
           <div className="grid lg:grid-cols-2 gap-6 items-center">
 
             {/* Left: Animated image */}
@@ -420,7 +420,7 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
               </motion.div>
             </motion.button>
           </div>
-        </div>
+        </div>}
 
         {/* ─── Independent Card Section ─── */}
         <div className="mt-4">
