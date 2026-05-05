@@ -22,7 +22,7 @@ export default function TermsPage() {
       <section className="bg-stone-50 border-b-2 border-stone-200">
         <div className="max-w-4xl mx-auto px-6 py-16 lg:py-24">
           <div className="text-center space-y-6">
-            <div className="inline-flex items-center gap-2 bg-white border-2 border-stone-200 px-4 py-2 text-sm rounded-full">
+            <div className="inline-flex items-center gap-2 bg-white border-2 border-stone-400 px-4 py-2 text-sm rounded-full">
               <Scale className="w-4 h-4" />
               <span>Юридичний документ</span>
             </div>
@@ -41,7 +41,7 @@ export default function TermsPage() {
                 <Download className="w-5 h-5" />
                 Завантажити PDF
               </button>
-              <button className="inline-flex items-center gap-2 bg-white text-stone-900 px-6 py-3 border-2 border-stone-200 hover:border-stone-900 transition-colors rounded-xl">
+              <button className="inline-flex items-center gap-2 bg-white text-stone-900 px-6 py-3 border-2 border-stone-200 hover:border-stone-900 hover:bg-stone-900 hover:text-white transition-colors rounded-xl">
                 <FileText className="w-5 h-5" />
                 Версія для друку
               </button>

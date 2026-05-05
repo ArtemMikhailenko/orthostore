@@ -226,8 +226,8 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
               </p>
             </div>
 
-            {/* Doctor Card - with fixed height */}
-            <div className="p-4 flex-1 flex flex-col min-h-[260px]">
+            {/* Doctor Card - full bleed photo with gradient overlay */}
+            <div className="flex-1 flex flex-col min-h-[340px] relative overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeTestimonial}
@@ -239,10 +239,10 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
                     duration: 0.3,
                     ease: "easeInOut"
                   }}
-                  className="flex-1 flex flex-col"
+                  className="flex-1 flex flex-col relative"
                 >
-                  {/* Doctor Photo */}
-                  <div className="aspect-video border-2 border-stone-200 bg-stone-50 flex items-center justify-center relative overflow-hidden mb-3 rounded-lg">
+                  {/* Full-bleed background photo */}
+                  <div className="absolute inset-0">
                     {currentTestimonial.doctorImage ? (
                       <Image
                         src={currentTestimonial.doctorImage}
@@ -251,45 +251,30 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
                         className="object-cover object-center"
                       />
                     ) : (
-                      <>
-                        <div className="absolute inset-0 bg-gradient-to-br from-stone-100 to-stone-200"></div>
-                        <div className="relative z-10 text-center">
-                          <div className="w-16 h-16 border-2 border-stone-900 bg-white mx-auto flex items-center justify-center rounded-lg">
-                            <span className="text-xl font-bold text-stone-900">
-                              {currentTestimonial.doctorName.split(' ')[1]?.[0] || currentTestimonial.doctorName[0] || 'О'}
-                            </span>
-                          </div>
-                        </div>
-                      </>
+                      <div className="absolute inset-0 bg-stone-200 flex items-center justify-center">
+                        <span className="text-5xl font-bold text-stone-400">
+                          {currentTestimonial.doctorName[0] || 'О'}
+                        </span>
+                      </div>
                     )}
+                    {/* Gradient overlay: transparent top → dark bottom */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-900/60 to-transparent" />
                   </div>
 
-                  {/* Doctor Info */}
-                  <div className="space-y-2 flex-1">
-                    <div>
-                      <h4 className="text-lg font-medium text-stone-900 mb-1">
-                        {currentTestimonial.doctorName}
-                      </h4>
-                      <p className="text-stone-600 text-sm">
-                        {currentTestimonial.doctorPosition}
-                      </p>
-                      <p className="text-stone-500 text-xs mt-1">
-                        {currentTestimonial.doctorClinic}
-                      </p>
-                    </div>
-
-                    <div className="w-8 h-px bg-stone-300"></div>
-
-                    <p className="text-stone-700 leading-relaxed text-sm">
-                      {currentTestimonial.doctorDescription}
-                    </p>
+                  {/* Text over gradient at bottom */}
+                  <div className="relative mt-auto pt-5 px-5 pb-14 text-white">
+                    <h4 className="text-xl font-medium">{currentTestimonial.doctorName}</h4>
+                    <p className="text-stone-300 text-sm mt-0.5">{currentTestimonial.doctorPosition}</p>
+                    <p className="text-stone-400 text-xs mt-0.5">{currentTestimonial.doctorClinic}</p>
+                    <div className="w-8 h-px bg-stone-500 my-3" />
+                    <p className="text-stone-200 text-sm leading-relaxed">{currentTestimonial.doctorDescription}</p>
                   </div>
                 </motion.div>
               </AnimatePresence>
 
-              {/* Navigation */}
-              <div className="flex items-center justify-between pt-4 mt-auto border-t-2 border-stone-200">
-                <div className="flex gap-2">
+              {/* Navigation - absolute over photo */}
+              <div className="absolute bottom-0 left-0 right-0 px-5 pb-4 flex items-center justify-between pointer-events-none">
+                <div className="flex gap-2 pointer-events-auto">
                   {testimonials.map((_, index) => (
                     <button
                       key={index}
@@ -300,20 +285,20 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
                       className={cn(
                         'h-1 transition-all duration-300 rounded-full',
                         activeTestimonial === index 
-                          ? 'w-8 bg-stone-900' 
-                          : 'w-1 bg-stone-300 hover:bg-stone-500'
+                          ? 'w-8 bg-white' 
+                          : 'w-1 bg-white/40 hover:bg-white/70'
                       )}
                       aria-label={`Перейти до лікаря ${index + 1}`}
                     />
                   ))}
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 pointer-events-auto">
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={prevTestimonial}
-                    className="w-8 h-8 border-2 border-stone-900 flex items-center justify-center hover:bg-stone-900 hover:text-white hover:border-sky-400 hover:shadow-[0_0_20px_rgba(56,189,248,0.7),0_0_40px_rgba(56,189,248,0.35)] hover:ring-[3px] hover:ring-sky-400/60 transition-all rounded-lg"
+                    className="w-8 h-8 border-2 border-white/50 text-white flex items-center justify-center hover:bg-white hover:text-stone-900 transition-all rounded-lg"
                     aria-label="Попередній"
                   >
                     <ChevronLeft className="w-4 h-4" />
@@ -322,7 +307,7 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={nextTestimonial}
-                    className="w-8 h-8 border-2 border-stone-900 flex items-center justify-center hover:bg-stone-900 hover:text-white hover:border-sky-400 hover:shadow-[0_0_20px_rgba(56,189,248,0.7),0_0_40px_rgba(56,189,248,0.35)] hover:ring-[3px] hover:ring-sky-400/60 transition-all rounded-lg"
+                    className="w-8 h-8 border-2 border-white/50 text-white flex items-center justify-center hover:bg-white hover:text-stone-900 transition-all rounded-lg"
                     aria-label="Наступний"
                   >
                     <ChevronRight className="w-4 h-4" />
