@@ -122,8 +122,8 @@ export function AIChatWidget() {
         onClick={toggleMenu}
         className={cn(
           'fixed bottom-6 right-6 z-50 w-14 h-14 rounded-2xl shadow-xl transition-all duration-300',
-          'bg-stone-900 text-white',
-          'hover:scale-110 active:scale-95 flex items-center justify-center overflow-hidden',
+          'bg-stone-900 text-white border-2 border-stone-700',
+          'hover:scale-110 hover:border-sky-400 hover:ring-[3px] hover:ring-sky-400/50 hover:shadow-[0_0_20px_rgba(56,189,248,0.7),0_0_40px_rgba(56,189,248,0.35)] active:scale-95 flex items-center justify-center overflow-hidden',
           (isMenuOpen || showChat) && 'scale-0'
         )}
         aria-label="Контакти"
