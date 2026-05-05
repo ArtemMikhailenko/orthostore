@@ -155,7 +155,7 @@ export default function TermsPage() {
               <span className="text-4xl font-light text-stone-300">03</span>
               <h2 className="text-3xl font-light">Предмет договору</h2>
             </div>
-            <div className="p-6 border-2 border-stone-200 bg-stone-50 mb-6">
+            <div className="p-6 border-2 border-stone-200 bg-stone-50 mb-6 rounded-xl">
               <p className="text-sm text-stone-700">
                 Продавець зобов'язується передати у власність Покупця Товари, а Покупець — прийняти та оплатити їх згідно з умовами договору.
               </p>
@@ -166,7 +166,7 @@ export default function TermsPage() {
               <p><span className="font-medium">3.4.</span> В замовленні Покупець обов'язково зазначає наступні дані: 1) прізвище, ім'я та по-батькові; 2) контактні дані: е-мейл та номер телефону; 3) адреса доставки: місто, вулицю та номер будинку; 4) найменування товару, розміри та кількість.</p>
               <p><span className="font-medium">3.5.</span> Обробка замовлення відбувається протягом 1 (одного) робочого дня згідно графіку роботи Продавця. Після обробки замовлення і з метою уточнення замовлення оператор Продавця зв'язується з Покупцем за даними, які Покупець вказав при оформленні замовлення.</p>
               
-              <div className="p-4 border-2 border-stone-300 bg-stone-50 my-4">
+              <div className="p-4 border-2 border-stone-300 bg-stone-50 my-4 rounded-xl">
                 <p className="font-medium text-stone-900 mb-2">Важливо:</p>
                 <p className="text-sm">Замовлення вважається прийнятим Продавцем у випадку отримання SMS-повідомлення від Продавця на номер телефону або е-мейл, що зазначені покупцем при замовленні. В такому повідомленні буде вказано номер замовлення.</p>
               </div>
@@ -195,7 +195,7 @@ export default function TermsPage() {
               <p><span className="font-medium">4.1.</span> Вартість Товару вказується Продавцем в національній валюті (гривні, UAH) з урахуванням ПДВ та без вартості доставки. Ціни, вказані на сайті на момент оформлення замовлення, є остаточними для такого замовлення.</p>
               
               <div className="grid md:grid-cols-2 gap-4 my-6">
-                <div className="p-4 border-2 border-stone-200">
+                <div className="p-4 border-2 border-stone-200 rounded-xl">
                   <div className="font-medium mb-2">Способи оплати:</div>
                   <ul className="space-y-1 text-sm">
                     <li>• Безготівковий розрахунок</li>
@@ -203,7 +203,7 @@ export default function TermsPage() {
                     <li>• Банківський переказ</li>
                   </ul>
                 </div>
-                <div className="p-4 border-2 border-stone-200">
+                <div className="p-4 border-2 border-stone-200 rounded-xl">
                   <div className="font-medium mb-2">Термін оплати:</div>
                   <p className="text-sm">До 3 банківських днів від дати виставлення рахунку</p>
                 </div>
@@ -211,11 +211,11 @@ export default function TermsPage() {
 
               <p><span className="font-medium">4.4.</span> Оплата може здійснюватися одним із способів: 1) безготівково шляхом перерахування коштів на банківський рахунок Продавця протягом трьох банківських днів від дати виставлення рахунку Продавцем; 2) оплата готівкою при доставці перевізникам (комісію перевізника за грошовий переказ сплачує Покупець).</p>
               
-              <div className="p-6 border-2 border-stone-900 bg-stone-50 my-6">
+              <div className="p-6 border-2 border-stone-900 bg-stone-50 my-6 rounded-xl">
                 <h3 className="font-medium text-lg mb-4">Програма КЕШБЕК</h3>
                 <p className="text-sm mb-3"><span className="font-medium">4.6.</span> Продавець може визначати перелік товарів, під час придбання яких Покупцю нараховується КЕШБЕК у вигляді бонусних балів. Розмір КЕШБЕКУ встановлюється у відсотковому співвідношенні від вартості відповідного товару.</p>
                 <p className="text-sm mb-3">КЕШБЕК нараховується після успішного оформлення та оплати замовлення на 15 день, що слідує за днем отримання Покупцем Товару.</p>
-                <div className="bg-white border-2 border-stone-200 p-4 mt-3">
+                <div className="bg-white border-2 border-stone-200 p-4 mt-3 rounded-xl">
                   <p className="text-xs font-medium mb-2">Приклад нарахування:</p>
                   <p className="text-xs">Продавець визначає 10 товарів з КЕШБЕКОМ 10%. Якщо вартість кожного товару 2000 грн, то загальна сума КЕШБЕКУ: 2000 грн × 10 товарів × 10% = 2000 грн</p>
                 </div>
@@ -236,21 +236,21 @@ export default function TermsPage() {
               <p><span className="font-medium">5.2.</span> Доставка Товару здійснюється у строк від 1 до 7 робочих днів від дня надходження SMS-повідомлення про підтвердження Товару залежно від перевізника, наявності Товару на складі та місцезнаходження Покупця.</p>
               
               <div className="grid md:grid-cols-3 gap-4 my-6">
-                <div className="p-4 border-2 border-stone-200">
+                <div className="p-4 border-2 border-stone-200 rounded-xl">
                   <div className="font-medium mb-2">Самовивіз</div>
                   <p className="text-xs">Зі складу Продавця в робочі години</p>
                 </div>
-                <div className="p-4 border-2 border-stone-200">
+                <div className="p-4 border-2 border-stone-200 rounded-xl">
                   <div className="font-medium mb-2">Нова Пошта</div>
                   <p className="text-xs">По всій Україні</p>
                 </div>
-                <div className="p-4 border-2 border-stone-200">
+                <div className="p-4 border-2 border-stone-200 rounded-xl">
                   <div className="font-medium mb-2">Кур'єр</div>
                   <p className="text-xs">Київ та Київська область</p>
                 </div>
               </div>
 
-              <div className="p-4 border-2 border-stone-300 bg-stone-50 my-4">
+              <div className="p-4 border-2 border-stone-300 bg-stone-50 my-4 rounded-xl">
                 <p className="font-medium mb-2">Умови безкоштовної доставки:</p>
                 <p className="text-xs mb-1">• По Києву: від 2 500 грн</p>
                 <p className="text-xs">• По Україні: від 3 000 грн</p>
@@ -270,7 +270,7 @@ export default function TermsPage() {
             <div className="space-y-4 text-stone-700 leading-relaxed text-sm">
               <p><span className="font-medium">8.1.</span> Обмін або повернення товару здійснюється за попереднім погодженням з Продавцем. Для ініціювання обміну або повернення Покупець подає письмову заяву на e-mail або усну заявку оператору за телефоном із зазначенням номера замовлення та причини повернення.</p>
               
-              <div className="p-6 border-2 border-red-300 bg-red-50 my-6">
+              <div className="p-6 border-2 border-red-300 bg-red-50 my-6 rounded-xl">
                 <h3 className="font-medium text-red-900 mb-3">Підстави для відмови у поверненні:</h3>
                 <ul className="space-y-1 text-xs text-red-900">
                   <li>• Минуло понад 14 календарних днів від дати отримання Товару</li>
@@ -295,7 +295,7 @@ export default function TermsPage() {
               <span className="text-4xl font-light text-stone-300">09</span>
               <h2 className="text-3xl font-light">Конфіденційність та персональні дані</h2>
             </div>
-            <div className="p-6 border-2 border-stone-900 bg-stone-50 mb-6">
+            <div className="p-6 border-2 border-stone-900 bg-stone-50 mb-6 rounded-xl">
               <p className="text-sm">
                 Контролером персональних даних є Продавець. Обробка персональних даних здійснюється відповідно до Закону України «Про захист персональних даних».
               </p>
@@ -305,11 +305,11 @@ export default function TermsPage() {
               <p><span className="font-medium">9.3.</span> Цілі обробки: оформлення та виконання замовлень, здійснення оплати, гарантійне обслуговування, попередження шахрайства, надання доступу до особистого кабінету, інформування про статус замовлення.</p>
               
               <div className="grid md:grid-cols-2 gap-4 my-6">
-                <div className="p-4 border-2 border-stone-200">
+                <div className="p-4 border-2 border-stone-200 rounded-xl">
                   <div className="font-medium mb-2">Строки зберігання</div>
                   <p className="text-xs">Дані зберігаються протягом необхідного для досягнення цілей обробки строку або до отримання вимоги про видалення</p>
                 </div>
-                <div className="p-4 border-2 border-stone-200">
+                <div className="p-4 border-2 border-stone-200 rounded-xl">
                   <div className="font-medium mb-2">Передача третім особам</div>
                   <p className="text-xs">Лише логістичним партнерам, банкам, IT-провайдерам для виконання договору</p>
                 </div>

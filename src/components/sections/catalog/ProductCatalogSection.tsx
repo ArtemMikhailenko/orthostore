@@ -248,7 +248,7 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
                         src={currentTestimonial.doctorImage}
                         alt={currentTestimonial.doctorName}
                         fill
-                        className="object-cover object-top"
+                        className="object-cover object-center"
                       />
                     ) : (
                       <>
