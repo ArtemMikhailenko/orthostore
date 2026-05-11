@@ -26,51 +26,6 @@ type Testimonial = {
   clinicImage: string;
 };
 
-const defaultTestimonials: Testimonial[] = [
-  {
-    id: 1,
-    doctorName: "Владислава",
-    doctorPosition: "Засновниця клініки, ортодонт",
-    doctorClinic: "Ортодонтична клініка, Дрогобич",
-    doctorDescription: "Працюємо з ORTHOSTORE більше 5 років. Завжди якісна продукція, швидка доставка та професійна підтримка. Рекомендуємо як надійного партнера.",
-    doctorImage: "/images/doctors/doctors.jpeg",
-    clinicName: "Ортодонтична клініка",
-    clinicLocation: "вул. Данила Галицького, 5/1, Дрогобич, 82200",
-    clinicPhone: "+38 (096) 632 62 64",
-    clinicDescription: "Ми пропонуємо індивідуальний підхід до кожного пацієнта, використовуємо сучасні технології та матеріали. Спеціалізуємося на лікуванні дітей та дорослих, встановленні брекет-систем, ретенційних апаратів та коригуванні прикусу за допомогою невидимих брекетів.",
-    clinicServices: ["Брекет-системи", "Невидимі брекети", "Дитяча ортодонтія"],
-    clinicImage: "/images/doctors/likarnya.jpeg"
-  },
-  {
-    id: 2,
-    doctorName: "Др. Андрій Петренко",
-    doctorPosition: "Ортодонт-практик",
-    doctorClinic: "DentPro, Львів",
-    doctorDescription: "ORTHOSTORE - це гарантія якості. Замовляю у них всі матеріали для своєї практики. Особливо вражає асортимент преміум-брендів.",
-    doctorImage: "",
-    clinicName: "DentPro",
-    clinicLocation: "пр. Свободи, 12, Львів",
-    clinicPhone: "",
-    clinicDescription: "Клініка європейського рівня з фокусом на естетичній стоматології та ортодонтії. Індивідуальний підхід до кожного пацієнта.",
-    clinicServices: ["Естетична ортодонтія", "Invisalign", "3D-діагностика"],
-    clinicImage: ""
-  },
-  {
-    id: 3,
-    doctorName: "Др. Марія Іваненко",
-    doctorPosition: "Стоматолог-ортодонт",
-    doctorClinic: "Perfect Smile, Одеса",
-    doctorDescription: "Співпраця з ORTHOSTORE дозволила нам вийти на новий рівень обслуговування. Завжди актуальні новинки ринку та конкурентні ціни.",
-    doctorImage: "",
-    clinicName: "Perfect Smile",
-    clinicLocation: "Дерибасівська, 8, Одеса",
-    clinicPhone: "",
-    clinicDescription: "Провідний центр ортодонтичного лікування на півдні України. Застосовуємо інноваційні методики та сучасні технології.",
-    clinicServices: ["Лінгвальні брекети", "Швидка ортодонтія", "Консультації онлайн"],
-    clinicImage: ""
-  }
-];
-
 const achievements = [
   { value: '500+', label: 'Клиник-партнеров' },
   { value: '15', label: 'Лет на рынке' },
@@ -100,12 +55,12 @@ const expertise = [
 export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps) {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [direction, setDirection] = useState(0);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>(defaultTestimonials);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
 
   useEffect(() => {
     http<{ testimonials?: Testimonial[] }>('/pages/homepage-doctors')
       .then((data) => {
-        if (Array.isArray(data?.testimonials) && data.testimonials.length > 0) {
+        if (Array.isArray(data?.testimonials)) {
           setTestimonials(data.testimonials);
         }
       })
@@ -122,7 +77,7 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
     setActiveTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
-  const currentTestimonial = testimonials[activeTestimonial];
+  const currentTestimonial = testimonials[activeTestimonial] ?? null;
 
   const slideVariants = {
     enter: {
@@ -209,7 +164,7 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
         </div> */}
 
         {/* Recommendations Section */}
-        <div className="grid lg:grid-cols-2 gap-8">
+        {currentTestimonial && <div className="grid lg:grid-cols-2 gap-8">
           
           {/* Left: ORTHOSTORE рекомендує - Doctors */}
           <div className="border-2 border-stone-200 bg-white h-full flex flex-col rounded-xl overflow-hidden">
@@ -451,7 +406,7 @@ export function AboutExpertiseSection({ className }: AboutExpertiseSectionProps)
               </div>
             </div>
           </div>
-        </div>
+        </div>}
       </div>
     </section>
   );
