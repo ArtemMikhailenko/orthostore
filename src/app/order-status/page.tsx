@@ -468,14 +468,14 @@ export default function OrderStatusPage() {
               <div className="p-6 space-y-3">
                 <Link
                   href="/catalog"
-                  className="flex items-center justify-between p-3 rounded-xl bg-stone-900 text-white hover:bg-stone-800 transition-colors group"
+                  className="flex items-center justify-between p-3 rounded-xl bg-stone-900 text-white border-2 border-stone-900 hover:bg-white hover:text-stone-900 transition-colors group"
                 >
                   <span className="font-medium">Продовжити покупки</span>
                   <ArrowLeft className="w-4 h-4 rotate-180" />
                 </Link>
                 <Link
                   href="/profile/orders"
-                  className="flex items-center justify-between p-3 rounded-xl bg-stone-900 text-white hover:bg-stone-800 transition-colors group"
+                  className="flex items-center justify-between p-3 rounded-xl bg-stone-900 text-white border-2 border-stone-900 hover:bg-white hover:text-stone-900 transition-colors group"
                 >
                   <span className="font-medium">Всі замовлення</span>
                   <Package className="w-4 h-4" />
