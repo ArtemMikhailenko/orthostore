@@ -24,3 +24,26 @@ body {
 .test-tailwind {
   @apply bg-blue-500 text-white p-4 rounded;
 }
+
+/* Print styles — clean PDF for offer/terms page */
+@media print {
+  header, footer, nav,
+  [data-print="hide"] {
+    display: none !important;
+  }
+  body {
+    font-size: 12pt;
+    color: #000;
+    background: #fff;
+  }
+  a {
+    color: #000;
+    text-decoration: none;
+  }
+  .shadow-sm, .shadow, .shadow-md, .shadow-lg {
+    box-shadow: none !important;
+  }
+  @page {
+    margin: 20mm;
+  }
+}

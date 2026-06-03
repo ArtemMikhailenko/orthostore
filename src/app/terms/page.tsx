@@ -1,3 +1,5 @@
+'use client';
+
 import { FileText, Download, CheckCircle, Scale, Shield, FileCheck } from 'lucide-react';
 
 export default function TermsPage() {
@@ -37,11 +39,11 @@ export default function TermsPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-              <button className="inline-flex items-center gap-2 bg-stone-900 text-white px-6 py-3 border-2 border-stone-900 hover:bg-white hover:text-stone-900 transition-colors rounded-xl">
+              <button onClick={() => window.print()} className="inline-flex items-center gap-2 bg-stone-900 text-white px-6 py-3 border-2 border-stone-900 hover:bg-white hover:text-stone-900 transition-colors rounded-xl">
                 <Download className="w-5 h-5" />
                 Завантажити PDF
               </button>
-              <button className="inline-flex items-center gap-2 bg-white text-stone-900 px-6 py-3 border-2 border-stone-200 hover:border-stone-900 hover:bg-stone-900 hover:text-white transition-colors rounded-xl">
+              <button onClick={() => window.print()} className="inline-flex items-center gap-2 bg-white text-stone-900 px-6 py-3 border-2 border-stone-200 hover:border-stone-900 hover:bg-stone-900 hover:text-white transition-colors rounded-xl">
                 <FileText className="w-5 h-5" />
                 Версія для друку
               </button>
@@ -363,7 +365,7 @@ export default function TermsPage() {
             <a href="/contacts" className="inline-flex items-center gap-2 bg-stone-900 text-white px-6 py-3 border-2 border-stone-900 hover:bg-white hover:text-stone-900 transition-colors rounded-xl">
               Зв'язатись з нами
             </a>
-            <button className="inline-flex items-center gap-2 bg-white text-stone-900 px-6 py-3 border-2 border-stone-200 hover:bg-stone-900 hover:text-white hover:border-stone-900 transition-colors rounded-xl">
+            <button onClick={() => window.print()} className="inline-flex items-center gap-2 bg-white text-stone-900 px-6 py-3 border-2 border-stone-200 hover:bg-stone-900 hover:text-white hover:border-stone-900 transition-colors rounded-xl">
               <Download className="w-5 h-5" />
               Завантажити договір
             </button>
