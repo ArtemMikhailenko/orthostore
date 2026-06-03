@@ -23,7 +23,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/lib/cart-store';
 import { useAuthStore } from '@/lib/auth-store';
-import { apiCreateOrder, apiValidatePromoCode } from '@/lib/api/auth';
+import { apiCreateOrder, apiValidatePromoCode, withAuth } from '@/lib/api/auth';
 import { getClientId } from '@/lib/client-id';
 
 const DELIVERY_METHODS = [
@@ -907,7 +907,7 @@ export default function CheckoutPage() {
                         const clientId = getClientId() || crypto.randomUUID();
                         const idempotencyKey = crypto.randomUUID();
                         const fullName = [formData.firstName, formData.lastName].filter(Boolean).join(' ');
-                        const order = await apiCreateOrder(
+                        const order = await withAuth(() => apiCreateOrder(
                           {
                             phone: formData.phone,
                             clientId,
@@ -926,7 +926,7 @@ export default function CheckoutPage() {
                             cashbackAmountToUse: cashbackDiscount > 0 ? cashbackDiscount : undefined,
                           },
                           idempotencyKey
-                        );
+                        ));
                         // Save order for order-status page
                         try { sessionStorage.setItem('lastOrder', JSON.stringify(order)); } catch {}
                         clearCart();
