@@ -252,8 +252,8 @@ export default function TermsPage() {
 
               <div className="p-4 border-2 border-stone-300 bg-stone-50 my-4 rounded-xl">
                 <p className="font-medium mb-2">Умови безкоштовної доставки:</p>
-                <p className="text-xs mb-1">• По Києву: від 2 500 грн</p>
-                <p className="text-xs">• По Україні: від 3 000 грн</p>
+                <p className="text-xs mb-1">• По Києву: від 3 000 грн</p>
+                <p className="text-xs">• По Україні: від 3 500 грн</p>
               </div>
 
               <p><span className="font-medium">5.10.</span> Право власності та ризик випадкової втрати або пошкодження Товару переходять до Покупця з моменту фактичної передачі Товару Покупцю або його уповноваженому представнику.</p>
