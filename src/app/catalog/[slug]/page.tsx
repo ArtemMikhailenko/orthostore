@@ -361,7 +361,7 @@ function ProductCard({ product, categorySlug }: { product: UiProduct; categorySl
         {/* Quick add */}
         <div className={cn('absolute bottom-0 left-0 right-0 p-4 transition-all duration-500', isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full')}>
           <button
-            onClick={e => { e.preventDefault(); e.stopPropagation(); addItem({ id: product.id, sku: product.sku, name: product.name, price: product.price, imageUrl: product.imageUrl, brand: product.brand }, 1); openCart(); }}
+            onClick={e => { e.preventDefault(); e.stopPropagation(); addItem({ id: product.id, productId: product.id, sku: product.sku, name: product.name, price: product.price, imageUrl: product.imageUrl, brand: product.brand }, 1); openCart(); }}
             className="w-full bg-stone-900 text-white py-2.5 font-medium hover:bg-stone-800 transition-all duration-300 flex items-center justify-center gap-2 rounded-xl"
           >
             <ShoppingCart className="w-4 h-4" />
@@ -487,7 +487,7 @@ function ProductListCard({ product, categorySlug }: { product: UiProduct; catego
             {product.originalPrice && <span className="text-xs text-stone-400 line-through">{product.originalPrice.toLocaleString()} ₴</span>}
           </div>
           <button
-            onClick={(e) => { e.preventDefault(); addItem({ id: product.id, sku: product.sku, name: product.name, price: product.price, imageUrl: product.imageUrl, brand: product.brand }, 1); openCart(); }}
+            onClick={(e) => { e.preventDefault(); addItem({ id: product.id, productId: product.id, sku: product.sku, name: product.name, price: product.price, imageUrl: product.imageUrl, brand: product.brand }, 1); openCart(); }}
             className="flex items-center gap-2 bg-stone-900 text-white px-4 py-2 hover:bg-stone-800 transition-colors text-sm font-medium rounded-xl"
           >
             <ShoppingCart className="w-4 h-4" />

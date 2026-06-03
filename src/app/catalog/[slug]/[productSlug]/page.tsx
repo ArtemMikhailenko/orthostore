@@ -365,6 +365,7 @@ export default function ProductDetailPage() {
     addItem(
       {
         id: `${product._id}-${variant._id || selectedVariant}`,
+        productId: String(product._id),
         sku: variant.sku,
         name: title,
         price,

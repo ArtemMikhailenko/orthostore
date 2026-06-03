@@ -912,7 +912,7 @@ export default function CheckoutPage() {
                             phone: formData.phone,
                             clientId,
                             items: cartItems.map((item) => ({
-                              productId: item.id,
+                              productId: item.productId ?? item.id.split('-')[0],
                               sku: item.sku || item.id,
                               quantity: item.quantity,
                               price: item.price,

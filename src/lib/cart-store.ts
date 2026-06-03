@@ -4,7 +4,8 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
 export type CartItem = {
-  id: string; // product id
+  id: string; // unique key: productId-variantId
+  productId: string; // real MongoDB product _id
   sku: string; // variant SKU (артикул)
   name: string;
   price: number;
