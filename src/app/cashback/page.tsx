@@ -52,7 +52,7 @@ export default function CashbackPage() {
           <div className="space-y-8">
             <div>
               <div className="inline-block bg-stone-900 text-white text-sm px-4 py-1.5 mb-4 rounded-full">
-                шукай товар з написом кешбек
+                шукай товар з написом CASH BACK
               </div>
               <h2 className="text-4xl lg:text-5xl font-light text-stone-900 mb-6 leading-tight">
                 Що таке кешбек та як він працює
