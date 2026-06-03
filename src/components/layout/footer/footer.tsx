@@ -124,7 +124,7 @@ export function FooterSection({ className }: FooterSectionProps) {
                 <span className="text-gray-400 text-sm">ПН-ПТ: 9:00-18:00</span>
               </div>
               <div>
-                <span className="text-gray-400 text-sm">вул. Данила Галицького, 5/1, Дрогобич</span>
+                <span className="text-gray-400 text-sm">м. Київ, вул. Саксаганського, 54/56</span>
               </div>
             </div>
           </div>
