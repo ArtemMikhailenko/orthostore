@@ -19,6 +19,11 @@ import { pickI18n } from "@/snippets/i18n";
 import { useCartStore } from "@/lib/cart-store";
 import { getAccessToken } from "@/lib/api/auth";
 import {
+  addRecentlyViewed,
+  getRecentlyViewed,
+  type RecentProduct,
+} from "@/lib/recently-viewed";
+import {
   ChevronLeft,
   ChevronRight,
   Heart,
@@ -267,6 +272,50 @@ function RelatedCard({
   );
 }
 
+/* ─────── Recently-viewed Card ─────── */
+function RecentCard({ product }: { product: RecentProduct }) {
+  return (
+    <Link
+      href={`/catalog/${product.categorySlug}/${product.slug}`}
+      className="group block bg-white rounded-2xl border border-stone-200/50 hover:border-stone-300 hover:shadow-xl hover:shadow-stone-900/5 transition-all duration-500 overflow-hidden"
+    >
+      <div className="relative aspect-square overflow-hidden">
+        {product.image ? (
+          <Image
+            src={product.image}
+            alt={product.title}
+            fill
+            sizes="(max-width: 768px) 50vw, 25vw"
+            className="object-contain p-4 group-hover:scale-105 transition-transform duration-500"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-stone-100 flex items-center justify-center">
+            <Package className="w-12 h-12 text-stone-300" />
+          </div>
+        )}
+      </div>
+      <div className="p-4 space-y-2">
+        {product.brand && (
+          <p className="text-xs text-stone-500 font-medium">{product.brand}</p>
+        )}
+        <h4 className="text-sm font-semibold text-stone-900 line-clamp-2 leading-tight group-hover:text-stone-700 transition-colors">
+          {product.title}
+        </h4>
+        <div className="flex items-center gap-2">
+          <span className="text-lg font-bold text-stone-900">
+            {product.price.toLocaleString()} ₴
+          </span>
+          {product.originalPrice && (
+            <span className="text-sm text-stone-400 line-through">
+              {product.originalPrice.toLocaleString()} ₴
+            </span>
+          )}
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 /* ════════════════════════════════════════════
    MAIN PAGE
    ════════════════════════════════════════════ */
@@ -297,6 +346,9 @@ export default function ProductDetailPage() {
   const [reviewHover, setReviewHover] = useState(0);
   const [reviewComment, setReviewComment] = useState("");
   const [reviewSubmitted, setReviewSubmitted] = useState(false);
+
+  // Recently viewed products
+  const [recentlyViewed, setRecentlyViewed] = useState<RecentProduct[]>([]);
 
   // Lookup maps
   const manufacturerMap = useMemo(() => {
@@ -350,6 +402,28 @@ export default function ProductDetailPage() {
       ).slice(0, 4),
     [relatedData, productSlug]
   );
+
+  // Record current product into "recently viewed" and load the list (excluding current)
+  useEffect(() => {
+    if (!product) return;
+    addRecentlyViewed({
+      slug: product.slug,
+      categorySlug,
+      title: pickI18n(product.titleI18n as any, "uk") || product.slug,
+      image: product.images?.[0],
+      price: (product as any).priceMinFinal ?? product.priceMin ?? 0,
+      originalPrice:
+        product.priceMin &&
+        (product as any).priceMinFinal &&
+        (product as any).priceMinFinal < product.priceMin
+          ? product.priceMin
+          : undefined,
+      brand: product.manufacturerIds?.[0]
+        ? manufacturerMap.get(product.manufacturerIds[0]) ?? null
+        : null,
+    });
+    setRecentlyViewed(getRecentlyViewed().filter((p) => p.slug !== product.slug));
+  }, [product, categorySlug, manufacturerMap]);
 
   // Copy link
   const handleCopyLink = () => {
@@ -1019,12 +1093,12 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        {/* Related products */}
+        {/* Recommended products */}
         {relatedProducts.length > 0 && (
           <div className="mt-16 mb-12">
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-2xl font-light text-stone-900 tracking-tight">
-                Схожі товари
+                До цього товару рекомендуємо
               </h2>
               <Link
                 href={`/catalog/${categorySlug}`}
@@ -1041,6 +1115,22 @@ export default function ProductDetailPage() {
                   categorySlug={categorySlug}
                   manufacturers={manufacturerMap}
                 />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Recently viewed products */}
+        {recentlyViewed.length > 0 && (
+          <div className="mt-16 mb-12">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-2xl font-light text-stone-900 tracking-tight">
+                Ви переглянули
+              </h2>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {recentlyViewed.slice(0, 4).map((rp) => (
+                <RecentCard key={rp.slug} product={rp} />
               ))}
             </div>
           </div>
