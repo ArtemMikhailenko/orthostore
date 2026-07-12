@@ -161,52 +161,84 @@ function ImageGallery({ images, name }: { images: string[]; name: string }) {
   );
 }
 
-/* ─────── Variant Selector ─────── */
-function VariantSelector({
+/* ─────── Option-group Selector (separate selector per option, like before) ─────── */
+function OptionGroupsSelector({
   variants,
-  selected,
+  selectedIndex,
   onSelect,
-  manufacturers,
-  countries,
 }: {
   variants: ProductVariantWithDiscounts[];
-  selected: number;
+  selectedIndex: number;
   onSelect: (i: number) => void;
-  manufacturers: Map<string, string>;
-  countries: Map<string, string>;
 }) {
-  if (variants.length <= 1) return null;
+  const active = useMemo(
+    () => variants.filter((v) => v.isActive),
+    [variants]
+  );
+
+  // Derive option groups (name → distinct values) from the variants
+  const groups = useMemo(() => {
+    const map = new Map<string, string[]>();
+    for (const v of active) {
+      for (const [k, val] of Object.entries(v.options || {})) {
+        const arr = map.get(k) ?? [];
+        const s = String(val);
+        if (!arr.includes(s)) arr.push(s);
+        map.set(k, arr);
+      }
+    }
+    return Array.from(map.entries()).map(([name, values]) => ({ name, values }));
+  }, [active]);
+
+  if (groups.length === 0) return null;
+
+  const current = variants[selectedIndex]?.options || {};
+
+  // Pick the variant matching the chosen value, keeping other selections where possible
+  const pick = (group: string, value: string) => {
+    const candidates = active.filter(
+      (v) => String(v.options?.[group]) === value
+    );
+    const best =
+      candidates.find((v) =>
+        Object.entries(current).every(
+          ([k, val]) => k === group || String(v.options?.[k]) === String(val)
+        )
+      ) || candidates[0];
+    if (best) {
+      const idx = variants.indexOf(best);
+      if (idx >= 0) onSelect(idx);
+    }
+  };
 
   return (
-    <div className="space-y-3">
-      <h3 className="text-sm font-medium text-stone-900 uppercase tracking-wider">
-        Варіант
-      </h3>
-      <div className="flex flex-wrap gap-2">
-        {variants.filter(v => v.isActive).map((v, i) => {
-          const brand = v.manufacturerId ? manufacturers.get(v.manufacturerId) : null;
-          const optionStr = v.options
-            ? Object.entries(v.options).map(([k, val]) => `${val}`).join(" · ")
-            : null;
-          const label = optionStr || v.sku;
-
-          return (
-            <button
-              key={v._id || i}
-              onClick={() => onSelect(i)}
-              className={cn(
-                "px-4 py-2.5 rounded-xl border text-sm font-medium transition-all duration-200",
-                i === selected
-                  ? "border-stone-900 bg-stone-900 text-white shadow-md"
-                  : "border-stone-300 bg-white text-stone-700 hover:border-stone-500 hover:bg-stone-50"
-              )}
-            >
-              <span>{label}</span>
-              {brand && <span className="text-xs opacity-70 ml-1.5">({brand})</span>}
-            </button>
-          );
-        })}
-      </div>
+    <div className="space-y-5">
+      {groups.map((g) => (
+        <div key={g.name} className="space-y-3">
+          <h3 className="text-sm font-medium text-stone-900 uppercase tracking-wider">
+            {g.name}
+          </h3>
+          <div className="flex flex-wrap gap-2">
+            {g.values.map((val) => {
+              const selected = String(current[g.name] ?? "") === val;
+              return (
+                <button
+                  key={val}
+                  onClick={() => pick(g.name, val)}
+                  className={cn(
+                    "px-4 py-2.5 rounded-xl border text-sm font-medium transition-all duration-200",
+                    selected
+                      ? "border-stone-900 bg-stone-900 text-white shadow-md"
+                      : "border-stone-300 bg-white text-stone-700 hover:border-stone-500 hover:bg-stone-50"
+                  )}
+                >
+                  {val}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
@@ -629,13 +661,11 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            {/* Variant selector */}
-            <VariantSelector
+            {/* Option groups (separate selector per option) */}
+            <OptionGroupsSelector
               variants={product.variants}
-              selected={selectedVariant}
+              selectedIndex={selectedVariant}
               onSelect={setSelectedVariant}
-              manufacturers={manufacturerMap}
-              countries={countryMap}
             />
 
             {/* Price block */}
