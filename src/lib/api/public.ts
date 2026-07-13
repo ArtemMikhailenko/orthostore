@@ -19,6 +19,20 @@ export function getCountries(): Promise<Country[]> {
   return http<Country[]>('/countries');
 }
 
+// Subcategories (backend returns all; filter by categoryId on the client)
+export type Subcategory = {
+  _id: string;
+  slug: string;
+  categoryId: string;
+  nameI18n: { uk: string; en?: string };
+  sort?: number;
+  isActive?: boolean;
+};
+
+export function getSubcategories(): Promise<Subcategory[]> {
+  return http<Subcategory[]>('/subcategories');
+}
+
 // Manufacturers
 export function getManufacturers(): Promise<Manufacturer[]> {
   return http<Manufacturer[]>('/manufacturers');
@@ -29,6 +43,7 @@ export type GetProductsParams = {
   q?: string;
   qLike?: string;
   category?: string;
+  subcategory?: string;
   manufacturerId?: string | string[];
   countryId?: string | string[];
   tags?: string | string[];

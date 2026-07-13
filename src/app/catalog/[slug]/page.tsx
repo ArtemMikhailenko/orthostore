@@ -1,8 +1,8 @@
 "use client";
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
-import { useProducts, useManufacturers, useCategories, useCountries } from '@/lib/api/hooks';
+import { useProducts, useManufacturers, useCategories, useCountries, useSubcategories } from '@/lib/api/hooks';
 import type { ProductWithDiscounts } from '@/lib/api/public.types';
 import { pickI18n } from '@/snippets/i18n';
 import {
@@ -48,7 +48,7 @@ const SLUG_NAME_MAP: Record<string, string> = {
 };
 import Image from 'next/image';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useCartStore } from '@/lib/cart-store';
 
 /* ─────── UiProduct type ─────── */
@@ -500,9 +500,12 @@ function ProductListCard({ product, categorySlug }: { product: UiProduct; catego
 }
 
 /* ─────── Main Category Products Page ─────── */
-export default function CategoryProductsPage() {
+function CategoryProductsPageInner() {
   const params = useParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const slug = params.slug as string;
+  const subSlug = searchParams.get('sub') || '';
 
   const [filters, setFilters] = useState<CatalogFilters>({});
   const [sortBy, setSortBy] = useState('popular');
@@ -514,6 +517,7 @@ export default function CategoryProductsPage() {
   const { data: categories } = useCategories();
   const { data: manufacturers } = useManufacturers();
   const { data: countries } = useCountries();
+  const { data: allSubcategories } = useSubcategories();
 
   const currentCategory = useMemo(
     () => categories?.find(c => c.slug === slug),
@@ -521,6 +525,29 @@ export default function CategoryProductsPage() {
   );
   const categoryId = currentCategory?._id as string | undefined;
   const categoryName = SLUG_NAME_MAP[slug] || (currentCategory ? pickI18n(currentCategory.nameI18n as any, 'uk') : '') || slug;
+
+  // Subcategories that belong to this category
+  const subcategories = useMemo(
+    () =>
+      (allSubcategories ?? [])
+        .filter(s => s.categoryId === categoryId && s.isActive !== false)
+        .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0)),
+    [allSubcategories, categoryId],
+  );
+  const activeSub = useMemo(
+    () => subcategories.find(s => s.slug === subSlug),
+    [subcategories, subSlug],
+  );
+  const subcategoryId = activeSub?._id;
+
+  // Navigate to a subcategory (or clear it) via the ?sub= query param
+  const selectSub = (nextSlug: string) => {
+    const qp = new URLSearchParams(Array.from(searchParams.entries()));
+    if (nextSlug) qp.set('sub', nextSlug);
+    else qp.delete('sub');
+    const qs = qp.toString();
+    router.push(`/catalog/${slug}${qs ? `?${qs}` : ''}`, { scroll: false });
+  };
 
   const sortParam = useMemo(() => {
     switch (sortBy) {
@@ -537,6 +564,7 @@ export default function CategoryProductsPage() {
     page,
     limit,
     category: categoryId,
+    subcategory: subcategoryId,
     manufacturerId: filters.manufacturerId,
     countryId: filters.countryId,
     priceFrom: filters.priceFrom,
@@ -563,7 +591,7 @@ export default function CategoryProductsPage() {
   const [items, setItems] = useState<ProductWithDiscounts[]>([]);
   const total = data?.total ?? 0;
 
-  useEffect(() => { setPage(1); setItems([]); }, [JSON.stringify(filters), sortBy, categoryId]);
+  useEffect(() => { setPage(1); setItems([]); }, [JSON.stringify(filters), sortBy, categoryId, subcategoryId]);
   useEffect(() => {
     if (data?.items) setItems(prev => (page === 1 ? data.items : [...prev, ...data.items]));
   }, [data, page]);
@@ -643,6 +671,40 @@ export default function CategoryProductsPage() {
               <SmartFilters manufacturers={manufacturers} countries={countries} value={filters} onChange={setFilters} />
             </div>
           </div>
+
+          {/* Subcategory chips */}
+          {subcategories.length > 0 && (
+            <div className="flex items-center gap-2 flex-wrap mt-4">
+              <button
+                onClick={() => selectSub('')}
+                className={cn(
+                  'px-4 py-1.5 rounded-full text-sm font-medium border transition-all duration-200',
+                  !subcategoryId
+                    ? 'border-stone-900 bg-stone-900 text-white shadow-sm'
+                    : 'border-stone-300 bg-white text-stone-600 hover:border-stone-500 hover:text-stone-900'
+                )}
+              >
+                Всі
+              </button>
+              {subcategories.map((sub) => {
+                const selected = sub._id === subcategoryId;
+                return (
+                  <button
+                    key={sub._id}
+                    onClick={() => selectSub(sub.slug)}
+                    className={cn(
+                      'px-4 py-1.5 rounded-full text-sm font-medium border transition-all duration-200',
+                      selected
+                        ? 'border-stone-900 bg-stone-900 text-white shadow-sm'
+                        : 'border-stone-300 bg-white text-stone-600 hover:border-stone-500 hover:text-stone-900'
+                    )}
+                  >
+                    {pickI18n(sub.nameI18n as any, 'uk')}
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
           {/* Active filters */}
           {Object.keys(filters).length > 0 && (
@@ -742,5 +804,13 @@ export default function CategoryProductsPage() {
         }
       `}</style>
     </div>
+  );
+}
+
+export default function CategoryProductsPage() {
+  return (
+    <Suspense fallback={null}>
+      <CategoryProductsPageInner />
+    </Suspense>
   );
 }

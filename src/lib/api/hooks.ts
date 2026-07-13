@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getCategories, getCountries, getManufacturers, getProducts, getProduct, createOrder, getOrderHistory, getGalleryImages, getProductReviews, createProductReview, getPageContent, type GetProductsParams, type GalleryImage, type ProductReview, type CreateReviewDto } from './public';
+import { getCategories, getCountries, getManufacturers, getSubcategories, getProducts, getProduct, createOrder, getOrderHistory, getGalleryImages, getProductReviews, createProductReview, getPageContent, type GetProductsParams, type GalleryImage, type ProductReview, type CreateReviewDto, type Subcategory } from './public';
 import type { Category, Country, Manufacturer, ProductListResponse, ProductWithDiscounts, Order, CreateOrderRequest } from './public.types';
 
 export function useCategories() {
@@ -14,6 +14,10 @@ export function useCountries() {
 
 export function useManufacturers() {
   return useQuery<Manufacturer[]>({ queryKey: ['manufacturers'], queryFn: getManufacturers });
+}
+
+export function useSubcategories() {
+  return useQuery<Subcategory[]>({ queryKey: ['subcategories'], queryFn: getSubcategories });
 }
 
 export function useProducts(params: GetProductsParams = {}) {

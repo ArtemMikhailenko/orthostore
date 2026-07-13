@@ -1,9 +1,11 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import { ArrowRight, Package } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { useCategories, useSubcategories } from "@/lib/api/hooks";
+import { pickI18n } from "@/snippets/i18n";
 
 /* ─── Inline Subcategory Tags (shown inside cards) ─── */
 function SubcategoryTags({ subcategories, parentSlug, variant = "light" }: { 
@@ -31,9 +33,8 @@ function SubcategoryTags({ subcategories, parentSlug, variant = "light" }: {
     <div className="flex flex-wrap gap-1.5 mt-3 max-h-0 opacity-0 group-hover:max-h-40 group-hover:opacity-100 transition-all duration-500 overflow-hidden">
       {subcategories.map((sub, idx) => (
         <Link
-          key={idx}
-          href={`/catalog/${parentSlug}?sub=${sub.name.toLowerCase().replace(/\s+/g, "-")}`}
-          onClick={(e) => e.stopPropagation()}
+          key={sub.slug || idx}
+          href={`/catalog/${parentSlug}?sub=${encodeURIComponent(sub.slug)}`}
           className={cn(
             "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-medium uppercase tracking-wider transition-all duration-300",
             s.tag
@@ -52,6 +53,7 @@ type CardStyle = "photo" | "dark" | "light" | "accent";
 
 type SubCategory = {
   name: string;
+  slug: string;
   count?: number;
 };
 
@@ -79,11 +81,6 @@ const ALL_CATEGORIES: CatItem[] = [
     slug: "brekety", 
     img: catImg("Атачменти - кнопки 1.jpg"), 
     style: "photo",
-    subcategories: [
-      { name: "самолігуючі", count: 28 },
-      { name: "естетичні", count: 32 },
-      { name: "лігатурні", count: 24 },
-    ]
   },
   { 
     name: "МІКРОІМПЛАНТИ", 
@@ -96,10 +93,6 @@ const ALL_CATEGORIES: CatItem[] = [
     slug: "mini-plastyny", 
     img: catImg("Міні пластини.png"), 
     style: "accent",
-    subcategories: [
-      { name: "міні пластини", count: 18 },
-      { name: "щелепно-лицьова хірургія", count: 12 },
-    ]
   },
   { 
     name: "ПРОПИСИ БРЕКЕТІВ", 
@@ -118,13 +111,6 @@ const ALL_CATEGORIES: CatItem[] = [
     slug: "atachments", 
     img: catImg("Атачменти 1.jpg"), 
     style: "dark",
-    subcategories: [
-      { name: "стопори", count: 35 },
-      { name: "кнопки", count: 28 },
-      { name: "накусочні майданчики", count: 15 },
-      { name: "пружини", count: 18 },
-      { name: "металеві лігатури", count: 22 },
-    ]
   },
   { 
     name: "ДУГИ", 
@@ -173,14 +159,6 @@ const ALL_CATEGORIES: CatItem[] = [
     slug: "materialy-tehnikiv", 
     img: catImg("Матеріали Для техників.JPG"), 
     style: "photo",
-    subcategories: [
-      { name: "гвинти", count: 15 },
-      { name: "гвинти MSE", count: 8 },
-      { name: "пластини для ретенційних кап", count: 12 },
-      { name: "пластини для елайнерів", count: 18 },
-      { name: "пластмасса", count: 22 },
-      { name: "відбиткові ложки", count: 10 },
-    ]
   },
   { 
     name: "СЕПАРАЦІЙНІ ІНСТРУМЕНТИ", 
@@ -199,10 +177,6 @@ const ALL_CATEGORIES: CatItem[] = [
     slug: "instrumenty", 
     img: catImg("Інструменти.jpg"), 
     style: "photo",
-    subcategories: [
-      { name: "ORTHOSTORE", count: 45 },
-      { name: "LE MED", count: 38 },
-    ]
   },
 ];
 
@@ -227,101 +201,121 @@ const GRID_AREAS = [
   "col-span-1 row-span-1",   // 16 АКСЕСУАРИ       — 1×1
 ];
 
-/* ─── Photo Card — full image background ─── */
-function PhotoCard({ cat, area }: { cat: CatItem; area: string }) {
-  const isLarge = area.includes("col-span-2") && area.includes("row-span-2");
-  const hasSubcats = cat.subcategories && cat.subcategories.length > 0;
-  return (
-    <Link href={hasSubcats ? '#' : `/catalog/${cat.slug}`} onClick={hasSubcats ? (e: React.MouseEvent) => e.preventDefault() : undefined} className={cn("group relative block rounded-2xl overflow-hidden border border-stone-200 hover:border-sky-400 hover:ring-[3px] hover:ring-sky-400/50 hover:shadow-[0_0_20px_rgba(56,189,248,0.6),0_0_40px_rgba(56,189,248,0.25)] transition-all duration-300", area)}>
-      <Image src={cat.img} alt={cat.name} fill className="object-cover group-hover:scale-105 transition-all duration-700" sizes="(max-width:768px) 100vw, 33vw" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent transition-opacity duration-500" />
-      <div className={cn("relative z-10 flex flex-col justify-end h-full p-5", isLarge && "p-7")}>
-        <h3 className={cn("font-semibold uppercase tracking-wider leading-tight text-white line-clamp-2", isLarge ? "text-2xl" : "text-sm")}>{cat.name}</h3>
-        <div className="flex items-center gap-2 mt-2 text-white/70 group-hover:text-sky-300 transition-colors duration-300">
-          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
-        </div>
-        {hasSubcats && (
-          <SubcategoryTags subcategories={cat.subcategories!} parentSlug={cat.slug} variant="dark" />
-        )}
-      </div>
-    </Link>
-  );
-}
+/* ─── Per-style visual config ─── */
+const CARD_STYLES: Record<CardStyle, { container: string; img: string; overlay: string }> = {
+  photo: {
+    container: "border border-stone-200",
+    img: "",
+    overlay: "bg-gradient-to-t from-black/75 via-black/15 to-transparent",
+  },
+  dark: {
+    container: "bg-stone-900 border border-stone-700",
+    img: "opacity-55 group-hover:opacity-75",
+    overlay: "bg-gradient-to-t from-stone-900/85 via-stone-900/30 to-transparent",
+  },
+  light: {
+    container: "bg-stone-200 border border-stone-300",
+    img: "opacity-60 group-hover:opacity-85",
+    overlay: "bg-gradient-to-t from-stone-900/70 via-stone-900/15 to-transparent",
+  },
+  accent: {
+    container: "bg-stone-900 border border-stone-700",
+    img: "opacity-55 group-hover:opacity-80",
+    overlay:
+      "bg-gradient-to-t from-stone-900/90 via-stone-900/25 to-transparent group-hover:from-stone-900/70 transition-all duration-500",
+  },
+};
 
-/* ─── Dark Card — full image, dark overlay ─── */
-function DarkCard({ cat, area }: { cat: CatItem; area: string }) {
-  const hasSubcats = cat.subcategories && cat.subcategories.length > 0;
-  return (
-    <Link href={hasSubcats ? '#' : `/catalog/${cat.slug}`} onClick={hasSubcats ? (e: React.MouseEvent) => e.preventDefault() : undefined} className={cn("group relative block rounded-2xl overflow-hidden bg-stone-900 border border-stone-700 hover:border-sky-400 hover:ring-[3px] hover:ring-sky-400/50 hover:shadow-[0_0_20px_rgba(56,189,248,0.6),0_0_40px_rgba(56,189,248,0.25)] transition-all duration-300", area)}>
-      <Image src={cat.img} alt={cat.name} fill className="object-cover group-hover:scale-105 transition-all duration-700 opacity-55 group-hover:opacity-75" sizes="(max-width:768px) 100vw, 25vw" />
-      <div className="absolute inset-0 bg-gradient-to-t from-stone-900/85 via-stone-900/30 to-transparent" />
-      <div className="relative z-10 flex flex-col justify-end h-full p-5">
-        <h3 className="font-semibold uppercase tracking-wider leading-tight text-white text-sm line-clamp-2">{cat.name}</h3>
-        <div className="flex items-center gap-2 mt-2 text-white/70 group-hover:text-sky-300 transition-colors duration-300">
-          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
-        </div>
-        {hasSubcats && (
-          <SubcategoryTags subcategories={cat.subcategories!} parentSlug={cat.slug} variant="dark" />
-        )}
-      </div>
-    </Link>
-  );
-}
-
-/* ─── Light Card — full image, soft overlay ─── */
-function LightCard({ cat, area }: { cat: CatItem; area: string }) {
-  const hasSubcats = cat.subcategories && cat.subcategories.length > 0;
-  return (
-    <Link href={hasSubcats ? '#' : `/catalog/${cat.slug}`} onClick={hasSubcats ? (e: React.MouseEvent) => e.preventDefault() : undefined} className={cn("group relative block rounded-2xl overflow-hidden bg-stone-200 border border-stone-300 hover:border-sky-400 hover:ring-[3px] hover:ring-sky-400/50 hover:shadow-[0_0_20px_rgba(56,189,248,0.6),0_0_40px_rgba(56,189,248,0.25)] transition-all duration-300", area)}>
-      <Image src={cat.img} alt={cat.name} fill className="object-cover group-hover:scale-105 transition-all duration-700 opacity-60 group-hover:opacity-85" sizes="(max-width:768px) 100vw, 25vw" />
-      <div className="absolute inset-0 bg-gradient-to-t from-stone-900/70 via-stone-900/15 to-transparent" />
-      <div className="relative z-10 flex flex-col justify-end h-full p-5">
-        <h3 className="font-semibold uppercase tracking-wider leading-tight text-white text-sm line-clamp-2">{cat.name}</h3>
-        <div className="flex items-center gap-2 mt-2 text-white/70 group-hover:text-sky-300 transition-colors duration-300">
-          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
-        </div>
-        {hasSubcats && (
-          <SubcategoryTags subcategories={cat.subcategories!} parentSlug={cat.slug} variant="dark" />
-        )}
-      </div>
-    </Link>
-  );
-}
-
-/* ─── Accent Card — full image, sky-tinted overlay ─── */
-function AccentCard({ cat, area }: { cat: CatItem; area: string }) {
-  const hasSubcats = cat.subcategories && cat.subcategories.length > 0;
-  return (
-    <Link href={hasSubcats ? '#' : `/catalog/${cat.slug}`} onClick={hasSubcats ? (e: React.MouseEvent) => e.preventDefault() : undefined} className={cn("group relative block rounded-2xl overflow-hidden bg-stone-900 border border-stone-700 hover:border-sky-400 hover:ring-[3px] hover:ring-sky-400/50 hover:shadow-[0_0_20px_rgba(56,189,248,0.6),0_0_40px_rgba(56,189,248,0.25)] transition-all duration-300", area)}>
-      <Image src={cat.img} alt={cat.name} fill className="object-cover group-hover:scale-105 transition-all duration-700 opacity-55 group-hover:opacity-80" sizes="(max-width:768px) 100vw, 25vw" />
-      <div className="absolute inset-0 bg-gradient-to-t from-stone-900/90 via-stone-900/25 to-transparent group-hover:from-stone-900/70 transition-all duration-500" />
-      <div className="relative z-10 flex flex-col justify-end h-full p-5">
-        <h3 className="font-semibold uppercase tracking-wider leading-tight text-white text-sm line-clamp-2">{cat.name}</h3>
-        <div className="flex items-center gap-2 mt-2 text-white/70 group-hover:text-sky-300 transition-colors duration-300">
-          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
-        </div>
-        {hasSubcats && (
-          <SubcategoryTags subcategories={cat.subcategories!} parentSlug={cat.slug} variant="dark" />
-        )}
-      </div>
-    </Link>
-  );
-}
-
-/* ─── Route to correct card component ─── */
-function CategoryCard({ cat, index }: { cat: CatItem; index: number }) {
+/* ─── Category card ─── */
+function CategoryCard({
+  cat,
+  index,
+  subcats,
+}: {
+  cat: CatItem;
+  index: number;
+  subcats: SubCategory[];
+}) {
   const area = GRID_AREAS[index] ?? "col-span-1 row-span-1";
-  const props = { cat, area };
-  switch (cat.style) {
-    case "dark":   return <DarkCard {...props} />;
-    case "light":  return <LightCard {...props} />;
-    case "accent": return <AccentCard {...props} />;
-    default:       return <PhotoCard {...props} />;
-  }
+  const isLarge = area.includes("col-span-2") && area.includes("row-span-2");
+  const st = CARD_STYLES[cat.style];
+  const hasSubcats = subcats.length > 0;
+
+  return (
+    <div
+      className={cn(
+        "group relative rounded-2xl overflow-hidden hover:border-sky-400 hover:ring-[3px] hover:ring-sky-400/50 hover:shadow-[0_0_20px_rgba(56,189,248,0.6),0_0_40px_rgba(56,189,248,0.25)] transition-all duration-300",
+        st.container,
+        area
+      )}
+    >
+      <Image
+        src={cat.img}
+        alt={cat.name}
+        fill
+        className={cn("object-cover group-hover:scale-105 transition-all duration-700", st.img)}
+        sizes="(max-width:768px) 100vw, 33vw"
+      />
+      <div className={cn("absolute inset-0", st.overlay)} />
+
+      {/* Full-card link → category */}
+      <Link
+        href={`/catalog/${cat.slug}`}
+        aria-label={cat.name}
+        className="absolute inset-0 z-[1]"
+      />
+
+      {/* Content overlay (click-through, except subcategory tags) */}
+      <div
+        className={cn(
+          "relative z-[2] flex flex-col justify-end h-full p-5 pointer-events-none",
+          isLarge && "p-7"
+        )}
+      >
+        <h3
+          className={cn(
+            "font-semibold uppercase tracking-wider leading-tight text-white line-clamp-2",
+            isLarge ? "text-2xl" : "text-sm"
+          )}
+        >
+          {cat.name}
+        </h3>
+        <div className="flex items-center gap-2 mt-2 text-white/70 group-hover:text-sky-300 transition-colors duration-300">
+          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
+        </div>
+        {hasSubcats && (
+          <div className="pointer-events-auto">
+            <SubcategoryTags subcategories={subcats} parentSlug={cat.slug} variant="dark" />
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 /* ─── Main Catalog Page ─── */
 export default function CatalogPage() {
+  const { data: categories } = useCategories();
+  const { data: subcategories } = useSubcategories();
+
+  // Map category slug → its real subcategories (from the backend)
+  const subcatsByCatSlug = useMemo(() => {
+    const catIdToSlug = new Map<string, string>();
+    (categories ?? []).forEach((c) => catIdToSlug.set(c._id as string, c.slug));
+    const map = new Map<string, SubCategory[]>();
+    (subcategories ?? [])
+      .filter((s) => s.isActive !== false)
+      .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0))
+      .forEach((s) => {
+        const catSlug = catIdToSlug.get(s.categoryId);
+        if (!catSlug) return;
+        const arr = map.get(catSlug) ?? [];
+        arr.push({ name: pickI18n(s.nameI18n as any, "uk"), slug: s.slug });
+        map.set(catSlug, arr);
+      });
+    return map;
+  }, [categories, subcategories]);
+
   return (
     <div className="min-h-screen bg-white">
 
@@ -349,7 +343,12 @@ export default function CatalogPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         <div className="grid grid-cols-2 lg:grid-cols-4 grid-flow-row-dense gap-3 auto-rows-[180px] sm:auto-rows-[200px]">
           {ALL_CATEGORIES.map((cat, i) => (
-            <CategoryCard key={cat.slug} cat={cat} index={i} />
+            <CategoryCard
+              key={cat.slug}
+              cat={cat}
+              index={i}
+              subcats={subcatsByCatSlug.get(cat.slug) ?? []}
+            />
           ))}
         </div>
       </div>
