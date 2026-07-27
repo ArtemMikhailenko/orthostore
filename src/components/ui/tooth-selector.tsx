@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils";
 
 /* FDI (ISO 3950) two-digit tooth numbering, laid out as a dental arch.
    On screen the patient's right is on the viewer's left (dental convention). */
-const UPPER = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28];
-const LOWER = [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38];
+const UPPER = [17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27];
+const LOWER = [47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37];
 
 const TYPE_BY_LAST_DIGIT: Record<string, string> = {
   "1": "Центральний різець",
@@ -73,7 +73,7 @@ function Arch({
       {teeth.map((n, i) => (
         <React.Fragment key={n}>
           {/* midline gap between quadrants */}
-          {i === 8 && <div className="w-1.5 sm:w-3 shrink-0" />}
+          {i === 7 && <div className="w-1.5 sm:w-3 shrink-0" />}
           <ToothButton
             n={n}
             selected={value === String(n)}
