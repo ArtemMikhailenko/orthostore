@@ -3,6 +3,7 @@ import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
 import { useProducts, useManufacturers, useCategories, useCountries, useSubcategories } from '@/lib/api/hooks';
+import { productDisplayPrice } from '@/lib/api/public';
 import type { ProductWithDiscounts } from '@/lib/api/public.types';
 import { pickI18n } from '@/snippets/i18n';
 import {
@@ -86,9 +87,7 @@ function mapApiToUi(
   lang: 'uk' | 'en' = 'uk',
 ): UiProduct {
   const title = pickI18n(p.titleI18n as any, lang) || p.slug;
-  const price = (p as any).priceMinFinal ?? p.priceMin ?? 0;
-  const originalPrice =
-    p.priceMin && (p as any).priceMinFinal && (p as any).priceMinFinal < p.priceMin ? p.priceMin : undefined;
+  const { price, originalPrice } = productDisplayPrice(p);
   const isNew = (p as any).isNew ?? (p.createdAt ? Date.now() - new Date(p.createdAt).getTime() < 1000 * 60 * 60 * 24 * 30 : false);
   const image = p.images?.[0] ?? '';
   const mId = p.manufacturerIds?.[0];

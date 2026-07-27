@@ -65,6 +65,24 @@ export function getProduct(idOrSlug: string): Promise<ProductWithDiscounts> {
   return http<ProductWithDiscounts>(`/products/${encodeURIComponent(idOrSlug)}`);
 }
 
+/** Price shown in the catalog: the admin-chosen default variant, else the minimum. */
+export function productDisplayPrice(p: any): { price: number; originalPrice?: number } {
+  const sku = p?.defaultVariantSku;
+  if (sku && Array.isArray(p?.variants)) {
+    const v = p.variants.find((x: any) => x?.sku === sku);
+    if (v) {
+      const price = v.priceFinal ?? v.price ?? 0;
+      const originalPrice =
+        v.priceOriginal && v.priceOriginal > price ? v.priceOriginal : undefined;
+      return { price, originalPrice };
+    }
+  }
+  const price = p?.priceMinFinal ?? p?.priceMin ?? 0;
+  const originalPrice =
+    p?.priceMin && p?.priceMinFinal && p.priceMinFinal < p.priceMin ? p.priceMin : undefined;
+  return { price, originalPrice };
+}
+
 // Orders
 export function createOrder(body: CreateOrderRequest, idempotencyKey?: string): Promise<Order> {
   return http<Order>('/orders', { method: 'POST', body, idempotencyKey });

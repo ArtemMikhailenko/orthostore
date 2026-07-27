@@ -15,6 +15,7 @@ import {
   useCreateReview,
 } from "@/lib/api/hooks";
 import type { ProductWithDiscounts, ProductVariantWithDiscounts } from "@/lib/api/public.types";
+import { productDisplayPrice } from "@/lib/api/public";
 import { pickI18n } from "@/snippets/i18n";
 import { useCartStore } from "@/lib/cart-store";
 import { getAccessToken } from "@/lib/api/auth";
@@ -256,11 +257,7 @@ function RelatedCard({
 }) {
   const title = pickI18n(product.titleI18n as any, "uk") || product.slug;
   const image = product.images?.[0];
-  const price = (product as any).priceMinFinal ?? product.priceMin ?? 0;
-  const originalPrice =
-    product.priceMin && (product as any).priceMinFinal && (product as any).priceMinFinal < product.priceMin
-      ? product.priceMin
-      : undefined;
+  const { price, originalPrice } = productDisplayPrice(product);
   const brand = product.manufacturerIds?.[0]
     ? manufacturers.get(product.manufacturerIds[0])
     : null;
@@ -445,6 +442,17 @@ export default function ProductDetailPage() {
   }, [variant]);
 
   const needTooth = isToothProduct && isPieceVariant;
+
+  // Pre-select the admin-chosen default variant (else the first) on load
+  useEffect(() => {
+    if (!product) return;
+    const sku = (product as any).defaultVariantSku as string | undefined;
+    const idx = sku
+      ? product.variants?.findIndex((v) => v.sku === sku) ?? -1
+      : -1;
+    setSelectedVariant(idx >= 0 ? idx : 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product?._id]);
 
   // Reset the chosen tooth whenever the variant changes
   useEffect(() => {
