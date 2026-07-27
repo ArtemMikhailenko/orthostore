@@ -518,6 +518,7 @@ export default function ProductDetailPage() {
         price,
         imageUrl: allImages[0],
         brand: brandName || undefined,
+        options: variant.options as Record<string, string | number> | undefined,
         tooth: needTooth && selectedTooth ? selectedTooth : undefined,
       },
       quantity

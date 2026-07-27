@@ -12,6 +12,7 @@ export type CartItem = {
   imageUrl?: string;
   quantity: number;
   brand?: string;
+  options?: Record<string, string | number>; // variant options snapshot (Розмір/Тип/…)
   tooth?: string; // FDI tooth number for per-piece brackets/tubes (e.g. "16")
 };
 
