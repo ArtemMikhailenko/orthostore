@@ -18,6 +18,7 @@ import type { ProductWithDiscounts, ProductVariantWithDiscounts } from "@/lib/ap
 import { pickI18n } from "@/snippets/i18n";
 import { useCartStore } from "@/lib/cart-store";
 import { getAccessToken } from "@/lib/api/auth";
+import { ToothSelector } from "@/components/ui/tooth-selector";
 import {
   addRecentlyViewed,
   getRecentlyViewed,
@@ -362,6 +363,7 @@ export default function ProductDetailPage() {
   const { data: countries } = useCountries();
 
   const [selectedVariant, setSelectedVariant] = useState(0);
+  const [selectedTooth, setSelectedTooth] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -420,6 +422,35 @@ export default function ProductDetailPage() {
   const variantImages = variant?.images ?? [];
   const allImages = [...variantImages, ...images.filter((img) => !variantImages.includes(img))];
 
+  // Tooth picker: for brackets / buccal tubes bought per piece ("Шт."), the
+  // customer must specify which tooth this bracket/tube is for.
+  const TOOTH_CATEGORY_SLUGS = ["brekety", "shchichni-molyarni"];
+  const isToothProduct = useMemo(() => {
+    const slugs = new Set<string>();
+    if (categorySlug) slugs.add(categorySlug);
+    (product?.categoryIds ?? []).forEach((cid) => {
+      const c = categories?.find((x) => (x._id as string) === cid);
+      if (c?.slug) slugs.add(c.slug);
+    });
+    return TOOTH_CATEGORY_SLUGS.some((s) => slugs.has(s));
+  }, [product, categories, categorySlug]);
+
+  const isPieceVariant = useMemo(() => {
+    if (!variant) return false;
+    const vals = Object.values(variant.options || {}).map((v) =>
+      String(v).trim().toLowerCase()
+    );
+    const unit = (variant.unit || "").trim().toLowerCase();
+    return vals.some((v) => /^шт\.?$/.test(v)) || /^шт/.test(unit);
+  }, [variant]);
+
+  const needTooth = isToothProduct && isPieceVariant;
+
+  // Reset the chosen tooth whenever the variant changes
+  useEffect(() => {
+    setSelectedTooth(null);
+  }, [selectedVariant, product?._id]);
+
   // Related products (same category)
   const categoryId = product?.categoryIds?.[0];
   const { data: relatedData } = useProducts({
@@ -468,15 +499,18 @@ export default function ProductDetailPage() {
   // Add to cart
   const handleAddToCart = () => {
     if (!product || !variant) return;
+    if (needTooth && !selectedTooth) return; // guard: tooth required
+    const toothSuffix = needTooth && selectedTooth ? `-t${selectedTooth}` : "";
     addItem(
       {
-        id: `${product._id}-${variant._id || selectedVariant}`,
+        id: `${product._id}-${variant._id || selectedVariant}${toothSuffix}`,
         productId: String(product._id),
         sku: variant.sku,
         name: title,
         price,
         imageUrl: allImages[0],
         brand: brandName || undefined,
+        tooth: needTooth && selectedTooth ? selectedTooth : undefined,
       },
       quantity
     );
@@ -668,6 +702,11 @@ export default function ProductDetailPage() {
               onSelect={setSelectedVariant}
             />
 
+            {/* Tooth picker — for per-piece brackets / buccal tubes */}
+            {needTooth && (
+              <ToothSelector value={selectedTooth} onChange={setSelectedTooth} />
+            )}
+
             {/* Price block */}
             <div className="bg-stone-50 rounded-2xl p-6 space-y-4">
               <div className="flex items-end gap-3">
@@ -718,12 +757,19 @@ export default function ProductDetailPage() {
 
                 <button
                   onClick={handleAddToCart}
-                  className="flex-1 flex items-center justify-center gap-3 bg-stone-900 text-white py-3.5 px-6 rounded-xl font-medium hover:bg-stone-800 transition-all duration-300 shadow-lg shadow-stone-900/20 hover:shadow-xl hover:shadow-stone-900/30 active:scale-[0.98]"
+                  disabled={needTooth && !selectedTooth}
+                  className="flex-1 flex items-center justify-center gap-3 bg-stone-900 text-white py-3.5 px-6 rounded-xl font-medium hover:bg-stone-800 transition-all duration-300 shadow-lg shadow-stone-900/20 hover:shadow-xl hover:shadow-stone-900/30 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-stone-900 disabled:active:scale-100"
                 >
                   <ShoppingCart className="w-5 h-5" />
                   Додати в кошик
                 </button>
               </div>
+
+              {needTooth && !selectedTooth && (
+                <p className="text-xs text-amber-600">
+                  Оберіть зуб, щоб додати товар у кошик
+                </p>
+              )}
 
               {/* Unit */}
               {variant?.unit && (

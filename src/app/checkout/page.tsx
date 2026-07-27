@@ -917,7 +917,7 @@ export default function CheckoutPage() {
                               quantity: item.quantity,
                               price: item.price,
                               title: item.name,
-                              options: {},
+                              options: (item.tooth ? { 'Зуб': item.tooth } : {}) as Record<string, string | number>,
                             })),
                             deliveryFee: actualDeliveryPrice,
                             name: fullName || undefined,

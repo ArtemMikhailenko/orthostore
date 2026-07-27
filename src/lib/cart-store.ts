@@ -4,7 +4,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
 export type CartItem = {
-  id: string; // unique key: productId-variantId
+  id: string; // unique key: productId-variantId(-tooth)
   productId: string; // real MongoDB product _id
   sku: string; // variant SKU (артикул)
   name: string;
@@ -12,6 +12,7 @@ export type CartItem = {
   imageUrl?: string;
   quantity: number;
   brand?: string;
+  tooth?: string; // FDI tooth number for per-piece brackets/tubes (e.g. "16")
 };
 
 type CartState = {
