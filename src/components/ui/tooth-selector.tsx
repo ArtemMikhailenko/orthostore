@@ -47,9 +47,10 @@ function ToothButton({
       onClick={onClick}
       title={toothLabel(String(n))}
       className={cn(
-        "flex items-center justify-center w-8 h-9 sm:w-9 sm:h-10 rounded-md border text-xs font-semibold transition-all duration-150 shrink-0",
+        // flex-1 so all teeth shrink to fit the row — no overflow / no cut-off
+        "flex-1 min-w-0 h-9 sm:h-10 rounded-md border text-[11px] sm:text-xs font-semibold transition-all duration-150",
         selected
-          ? "border-stone-900 bg-stone-900 text-white shadow-md scale-105"
+          ? "border-stone-900 bg-stone-900 text-white shadow-md"
           : "border-stone-300 bg-white text-stone-700 hover:border-sky-400 hover:text-sky-600 hover:bg-sky-50"
       )}
     >
@@ -68,11 +69,11 @@ function Arch({
   onChange: (t: string) => void;
 }) {
   return (
-    <div className="flex justify-center gap-1 overflow-x-auto pb-1">
+    <div className="flex items-stretch gap-0.5 sm:gap-1">
       {teeth.map((n, i) => (
         <React.Fragment key={n}>
           {/* midline gap between quadrants */}
-          {i === 8 && <div className="w-2 sm:w-3 shrink-0" />}
+          {i === 8 && <div className="w-1.5 sm:w-3 shrink-0" />}
           <ToothButton
             n={n}
             selected={value === String(n)}
