@@ -4,9 +4,21 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 /* FDI (ISO 3950) two-digit tooth numbering, laid out as a dental arch.
-   On screen the patient's right is on the viewer's left (dental convention). */
-const UPPER = [17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27];
-const LOWER = [47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37];
+   On screen the patient's right is on the viewer's left (dental convention).
+   Brackets go on incisors/canines/premolars (1–5); buccal tubes ("замки")
+   go on molars (6–7). Third molars (8) are never bracketed. */
+export type ToothMode = "brackets" | "tubes";
+
+const TEETH: Record<ToothMode, { upper: number[]; lower: number[] }> = {
+  brackets: {
+    upper: [15, 14, 13, 12, 11, 21, 22, 23, 24, 25],
+    lower: [45, 44, 43, 42, 41, 31, 32, 33, 34, 35],
+  },
+  tubes: {
+    upper: [17, 16, 26, 27],
+    lower: [47, 46, 36, 37],
+  },
+};
 
 const TYPE_BY_LAST_DIGIT: Record<string, string> = {
   "1": "Центральний різець",
@@ -47,8 +59,9 @@ function ToothButton({
       onClick={onClick}
       title={toothLabel(String(n))}
       className={cn(
-        // flex-1 so all teeth shrink to fit the row — no overflow / no cut-off
-        "flex-1 min-w-0 h-9 sm:h-10 rounded-md border text-[11px] sm:text-xs font-semibold transition-all duration-150",
+        // flex-1 so all teeth shrink to fit the row — no overflow / no cut-off;
+        // max-w keeps small sets (tubes) from stretching too wide
+        "flex-1 min-w-0 max-w-[52px] h-9 sm:h-10 rounded-md border text-[11px] sm:text-xs font-semibold transition-all duration-150",
         selected
           ? "border-stone-900 bg-stone-900 text-white shadow-md"
           : "border-stone-300 bg-white text-stone-700 hover:border-sky-400 hover:text-sky-600 hover:bg-sky-50"
@@ -69,11 +82,11 @@ function Arch({
   onChange: (t: string) => void;
 }) {
   return (
-    <div className="flex items-stretch gap-0.5 sm:gap-1">
+    <div className="flex items-stretch justify-center gap-0.5 sm:gap-1">
       {teeth.map((n, i) => (
         <React.Fragment key={n}>
           {/* midline gap between quadrants */}
-          {i === 7 && <div className="w-1.5 sm:w-3 shrink-0" />}
+          {i === teeth.length / 2 && <div className="w-1.5 sm:w-3 shrink-0" />}
           <ToothButton
             n={n}
             selected={value === String(n)}
@@ -88,10 +101,13 @@ function Arch({
 export function ToothSelector({
   value,
   onChange,
+  mode = "brackets",
 }: {
   value: string | null;
   onChange: (t: string) => void;
+  mode?: ToothMode;
 }) {
+  const { upper, lower } = TEETH[mode];
   return (
     <div className="rounded-2xl border border-stone-200 bg-stone-50/60 p-4 sm:p-5 space-y-4">
       <div className="flex items-center justify-between gap-2 flex-wrap">
@@ -111,9 +127,9 @@ export function ToothSelector({
         <div className="text-[11px] font-medium text-stone-400 text-center uppercase tracking-wider">
           Верхня щелепа
         </div>
-        <Arch teeth={UPPER} value={value} onChange={onChange} />
+        <Arch teeth={upper} value={value} onChange={onChange} />
         <div className="h-px bg-stone-200 my-1" />
-        <Arch teeth={LOWER} value={value} onChange={onChange} />
+        <Arch teeth={lower} value={value} onChange={onChange} />
         <div className="text-[11px] font-medium text-stone-400 text-center uppercase tracking-wider">
           Нижня щелепа
         </div>

@@ -421,16 +421,19 @@ export default function ProductDetailPage() {
 
   // Tooth picker: for brackets / buccal tubes bought per piece ("Шт."), the
   // customer must specify which tooth this bracket/tube is for.
-  const TOOTH_CATEGORY_SLUGS = ["brekety", "shchichni-molyarni"];
-  const isToothProduct = useMemo(() => {
+  // Brackets → incisors/canines/premolars; buccal tubes ("замки") → molars.
+  const toothMode = useMemo<"brackets" | "tubes" | null>(() => {
     const slugs = new Set<string>();
     if (categorySlug) slugs.add(categorySlug);
     (product?.categoryIds ?? []).forEach((cid) => {
       const c = categories?.find((x) => (x._id as string) === cid);
       if (c?.slug) slugs.add(c.slug);
     });
-    return TOOTH_CATEGORY_SLUGS.some((s) => slugs.has(s));
+    if (slugs.has("shchichni-molyarni")) return "tubes";
+    if (slugs.has("brekety")) return "brackets";
+    return null;
   }, [product, categories, categorySlug]);
+  const isToothProduct = toothMode !== null;
 
   const isPieceVariant = useMemo(() => {
     if (!variant) return false;
@@ -713,7 +716,11 @@ export default function ProductDetailPage() {
 
             {/* Tooth picker — for per-piece brackets / buccal tubes */}
             {needTooth && (
-              <ToothSelector value={selectedTooth} onChange={setSelectedTooth} />
+              <ToothSelector
+                value={selectedTooth}
+                onChange={setSelectedTooth}
+                mode={toothMode ?? "brackets"}
+              />
             )}
 
             {/* Price block */}
