@@ -554,7 +554,8 @@ function CategoryProductsPageInner() {
       case 'price-high': return '-priceMinFinal';
       case 'name': return 'titleI18n.uk';
       case 'new': return '-createdAt';
-      default: return '-createdAt';
+      // default ("popular") → manual per-category order set in the admin
+      default: return 'order';
     }
   }, [sortBy]);
 
