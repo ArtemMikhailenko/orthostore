@@ -593,7 +593,18 @@ function CategoryProductsPageInner() {
 
   useEffect(() => { setPage(1); setItems([]); }, [JSON.stringify(filters), sortBy, categoryId, subcategoryId]);
   useEffect(() => {
-    if (data?.items) setItems(prev => (page === 1 ? data.items : [...prev, ...data.items]));
+    if (!data?.items) return;
+    setItems(prev => {
+      const merged = page === 1 ? data.items : [...prev, ...data.items];
+      // De-duplicate by id (guards against any pagination overlap)
+      const seen = new Set<string>();
+      return merged.filter(p => {
+        const id = (p._id as string) || p.slug;
+        if (seen.has(id)) return false;
+        seen.add(id);
+        return true;
+      });
+    });
   }, [data, page]);
 
   const uiProducts: UiProduct[] = useMemo(
