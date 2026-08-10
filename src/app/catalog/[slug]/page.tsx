@@ -15,6 +15,7 @@ import {
   X,
   ChevronDown,
   ChevronLeft,
+  ChevronRight,
   ArrowUpDown,
   Sparkles,
   TrendingUp,
@@ -539,6 +540,10 @@ function CategoryProductsPageInner() {
   );
   const subcategoryId = activeSub?._id;
 
+  // When a category has subcategories and none is picked yet, show a grid of
+  // subcategory cards instead of the product list.
+  const showSubcategoryCards = subcategories.length > 0 && !subcategoryId;
+
   // Navigate to a subcategory (or clear it) via the ?sub= query param
   const selectSub = (nextSlug: string) => {
     const qp = new URLSearchParams(Array.from(searchParams.entries()));
@@ -645,10 +650,13 @@ function CategoryProductsPageInner() {
               <h1 className="text-3xl font-light text-stone-900 tracking-tight truncate">
                 {categoryName}
               </h1>
-              <span className="text-sm text-stone-500 bg-stone-100 px-3 py-1 rounded-full shrink-0">{total} товарів</span>
+              <span className="text-sm text-stone-500 bg-stone-100 px-3 py-1 rounded-full shrink-0">
+                {showSubcategoryCards ? `${subcategories.length} підкатегорій` : `${total} товарів`}
+              </span>
             </div>
 
-            {/* Sort + View + Filters */}
+            {/* Sort + View + Filters — hidden on the subcategory-cards view */}
+            {!showSubcategoryCards && (
             <div className="flex items-center gap-3">
               {/* View mode toggle */}
               <div className="flex items-center bg-white border border-stone-300 rounded-xl overflow-hidden shadow-sm">
@@ -681,10 +689,11 @@ function CategoryProductsPageInner() {
               {/* Filters */}
               <SmartFilters manufacturers={manufacturers} countries={countries} value={filters} onChange={setFilters} />
             </div>
+            )}
           </div>
 
-          {/* Subcategory chips */}
-          {subcategories.length > 0 && (
+          {/* Subcategory chips — shown once a subcategory is selected */}
+          {!showSubcategoryCards && subcategories.length > 0 && (
             <div className="flex items-center gap-2 flex-wrap mt-4">
               <button
                 onClick={() => selectSub('')}
@@ -748,8 +757,42 @@ function CategoryProductsPageInner() {
         </div>
       </div>
 
-      {/* Products */}
+      {/* Subcategory cards / Products */}
       <div className="max-w-7xl mx-auto px-6 py-8">
+        {showSubcategoryCards ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {subcategories.map((sub) => (
+              <Link
+                key={sub._id}
+                href={`/catalog/${slug}?sub=${encodeURIComponent(sub.slug)}`}
+                className="group block bg-white rounded-2xl border border-stone-200/60 hover:border-stone-300 hover:shadow-xl hover:shadow-stone-900/5 transition-all duration-300 overflow-hidden"
+              >
+                <div className="relative aspect-[4/3] bg-stone-50 overflow-hidden">
+                  {sub.imageUrl ? (
+                    <Image
+                      src={sub.imageUrl}
+                      alt={pickI18n(sub.nameI18n as any, 'uk')}
+                      fill
+                      sizes="(max-width:768px) 50vw, 25vw"
+                      className="object-contain p-4 group-hover:scale-105 transition-transform duration-500"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Package className="w-12 h-12 text-stone-300" />
+                    </div>
+                  )}
+                </div>
+                <div className="p-4 flex items-center justify-between gap-2">
+                  <h3 className="text-sm font-semibold text-stone-900 group-hover:text-stone-700 transition-colors line-clamp-2">
+                    {pickI18n(sub.nameI18n as any, 'uk')}
+                  </h3>
+                  <ChevronRight className="w-4 h-4 text-stone-400 group-hover:translate-x-0.5 transition-transform shrink-0" />
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+        <>
         {isLoading && uiProducts.length === 0 ? (
           <div className={cn(
             viewMode === 'grid'
@@ -799,6 +842,8 @@ function CategoryProductsPageInner() {
               {isFetching ? 'Завантаження…' : 'Завантажити ще'}
             </button>
           </div>
+        )}
+        </>
         )}
       </div>
 
