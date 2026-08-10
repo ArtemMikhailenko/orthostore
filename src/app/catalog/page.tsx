@@ -249,13 +249,19 @@ function CategoryCard({
         area
       )}
     >
-      <Image
-        src={cat.img}
-        alt={cat.name}
-        fill
-        className={cn("object-cover group-hover:scale-105 transition-all duration-700", st.img)}
-        sizes="(max-width:768px) 100vw, 33vw"
-      />
+      {cat.img ? (
+        <Image
+          src={cat.img}
+          alt={cat.name}
+          fill
+          className={cn("object-cover group-hover:scale-105 transition-all duration-700", st.img)}
+          sizes="(max-width:768px) 100vw, 33vw"
+        />
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-stone-100 to-stone-200">
+          <Package className="w-10 h-10 text-stone-400" />
+        </div>
+      )}
       <div className={cn("absolute inset-0", st.overlay)} />
 
       {/* Full-card link → category */}
@@ -316,6 +322,21 @@ export default function CatalogPage() {
     return map;
   }, [categories, subcategories]);
 
+  // Backend categories that aren't in the curated list → appended automatically
+  // so newly-created categories always show up in the catalog.
+  const extraCategories = useMemo<CatItem[]>(() => {
+    const known = new Set(ALL_CATEGORIES.map((c) => c.slug));
+    const styles: CardStyle[] = ["light", "dark", "accent", "photo"];
+    return (categories ?? [])
+      .filter((c) => (c as any).isActive !== false && !known.has(c.slug))
+      .map((c, i) => ({
+        name: (pickI18n(c.nameI18n as any, "uk") || c.slug).toUpperCase(),
+        slug: c.slug,
+        img: ((c as any).imageUrl as string) || "",
+        style: styles[i % styles.length],
+      }));
+  }, [categories]);
+
   return (
     <div className="min-h-screen bg-white">
 
@@ -342,7 +363,7 @@ export default function CatalogPage() {
       {/* Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         <div className="grid grid-cols-2 lg:grid-cols-4 grid-flow-row-dense gap-3 auto-rows-[180px] sm:auto-rows-[200px]">
-          {ALL_CATEGORIES.map((cat, i) => (
+          {[...ALL_CATEGORIES, ...extraCategories].map((cat, i) => (
             <CategoryCard
               key={cat.slug}
               cat={cat}
