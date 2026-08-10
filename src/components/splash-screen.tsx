@@ -168,7 +168,7 @@ export function SplashScreen({ children }: { children: React.ReactNode }) {
   return (
     <>
       <div
-        className={`fixed inset-0 z-[9999] bg-black flex items-center justify-center transition-opacity duration-700 ${fadeOut ? 'opacity-0' : 'opacity-100'}`}
+        className={`fixed inset-0 z-[9999] bg-white flex items-center justify-center transition-opacity duration-700 ${fadeOut ? 'opacity-0' : 'opacity-100'}`}
         onClick={handleSkip}
         style={{ cursor: 'pointer' }}
       >
@@ -178,13 +178,14 @@ export function SplashScreen({ children }: { children: React.ReactNode }) {
           autoPlay
           muted
           playsInline
+          preload="auto"
           onEnded={handleEnd}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover bg-white"
         />
 
         <button
           onClick={(e) => { e.stopPropagation(); handleSkip(); }}
-          className="absolute bottom-8 right-8 px-6 py-2 bg-white/20 backdrop-blur-sm text-white text-sm font-medium hover:bg-white/30 transition-colors border border-white/30 rounded-lg"
+          className="absolute bottom-8 right-8 px-6 py-2 bg-white/70 backdrop-blur-sm text-stone-700 text-sm font-medium hover:bg-white transition-colors border border-stone-300 rounded-lg shadow-sm"
         >
           Пропустити
         </button>
