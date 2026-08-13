@@ -418,6 +418,7 @@ export default function ProductDetailPage() {
   const images = product?.images ?? [];
   const variantImages = variant?.images ?? [];
   const allImages = [...variantImages, ...images.filter((img) => !variantImages.includes(img))];
+  const videos: string[] = ((product as any)?.videos as string[]) ?? [];
 
   // Tooth picker: for brackets / buccal tubes bought per piece ("Шт."), the
   // customer must specify which tooth this bracket/tube is for.
@@ -602,8 +603,24 @@ export default function ProductDetailPage() {
       {/* Main content */}
       <div className="max-w-7xl mx-auto px-6 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Left — Gallery */}
-          <ImageGallery images={allImages} name={title} />
+          {/* Left — Gallery + videos */}
+          <div className="space-y-4">
+            <ImageGallery images={allImages} name={title} />
+            {videos.length > 0 && (
+              <div className="space-y-3">
+                {videos.map((url, i) => (
+                  <video
+                    key={i}
+                    src={url}
+                    controls
+                    playsInline
+                    preload="metadata"
+                    className="w-full rounded-2xl bg-black"
+                  />
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* Right — Product info */}
           <div className="space-y-6">
