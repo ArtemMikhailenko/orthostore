@@ -766,12 +766,12 @@ function CategoryProductsPageInner() {
       {/* Subcategory cards / Products */}
       <div className="max-w-7xl mx-auto px-6 py-8">
         {showSubcategoryCards ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="flex flex-wrap justify-center gap-6">
             {subcategories.map((sub) => (
               <Link
                 key={sub._id}
                 href={`/catalog/${slug}?sub=${encodeURIComponent(sub.slug)}`}
-                className="group block bg-white rounded-2xl border border-stone-200/60 hover:border-stone-300 hover:shadow-xl hover:shadow-stone-900/5 transition-all duration-300 overflow-hidden"
+                className="group block w-full sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] lg:w-[calc(25%-18px)] max-w-[300px] bg-white rounded-2xl border border-stone-200/60 hover:border-stone-300 hover:shadow-xl hover:shadow-stone-900/5 transition-all duration-300 overflow-hidden"
               >
                 <div className="relative aspect-[4/3] bg-stone-50 overflow-hidden">
                   {sub.imageUrl ? (
