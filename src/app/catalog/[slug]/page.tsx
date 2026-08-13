@@ -504,7 +504,9 @@ function CategoryProductsPageInner() {
   const params = useParams();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const slug = params.slug as string;
+  // Decode so slugs with special chars (e.g. "sel%60p") resolve correctly.
+  const rawSlug = params.slug as string;
+  const slug = (() => { try { return decodeURIComponent(rawSlug); } catch { return rawSlug; } })();
   const subSlug = searchParams.get('sub') || '';
 
   const [filters, setFilters] = useState<CatalogFilters>({});
@@ -524,7 +526,11 @@ function CategoryProductsPageInner() {
     [categories, slug],
   );
   const categoryId = currentCategory?._id as string | undefined;
-  const categoryName = SLUG_NAME_MAP[slug] || (currentCategory ? pickI18n(currentCategory.nameI18n as any, 'uk') : '') || slug;
+  // Prefer the real (admin-editable) name; fall back to the legacy map, then slug.
+  const categoryName =
+    (currentCategory ? pickI18n(currentCategory.nameI18n as any, 'uk') : '') ||
+    SLUG_NAME_MAP[slug] ||
+    slug;
 
   // Subcategories that belong to this category
   const subcategories = useMemo(

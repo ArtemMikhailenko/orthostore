@@ -322,6 +322,16 @@ export default function CatalogPage() {
     return map;
   }, [categories, subcategories]);
 
+  // Real (admin-editable) category names by slug — so renaming reflects on the cards.
+  const nameBySlug = useMemo(() => {
+    const m = new Map<string, string>();
+    (categories ?? []).forEach((c) => {
+      const nm = pickI18n(c.nameI18n as any, "uk");
+      if (nm) m.set(c.slug, nm.toUpperCase());
+    });
+    return m;
+  }, [categories]);
+
   // Backend categories that aren't in the curated list → appended automatically
   // so newly-created categories always show up in the catalog.
   const extraCategories = useMemo<CatItem[]>(() => {
@@ -366,7 +376,7 @@ export default function CatalogPage() {
           {[...ALL_CATEGORIES, ...extraCategories].map((cat, i) => (
             <CategoryCard
               key={cat.slug}
-              cat={cat}
+              cat={{ ...cat, name: nameBySlug.get(cat.slug) || cat.name }}
               index={i}
               subcats={subcatsByCatSlug.get(cat.slug) ?? []}
             />
