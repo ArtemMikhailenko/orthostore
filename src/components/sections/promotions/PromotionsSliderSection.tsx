@@ -251,16 +251,10 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                   transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
                   className="absolute inset-0"
                 >
-                  <div className={cn('h-full border-2 border-stone-900 bg-gradient-to-br relative overflow-hidden rounded-2xl', currentProduct.color)}>
+                  <div className="h-full border-2 border-stone-900 bg-white relative overflow-hidden rounded-2xl">
                     <div className="absolute inset-0">
-                      <Image src={currentProduct.imageUrl || '/images/Screenshot_2.png'} alt={currentProduct.title} fill className="object-cover opacity-80" priority />
-                      <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-transparent" />
+                      <Image src={currentProduct.imageUrl || '/images/Screenshot_2.png'} alt={currentProduct.title} fill className="object-contain p-6" priority />
                     </div>
-                    <motion.div
-                      animate={{ rotate: [360, 0] }}
-                      transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
-                      className="absolute bottom-20 left-20 w-24 h-24 rounded-full border-2 border-stone-900/20"
-                    />
                     {/* Bottom Info Bar — only badge */}
                     <div className="absolute bottom-0 left-0 right-0 bg-stone-900 text-white p-6">
                       <div className="flex items-center justify-end">
@@ -444,9 +438,8 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                       whileHover={{ y: -6, transition: { duration: 0.2 } }}
                       className="flex flex-col w-full text-left border-2 border-stone-300 p-6 bg-white group cursor-pointer hover:border-sky-400/70 hover:ring-[2px] hover:ring-sky-400/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_28px_rgba(56,189,248,0.2)] transition-all duration-300 rounded-xl"
                     >
-                      <div className={cn('w-full aspect-square mb-4 border-2 border-stone-300 bg-gradient-to-br relative overflow-hidden rounded-lg', product.color)}>
-                        <Image src={product.imageUrl || '/images/Screenshot_2.png'} alt={product.title} fill className="object-cover opacity-70" />
-                        <div className="absolute inset-0 bg-gradient-to-br from-black/10 to-transparent" />
+                      <div className="w-full aspect-square mb-4 border-2 border-stone-300 bg-white relative overflow-hidden rounded-lg">
+                        <Image src={product.imageUrl || '/images/Screenshot_2.png'} alt={product.title} fill className="object-contain p-3" />
                       </div>
                       <div className="space-y-1">
                         <h4 className="font-medium text-stone-900 text-lg group-hover:text-stone-700 transition-colors">{product.title}</h4>
@@ -472,9 +465,8 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
                         whileHover={{ y: -6, transition: { duration: 0.2 } }}
                         className="flex flex-col w-full text-left border-2 border-stone-300 p-6 bg-white group cursor-pointer hover:border-sky-400/70 hover:ring-[2px] hover:ring-sky-400/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.5),0_0_28px_rgba(56,189,248,0.2)] transition-all duration-300 rounded-xl"
                       >
-                        <div className={cn('w-full aspect-square mb-4 border-2 border-stone-300 bg-gradient-to-br relative overflow-hidden rounded-lg', product.color)}>
-                          <Image src={product.imageUrl || '/images/Screenshot_2.png'} alt={product.title} fill className="object-cover opacity-70" />
-                          <div className="absolute inset-0 bg-gradient-to-br from-black/10 to-transparent" />
+                        <div className="w-full aspect-square mb-4 border-2 border-stone-300 bg-white relative overflow-hidden rounded-lg">
+                          <Image src={product.imageUrl || '/images/Screenshot_2.png'} alt={product.title} fill className="object-contain p-3" />
                         </div>
                         <div className="space-y-1">
                           <h4 className="font-medium text-stone-900 text-lg group-hover:text-stone-700 transition-colors">{product.title}</h4>
