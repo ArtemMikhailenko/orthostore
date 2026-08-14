@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useMemo, Suspense } from 'react';
+import React, { useState, useEffect, useMemo, useRef, Suspense } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
 import { useProducts, useManufacturers, useCategories, useCountries, useSubcategories } from '@/lib/api/hooks';
@@ -602,7 +602,70 @@ function CategoryProductsPageInner() {
   const [items, setItems] = useState<ProductWithDiscounts[]>([]);
   const total = data?.total ?? 0;
 
-  useEffect(() => { setPage(1); setItems([]); }, [JSON.stringify(filters), sortBy, categoryId, subcategoryId]);
+  // Persist loaded products + page + scroll per view, so returning from a
+  // product page restores the list & position instead of collapsing to page 1.
+  const stateKey = useMemo(
+    () => `catalog:${slug}:${subSlug}:${sortBy}:${JSON.stringify(filters)}`,
+    [slug, subSlug, sortBy, filters],
+  );
+  const didRestoreRef = useRef(false);
+
+  useEffect(() => {
+    let restored = false;
+    if (!didRestoreRef.current) {
+      didRestoreRef.current = true;
+      try {
+        const raw = sessionStorage.getItem(`${stateKey}:data`);
+        const saved = raw ? JSON.parse(raw) : null;
+        if (saved?.items?.length) {
+          setItems(saved.items);
+          setPage(saved.page || 1);
+          restored = true;
+          const sy = Number(sessionStorage.getItem(`${stateKey}:scroll`) || 0);
+          requestAnimationFrame(() =>
+            requestAnimationFrame(() => window.scrollTo(0, sy)),
+          );
+        }
+      } catch {}
+    }
+    if (!restored) {
+      setPage(1);
+      setItems([]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stateKey]);
+
+  // Save loaded products + current page
+  useEffect(() => {
+    if (typeof window === "undefined" || !items.length) return;
+    try {
+      if (items.length <= 300) {
+        sessionStorage.setItem(
+          `${stateKey}:data`,
+          JSON.stringify({ items, page }),
+        );
+      }
+    } catch {}
+  }, [items, page, stateKey]);
+
+  // Save scroll position (throttled)
+  useEffect(() => {
+    let t: ReturnType<typeof setTimeout> | undefined;
+    const onScroll = () => {
+      clearTimeout(t);
+      t = setTimeout(() => {
+        try {
+          sessionStorage.setItem(`${stateKey}:scroll`, String(window.scrollY));
+        } catch {}
+      }, 150);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(t);
+    };
+  }, [stateKey]);
+
   useEffect(() => {
     if (!data?.items) return;
     setItems(prev => {
