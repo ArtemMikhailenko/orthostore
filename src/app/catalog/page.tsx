@@ -326,9 +326,12 @@ export default function CatalogPage() {
   // ones exist, order). The curated list only supplies nice local images,
   // card styles and the bento sizes for known slugs.
   const displayCategories = useMemo<CatItem[]>(() => {
-    const curated = new Map<string, { img: string; style: CardStyle }>();
-    ALL_CATEGORIES.forEach((c) =>
-      curated.set(c.slug, { img: c.img, style: c.style }),
+    const curated = new Map<
+      string,
+      { img: string; style: CardStyle; order: number }
+    >();
+    ALL_CATEGORIES.forEach((c, i) =>
+      curated.set(c.slug, { img: c.img, style: c.style, order: i }),
     );
     const fallbackStyles: CardStyle[] = ["light", "dark", "accent", "photo"];
     const list = (categories ?? [])
@@ -340,8 +343,9 @@ export default function CatalogPage() {
           slug: c.slug,
           img: cur?.img || ((c as any).imageUrl as string) || "",
           style: cur?.style || fallbackStyles[i % fallbackStyles.length],
-          // Order by the backend `sort` field (admin-controlled)
-          _order: (c as any).sort ?? i + 1,
+          // Curated order first (keeps the bento layout from the mockups),
+          // any new backend categories are appended after (by their sort).
+          _order: cur ? cur.order : 1000 + ((c as any).sort ?? i),
         };
       });
     list.sort((a, b) => a._order - b._order);
