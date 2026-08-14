@@ -62,8 +62,39 @@ type CatItem = {
   slug: string;
   img: string;
   style: CardStyle;
+  area?: string; // explicit bento size (col-span/row-span)
   subcategories?: SubCategory[];
 };
+
+/* Explicit bento layout (order + size) per category slug — matches the design.
+   Categories not listed here are appended after as 1×1. */
+const BENTO: { slug: string; area: string }[] = [
+  { slug: "brekety", area: "col-span-2 row-span-2" }, // Брекети — велика
+  { slug: "propysy-breketiv", area: "col-span-1 row-span-1" }, // Прописи брекетів
+  { slug: "mini-plastyny", area: "col-span-1 row-span-1" }, // Міні пластини
+  { slug: "shchichni-molyarni", area: "col-span-1 row-span-1" }, // Щічні трубки
+  { slug: "mikroimplanty", area: "col-span-1 row-span-2" }, // Мікроімпланти — висока
+  { slug: "5-shchelepno-lytsova-khirurhiia", area: "col-span-1 row-span-2" }, // Щелепно-лицьова — висока
+  { slug: "instrumenty", area: "col-span-1 row-span-1" }, // Інструменти
+  { slug: "duhy", area: "col-span-1 row-span-1" }, // Дуги
+  { slug: "retraktory", area: "col-span-1 row-span-1" }, // Ретрактори
+  { slug: "elastychni", area: "col-span-1 row-span-1" }, // Еластичні матеріали
+  { slug: "atachments", area: "col-span-1 row-span-1" }, // Атачменти
+  { slug: "zovnishnorotovi", area: "col-span-1 row-span-1" }, // Зовнішньоротові
+  { slug: "marpe", area: "col-span-2 row-span-1" }, // MARPE — широка
+  { slug: "fiksatsiini", area: "col-span-2 row-span-1" }, // Композити та фіксаційні — широка
+  { slug: "aksesuari", area: "col-span-1 row-span-1" }, // Аксесуари
+  { slug: "treynera-myobreysy", area: "col-span-1 row-span-2" }, // Трейнера — висока
+  { slug: "separatsiyni-instrumenty", area: "col-span-1 row-span-1" }, // Сепараційні
+  { slug: "typodonts", area: "col-span-1 row-span-1" }, // Демонстраційні моделі
+  { slug: "materialy-tehnikiv", area: "col-span-1 row-span-1" }, // Матеріали для техніків
+  { slug: "dzerkala-foto", area: "col-span-1 row-span-1" }, // Дзеркала та фотоконтрастери
+  {
+    slug: "21-plastyny-dlia-elaineriv-ta-retentsiinykh-kap",
+    area: "col-span-1 row-span-1",
+  }, // Пластини для елайнерів
+  { slug: "p", area: "col-span-1 row-span-1" }, // Пуста
+];
 
 /*
   Layout: CSS Grid with named template areas.
@@ -236,7 +267,7 @@ function CategoryCard({
   index: number;
   subcats: SubCategory[];
 }) {
-  const area = GRID_AREAS[index] ?? "col-span-1 row-span-1";
+  const area = cat.area ?? GRID_AREAS[index] ?? "col-span-1 row-span-1";
   const isLarge = area.includes("col-span-2") && area.includes("row-span-2");
   const st = CARD_STYLES[cat.style];
   const hasSubcats = subcats.length > 0;
@@ -326,26 +357,26 @@ export default function CatalogPage() {
   // ones exist, order). The curated list only supplies nice local images,
   // card styles and the bento sizes for known slugs.
   const displayCategories = useMemo<CatItem[]>(() => {
-    const curated = new Map<
-      string,
-      { img: string; style: CardStyle; order: number }
-    >();
-    ALL_CATEGORIES.forEach((c, i) =>
-      curated.set(c.slug, { img: c.img, style: c.style, order: i }),
+    const curated = new Map<string, { img: string; style: CardStyle }>();
+    ALL_CATEGORIES.forEach((c) =>
+      curated.set(c.slug, { img: c.img, style: c.style }),
     );
+    const bento = new Map<string, { area: string; order: number }>();
+    BENTO.forEach((b, i) => bento.set(b.slug, { area: b.area, order: i }));
     const fallbackStyles: CardStyle[] = ["light", "dark", "accent", "photo"];
     const list = (categories ?? [])
       .filter((c) => (c as any).isActive !== false)
       .map((c, i) => {
         const cur = curated.get(c.slug);
+        const bn = bento.get(c.slug);
         return {
           name: (pickI18n(c.nameI18n as any, "uk") || c.slug).toUpperCase(),
           slug: c.slug,
           img: cur?.img || ((c as any).imageUrl as string) || "",
           style: cur?.style || fallbackStyles[i % fallbackStyles.length],
-          // Curated order first (keeps the bento layout from the mockups),
-          // any new backend categories are appended after (by their sort).
-          _order: cur ? cur.order : 1000 + ((c as any).sort ?? i),
+          area: bn?.area,
+          // Bento order first (matches the design), the rest appended.
+          _order: bn ? bn.order : 1000 + ((c as any).sort ?? i),
         };
       });
     list.sort((a, b) => a._order - b._order);
