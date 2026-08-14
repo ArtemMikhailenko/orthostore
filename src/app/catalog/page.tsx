@@ -75,8 +75,8 @@ const BENTO: { slug: string; area: string }[] = [
   { slug: "mini-plastyny", area: "col-span-1 row-span-1" }, // Міні пластини
   { slug: "shchichni-molyarni", area: "col-span-1 row-span-1" }, // Щічні трубки
   { slug: "mikroimplanty", area: "col-span-1 row-span-2" }, // Мікроімпланти — висока 1×2
-  { slug: "5-shchelepno-lytsova-khirurhiia", area: "col-span-1 row-span-1" }, // Щелепно-лицьова
-  { slug: "instrumenty", area: "col-span-1 row-span-1" }, // Інструменти
+  { slug: "5-shchelepno-lytsova-khirurhiia", area: "col-span-1 row-span-2" }, // Щелепно-лицьова — висока 1×2
+  { slug: "instrumenty", area: "col-span-2 row-span-1" }, // Інструменти — широка 2×1
   { slug: "duhy", area: "col-span-1 row-span-1" }, // Дуги
   { slug: "retraktory", area: "col-span-1 row-span-1" }, // Ретрактори
   { slug: "elastychni", area: "col-span-1 row-span-1" }, // Еластичні матеріали
@@ -89,7 +89,7 @@ const BENTO: { slug: string; area: string }[] = [
   { slug: "separatsiyni-instrumenty", area: "col-span-1 row-span-1" }, // Сепараційні
   { slug: "typodonts", area: "col-span-1 row-span-1" }, // Демонстраційні моделі
   { slug: "materialy-tehnikiv", area: "col-span-1 row-span-1" }, // Матеріали для техніків
-  { slug: "dzerkala-foto", area: "col-span-1 row-span-1" }, // Дзеркала та фотоконтрастери
+  { slug: "dzerkala-foto", area: "col-span-2 row-span-1" }, // Дзеркала та фотоконтрастери — широка 2×1
   {
     slug: "21-plastyny-dlia-elaineriv-ta-retentsiinykh-kap",
     area: "col-span-1 row-span-1",
