@@ -322,29 +322,30 @@ export default function CatalogPage() {
     return map;
   }, [categories, subcategories]);
 
-  // Real (admin-editable) category names by slug — so renaming reflects on the cards.
-  const nameBySlug = useMemo(() => {
-    const m = new Map<string, string>();
-    (categories ?? []).forEach((c) => {
-      const nm = pickI18n(c.nameI18n as any, "uk");
-      if (nm) m.set(c.slug, nm.toUpperCase());
-    });
-    return m;
-  }, [categories]);
-
-  // Backend categories that aren't in the curated list → appended automatically
-  // so newly-created categories always show up in the catalog.
-  const extraCategories = useMemo<CatItem[]>(() => {
-    const known = new Set(ALL_CATEGORIES.map((c) => c.slug));
-    const styles: CardStyle[] = ["light", "dark", "accent", "photo"];
-    return (categories ?? [])
-      .filter((c) => (c as any).isActive !== false && !known.has(c.slug))
-      .map((c, i) => ({
-        name: (pickI18n(c.nameI18n as any, "uk") || c.slug).toUpperCase(),
-        slug: c.slug,
-        img: ((c as any).imageUrl as string) || "",
-        style: styles[i % styles.length],
-      }));
+  // Catalog cards are driven ENTIRELY by the backend categories (names, which
+  // ones exist, order). The curated list only supplies nice local images,
+  // card styles and the bento sizes for known slugs.
+  const displayCategories = useMemo<CatItem[]>(() => {
+    const curated = new Map<string, { img: string; style: CardStyle }>();
+    ALL_CATEGORIES.forEach((c) =>
+      curated.set(c.slug, { img: c.img, style: c.style }),
+    );
+    const fallbackStyles: CardStyle[] = ["light", "dark", "accent", "photo"];
+    const list = (categories ?? [])
+      .filter((c) => (c as any).isActive !== false)
+      .map((c, i) => {
+        const cur = curated.get(c.slug);
+        return {
+          name: (pickI18n(c.nameI18n as any, "uk") || c.slug).toUpperCase(),
+          slug: c.slug,
+          img: cur?.img || ((c as any).imageUrl as string) || "",
+          style: cur?.style || fallbackStyles[i % fallbackStyles.length],
+          // Order by the backend `sort` field (admin-controlled)
+          _order: (c as any).sort ?? i + 1,
+        };
+      });
+    list.sort((a, b) => a._order - b._order);
+    return list.map(({ _order: _drop, ...rest }) => rest);
   }, [categories]);
 
   return (
@@ -373,10 +374,10 @@ export default function CatalogPage() {
       {/* Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         <div className="grid grid-cols-2 lg:grid-cols-4 grid-flow-row-dense gap-3 auto-rows-[180px] sm:auto-rows-[200px]">
-          {[...ALL_CATEGORIES, ...extraCategories].map((cat, i) => (
+          {displayCategories.map((cat, i) => (
             <CategoryCard
               key={cat.slug}
-              cat={{ ...cat, name: nameBySlug.get(cat.slug) || cat.name }}
+              cat={cat}
               index={i}
               subcats={subcatsByCatSlug.get(cat.slug) ?? []}
             />
