@@ -69,31 +69,31 @@ type CatItem = {
 /* Explicit bento layout (order + size) per category slug — matches the design.
    Categories not listed here are appended after as 1×1. */
 const BENTO: { slug: string; area: string }[] = [
-  { slug: "brekety", area: "col-span-2 row-span-2" }, // Брекети — велика
-  { slug: "propysy-breketiv", area: "col-span-1 row-span-1" }, // Прописи брекетів
-  { slug: "mini-plastyny", area: "col-span-1 row-span-1" }, // Міні пластини
-  { slug: "shchichni-molyarni", area: "col-span-1 row-span-1" }, // Щічні трубки
-  { slug: "mikroimplanty", area: "col-span-1 row-span-2" }, // Мікроімпланти — висока
-  { slug: "5-shchelepno-lytsova-khirurhiia", area: "col-span-1 row-span-2" }, // Щелепно-лицьова — висока
-  { slug: "instrumenty", area: "col-span-1 row-span-1" }, // Інструменти
-  { slug: "duhy", area: "col-span-1 row-span-1" }, // Дуги
-  { slug: "retraktory", area: "col-span-1 row-span-1" }, // Ретрактори
-  { slug: "elastychni", area: "col-span-1 row-span-1" }, // Еластичні матеріали
-  { slug: "atachments", area: "col-span-1 row-span-1" }, // Атачменти
-  { slug: "zovnishnorotovi", area: "col-span-1 row-span-1" }, // Зовнішньоротові
-  { slug: "marpe", area: "col-span-2 row-span-1" }, // MARPE — широка
-  { slug: "fiksatsiini", area: "col-span-2 row-span-1" }, // Композити та фіксаційні — широка
-  { slug: "aksesuari", area: "col-span-1 row-span-1" }, // Аксесуари
-  { slug: "treynera-myobreysy", area: "col-span-1 row-span-2" }, // Трейнера — висока
-  { slug: "separatsiyni-instrumenty", area: "col-span-1 row-span-1" }, // Сепараційні
-  { slug: "typodonts", area: "col-span-1 row-span-1" }, // Демонстраційні моделі
-  { slug: "materialy-tehnikiv", area: "col-span-1 row-span-1" }, // Матеріали для техніків
-  { slug: "dzerkala-foto", area: "col-span-1 row-span-1" }, // Дзеркала та фотоконтрастери
+  { slug: "brekety", area: "col-span-2 row-span-2" }, // 1 Брекети — велика 2×2
+  { slug: "propysy-breketiv", area: "col-span-1 row-span-1" }, // 2 Прописи брекетів
+  { slug: "mikroimplanty", area: "col-span-1 row-span-2" }, // 3 Мікроімпланти — висока 1×2
+  { slug: "mini-plastyny", area: "col-span-1 row-span-1" }, // 4 Міні пластини
+  { slug: "5-shchelepno-lytsova-khirurhiia", area: "col-span-1 row-span-2" }, // 5 Щелепно-лицьова — висока 1×2
+  { slug: "shchichni-molyarni", area: "col-span-1 row-span-1" }, // 6 Щічні трубки
+  { slug: "duhy", area: "col-span-1 row-span-1" }, // 7 Дуги, дроти, металеві лігатури
+  { slug: "elastychni", area: "col-span-1 row-span-1" }, // 8 Еластичні матеріали
+  { slug: "instrumenty", area: "col-span-1 row-span-1" }, // 9 Інструменти
+  { slug: "retraktory", area: "col-span-1 row-span-1" }, // 10 Ретрактори
+  { slug: "atachments", area: "col-span-1 row-span-1" }, // 11 Атачменти
+  { slug: "fiksatsiini", area: "col-span-2 row-span-1" }, // 12 Композити та фіксаційні — широка 2×1
+  { slug: "dzerkala-foto", area: "col-span-1 row-span-1" }, // 13 Дзеркала та фотоконтрастери
+  { slug: "zovnishnorotovi", area: "col-span-1 row-span-1" }, // 14 Зовнішньоротові
+  { slug: "treynera-myobreysy", area: "col-span-1 row-span-2" }, // 15 Трейнера — висока 1×2
+  { slug: "materialy-tehnikiv", area: "col-span-1 row-span-1" }, // 16 Матеріали для техніків
+  { slug: "marpe", area: "col-span-2 row-span-1" }, // 17 MARPE — широка 2×1
+  { slug: "separatsiyni-instrumenty", area: "col-span-1 row-span-1" }, // 18 Сепараційні
+  { slug: "aksesuari", area: "col-span-1 row-span-1" }, // 19 Аксесуари
+  { slug: "typodonts", area: "col-span-1 row-span-1" }, // 20 Демонстраційні моделі
   {
     slug: "21-plastyny-dlia-elaineriv-ta-retentsiinykh-kap",
     area: "col-span-1 row-span-1",
-  }, // Пластини для елайнерів
-  { slug: "p", area: "col-span-1 row-span-1" }, // Пуста
+  }, // 21 Пластини для елайнерів
+  { slug: "p", area: "col-span-1 row-span-1" }, // 22 Поки пуста
 ];
 
 /*
