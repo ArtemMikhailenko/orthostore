@@ -373,7 +373,8 @@ export default function CatalogPage() {
         return {
           name: (pickI18n(c.nameI18n as any, "uk") || c.slug).toUpperCase(),
           slug: c.slug,
-          img: cur?.img || ((c as any).imageUrl as string) || "",
+          // Admin-uploaded photo wins; fall back to the curated local image.
+          img: ((c as any).imageUrl as string) || cur?.img || "",
           style: cur?.style || fallbackStyles[i % fallbackStyles.length],
           area: bn?.area,
           // Bento order first (matches the design), the rest appended.
