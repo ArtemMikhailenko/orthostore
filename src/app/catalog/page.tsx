@@ -72,12 +72,12 @@ const BENTO: { slug: string; area: string }[] = [
   // Order chosen so the dense grid packs into the layout from the mockups.
   { slug: "brekety", area: "col-span-2 row-span-2" }, // Брекети — велика 2×2
   { slug: "propysy-breketiv", area: "col-span-1 row-span-1" }, // Прописи брекетів
-  { slug: "mini-plastyny", area: "col-span-1 row-span-1" }, // Міні пластини
+  { slug: "miniplastyny", area: "col-span-1 row-span-1" }, // Мініпластини
   { slug: "shchichni-molyarni", area: "col-span-1 row-span-1" }, // Щічні трубки
   { slug: "mikroimplanty", area: "col-span-1 row-span-2" }, // Мікроімпланти — висока 1×2
   { slug: "5-shchelepno-lytsova-khirurhiia", area: "col-span-1 row-span-2" }, // Щелепно-лицьова — висока 1×2
   { slug: "instrumenty", area: "col-span-2 row-span-1" }, // Інструменти — широка 2×1
-  { slug: "duhy", area: "col-span-1 row-span-1" }, // Дуги
+  { slug: "duhy-droty-reteinery-metaleva-lihatura", area: "col-span-1 row-span-1" }, // Дуги, дроти, ретейнери…
   { slug: "retraktory", area: "col-span-1 row-span-1" }, // Ретрактори
   { slug: "elastychni", area: "col-span-1 row-span-1" }, // Еластичні матеріали
   { slug: "atachments", area: "col-span-1 row-span-1" }, // Атачменти
@@ -122,7 +122,7 @@ const ALL_CATEGORIES: CatItem[] = [
   },
   { 
     name: "МІНІ ПЛАСТИНЫ", 
-    slug: "mini-plastyny", 
+    slug: "miniplastyny", 
     img: catImg("Міні пластини.png"), 
     style: "accent",
   },
@@ -146,7 +146,7 @@ const ALL_CATEGORIES: CatItem[] = [
   },
   { 
     name: "ДУГИ", 
-    slug: "duhy", 
+    slug: "duhy-droty-reteinery-metaleva-lihatura", 
     img: catImg("Дуги.JPG"), 
     style: "photo"
   },
