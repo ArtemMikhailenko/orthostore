@@ -97,6 +97,16 @@ const BENTO: { slug: string; area: string }[] = [
   { slug: "p", area: "col-span-1 row-span-1" }, // Поки пуста
 ];
 
+/* Admin-controlled card size → bento area class.
+   Set per category in the admin (field "Розмір картки в каталозі").
+   Bound to the category itself, so it survives slug renames. */
+const CARD_SIZE_AREA: Record<string, string> = {
+  large: "col-span-2 row-span-2",
+  wide: "col-span-2 row-span-1",
+  tall: "col-span-1 row-span-2",
+  normal: "col-span-1 row-span-1",
+};
+
 /*
   Layout: CSS Grid with named template areas.
   7 rows, 4 columns, each item assigned to specific cells.
@@ -370,13 +380,15 @@ export default function CatalogPage() {
       .map((c, i) => {
         const cur = curated.get(c.slug);
         const bn = bento.get(c.slug);
+        // Admin-set size wins over the hardcoded bento map (survives renames).
+        const adminArea = CARD_SIZE_AREA[(c as any).cardSize as string];
         return {
           name: (pickI18n(c.nameI18n as any, "uk") || c.slug).toUpperCase(),
           slug: c.slug,
           // Admin-uploaded photo wins; fall back to the curated local image.
           img: ((c as any).imageUrl as string) || cur?.img || "",
           style: cur?.style || fallbackStyles[i % fallbackStyles.length],
-          area: bn?.area,
+          area: adminArea ?? bn?.area,
           // Bento order first (matches the design), the rest appended.
           _order: bn ? bn.order : 1000 + ((c as any).sort ?? i),
         };
