@@ -53,6 +53,84 @@ import Link from 'next/link';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useCartStore } from '@/lib/cart-store';
 
+/* ─── Prescription reference charts (shown on the "Прописи брекетів" category) ─── */
+function PropysyReference() {
+  const tables = [
+    {
+      src: "/images/propysy/propysy-upper.png",
+      alt: "Верхня щелепа — прописи брекетів",
+      w: 1008,
+      h: 413,
+      label: "Верхня щелепа",
+    },
+    {
+      src: "/images/propysy/propysy-lower.png",
+      alt: "Нижня щелепа — прописи брекетів",
+      w: 998,
+      h: 358,
+      label: "Нижня щелепа",
+    },
+  ];
+  return (
+    <section className="mb-12">
+      <div className="rounded-3xl border border-stone-200/70 bg-gradient-to-b from-stone-50 to-white p-6 sm:p-10">
+        <div className="max-w-3xl">
+          <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-sky-600 mb-3">
+            <Sparkles className="w-4 h-4" /> Довідник
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-light text-stone-900 tracking-tight">
+            Прописи брекетів
+          </h2>
+          <p className="text-stone-500 mt-3 leading-relaxed">
+            Значення торка (Torq.), ангуляції (Ang.) та ротації (Rot.) для кожного
+            зуба за різними системами прописів — MBT, Roth, Damon та інші.
+            Скористайтесь картою зубів (нумерація FDI) та таблицями для верхньої
+            та нижньої щелеп.
+          </p>
+        </div>
+
+        {/* Teeth map */}
+        <div className="mt-8">
+          <div className="flex items-center gap-2 mb-3 text-sm font-semibold text-stone-700">
+            <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
+            Карта зубів (нумерація FDI)
+          </div>
+          <div className="rounded-2xl border border-stone-200 bg-white p-4 sm:p-6 flex justify-center">
+            <Image
+              src="/images/propysy/propysy-teeth.png"
+              alt="Карта зубів — нумерація FDI"
+              width={932}
+              height={495}
+              className="w-full max-w-[560px] h-auto"
+            />
+          </div>
+        </div>
+
+        {/* Jaw tables */}
+        <div className="mt-8 grid grid-cols-1 gap-6">
+          {tables.map((t) => (
+            <div key={t.src}>
+              <div className="flex items-center gap-2 mb-3 text-sm font-semibold text-stone-700">
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
+                {t.label}
+              </div>
+              <div className="rounded-2xl border border-stone-200 bg-white p-3 sm:p-4 overflow-x-auto">
+                <Image
+                  src={t.src}
+                  alt={t.alt}
+                  width={t.w}
+                  height={t.h}
+                  className="h-auto min-w-[640px] w-full"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ─────── UiProduct type ─────── */
 interface UiProduct {
   id: string;
@@ -828,6 +906,7 @@ function CategoryProductsPageInner() {
 
       {/* Subcategory cards / Products */}
       <div className="max-w-7xl mx-auto px-6 py-8">
+        {(slug === 'propysy-breketiv' || slug.includes('propys')) && <PropysyReference />}
         {showSubcategoryCards ? (
           <div className="flex flex-wrap justify-center gap-6">
             {subcategories.map((sub) => (
