@@ -101,6 +101,7 @@ function PropysyReference() {
               alt="Карта зубів — нумерація FDI"
               width={932}
               height={495}
+              unoptimized
               className="w-full max-w-[560px] h-auto"
             />
           </div>
@@ -120,6 +121,7 @@ function PropysyReference() {
                   alt={t.alt}
                   width={t.w}
                   height={t.h}
+                  unoptimized
                   className="h-auto min-w-[640px] w-full"
                 />
               </div>
