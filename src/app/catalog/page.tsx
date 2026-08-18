@@ -352,7 +352,7 @@ export default function CatalogPage() {
     (categories ?? []).forEach((c) => catIdToSlug.set(c._id as string, c.slug));
     const map = new Map<string, SubCategory[]>();
     (subcategories ?? [])
-      .filter((s) => s.isActive !== false)
+      .filter((s) => s.isActive !== false && !(s as any).parentSubcategoryId)
       .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0))
       .forEach((s) => {
         const catSlug = catIdToSlug.get(s.categoryId);
