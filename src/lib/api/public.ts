@@ -24,6 +24,7 @@ export type Subcategory = {
   _id: string;
   slug: string;
   categoryId: string;
+  parentSubcategoryId?: string | null;
   nameI18n: { uk: string; en?: string };
   imageUrl?: string;
   sort?: number;

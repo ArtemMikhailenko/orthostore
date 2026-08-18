@@ -33,6 +33,7 @@ type PromotionsPageContent = {
   sectionTitle?: string;
   countdownLabel?: string;
   countdownSublabel?: string;
+  countdownEndAt?: string;
   priceLabel?: string;
   orderBtnText?: string;
   detailsBtnText?: string;
@@ -156,10 +157,18 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
   /* ── Countdown timer ── */
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   useEffect(() => {
-    const calculateTimeLeft = () => {
+    const getEndTarget = () => {
+      const custom = pageContent.countdownEndAt;
+      if (custom) {
+        const d = new Date(custom);
+        if (!isNaN(d.getTime())) return d;
+      }
+      // Fallback: end of the current month
       const now = new Date();
-      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
-      const diff = endOfMonth.getTime() - now.getTime();
+      return new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+    };
+    const calculateTimeLeft = () => {
+      const diff = getEndTarget().getTime() - Date.now();
       if (diff > 0) {
         setTimeLeft({
           days: Math.floor(diff / (1000 * 60 * 60 * 24)),
@@ -167,12 +176,14 @@ export function PromotionsSliderSection({ className }: PromotionsSectionProps) {
           minutes: Math.floor((diff / (1000 * 60)) % 60),
           seconds: Math.floor((diff / 1000) % 60),
         });
+      } else {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
       }
     };
     calculateTimeLeft();
     const timer = setInterval(calculateTimeLeft, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [pageContent.countdownEndAt]);
 
   /* ── Hero slider navigation ── */
   const paginate = (newDirection: number) => {

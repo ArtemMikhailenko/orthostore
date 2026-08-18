@@ -626,9 +626,36 @@ function CategoryProductsPageInner() {
   );
   const subcategoryId = activeSub?._id;
 
-  // When a category has subcategories and none is picked yet, show a grid of
-  // subcategory cards instead of the product list.
-  const showSubcategoryCards = subcategories.length > 0 && !subcategoryId;
+  // ── 3-level hierarchy ──
+  // Top-level subgroups (no parent) shown on the category root.
+  const topSubcategories = useMemo(
+    () => subcategories.filter(s => !s.parentSubcategoryId),
+    [subcategories],
+  );
+  // Children ("підгрупи") of the currently opened subgroup.
+  const activeSubChildren = useMemo(
+    () => (activeSub ? subcategories.filter(s => s.parentSubcategoryId === activeSub._id) : []),
+    [subcategories, activeSub],
+  );
+  // Which cards to show: children of the open subgroup, else the top level.
+  const cardsToShow = activeSub ? activeSubChildren : topSubcategories;
+  // Show subgroup cards when there are any at the current level; otherwise the
+  // current subgroup is a leaf → show its products.
+  const showSubcategoryCards = cardsToShow.length > 0;
+
+  // Parent of the currently open subgroup (if it is a 3rd-level item).
+  const activeParent = useMemo(
+    () =>
+      activeSub?.parentSubcategoryId
+        ? subcategories.find(s => s._id === activeSub.parentSubcategoryId)
+        : undefined,
+    [subcategories, activeSub],
+  );
+  // Sibling chips shown above the product list (peers at the same level).
+  const chipList = activeParent
+    ? subcategories.filter(s => s.parentSubcategoryId === activeParent._id)
+    : topSubcategories;
+  const chipAllSlug = activeParent ? activeParent.slug : '';
 
   // Navigate to a subcategory (or clear it) via the ?sub= query param
   const selectSub = (nextSlug: string) => {
@@ -787,20 +814,46 @@ function CategoryProductsPageInner() {
             <span>/</span>
             <Link href="/catalog" className="hover:text-stone-600 transition-colors">Каталог</Link>
             <span>/</span>
-            <span className="text-stone-600">{categoryName || slug}</span>
+            {activeSub ? (
+              <Link href={`/catalog/${slug}`} className="hover:text-stone-600 transition-colors">{categoryName || slug}</Link>
+            ) : (
+              <span className="text-stone-600">{categoryName || slug}</span>
+            )}
+            {activeParent && (
+              <>
+                <span>/</span>
+                <button onClick={() => selectSub(activeParent.slug)} className="hover:text-stone-600 transition-colors">
+                  {pickI18n(activeParent.nameI18n as any, 'uk')}
+                </button>
+              </>
+            )}
+            {activeSub && (
+              <>
+                <span>/</span>
+                <span className="text-stone-600">{pickI18n(activeSub.nameI18n as any, 'uk')}</span>
+              </>
+            )}
           </div>
 
           {/* Title row */}
           <div className="flex flex-col lg:flex-row lg:items-center gap-4">
             <div className="flex items-center gap-3 flex-1 min-w-0">
-              <Link href="/catalog" className="p-2 -ml-2 rounded-lg hover:bg-stone-100 transition-colors">
+              <button
+                onClick={() => {
+                  if (activeParent) selectSub(activeParent.slug);
+                  else if (activeSub) selectSub('');
+                  else router.push('/catalog');
+                }}
+                className="p-2 -ml-2 rounded-lg hover:bg-stone-100 transition-colors"
+                aria-label="Назад"
+              >
                 <ChevronLeft className="w-5 h-5 text-stone-600" />
-              </Link>
+              </button>
               <h1 className="text-3xl font-light text-stone-900 tracking-tight truncate">
                 {categoryName}
               </h1>
               <span className="text-sm text-stone-500 bg-stone-100 px-3 py-1 rounded-full shrink-0">
-                {showSubcategoryCards ? `${subcategories.length} підкатегорій` : `${total} товарів`}
+                {showSubcategoryCards ? `${cardsToShow.length} підкатегорій` : `${total} товарів`}
               </span>
             </div>
 
@@ -841,21 +894,21 @@ function CategoryProductsPageInner() {
             )}
           </div>
 
-          {/* Subcategory chips — shown once a subcategory is selected */}
-          {!showSubcategoryCards && subcategories.length > 0 && (
+          {/* Subcategory chips — sibling subgroups at the current level */}
+          {!showSubcategoryCards && chipList.length > 0 && (
             <div className="flex items-center gap-2 flex-wrap mt-4">
               <button
-                onClick={() => selectSub('')}
+                onClick={() => selectSub(chipAllSlug)}
                 className={cn(
                   'px-4 py-1.5 rounded-full text-sm font-medium border transition-all duration-200',
-                  !subcategoryId
+                  subSlug === chipAllSlug
                     ? 'border-stone-900 bg-stone-900 text-white shadow-sm'
                     : 'border-stone-300 bg-white text-stone-600 hover:border-stone-500 hover:text-stone-900'
                 )}
               >
-                Всі
+                {activeParent ? pickI18n(activeParent.nameI18n as any, 'uk') : 'Всі'}
               </button>
-              {subcategories.map((sub) => {
+              {chipList.map((sub) => {
                 const selected = sub._id === subcategoryId;
                 return (
                   <button
@@ -910,12 +963,12 @@ function CategoryProductsPageInner() {
       <div className="max-w-7xl mx-auto px-6 py-8">
         {(slug === 'propysy-breketiv' || slug.includes('propys')) && <PropysyReference />}
         {showSubcategoryCards ? (
-          <div className="flex flex-wrap justify-center gap-6">
-            {subcategories.map((sub) => (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6">
+            {cardsToShow.map((sub) => (
               <Link
                 key={sub._id}
                 href={`/catalog/${slug}?sub=${encodeURIComponent(sub.slug)}`}
-                className="group block w-full sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] lg:w-[calc(25%-18px)] max-w-[300px] bg-white rounded-2xl border border-stone-200/60 hover:border-stone-300 hover:shadow-xl hover:shadow-stone-900/5 transition-all duration-300 overflow-hidden"
+                className="group block bg-white rounded-2xl border border-stone-200/60 hover:border-stone-300 hover:shadow-xl hover:shadow-stone-900/5 transition-all duration-300 overflow-hidden"
               >
                 <div className="relative aspect-[4/3] bg-stone-50 overflow-hidden">
                   {sub.imageUrl ? (
