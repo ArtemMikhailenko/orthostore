@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
+      loader: 'custom',
+      loaderFile: './image-loader.js',
       remotePatterns: [
         { protocol: 'http', hostname: 'localhost' },
         { protocol: 'https', hostname: 'res.cloudinary.com' },
