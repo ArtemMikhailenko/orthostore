@@ -283,8 +283,8 @@ function RelatedCard({
         )}
       </div>
       <div className="p-4 space-y-2">
-        {brand && <p className="text-xs text-stone-500 font-medium">{brand}</p>}
-        <h4 className="text-sm font-semibold text-stone-900 line-clamp-2 leading-tight group-hover:text-stone-700 transition-colors">
+        <p className="text-xs text-stone-500 font-medium min-h-[1rem] truncate">{brand}</p>
+        <h4 className="text-sm font-semibold text-stone-900 line-clamp-2 leading-tight min-h-[2.25rem] group-hover:text-stone-700 transition-colors">
           {title}
         </h4>
         <div className="flex items-center gap-2">
@@ -325,10 +325,8 @@ function RecentCard({ product }: { product: RecentProduct }) {
         )}
       </div>
       <div className="p-4 space-y-2">
-        {product.brand && (
-          <p className="text-xs text-stone-500 font-medium">{product.brand}</p>
-        )}
-        <h4 className="text-sm font-semibold text-stone-900 line-clamp-2 leading-tight group-hover:text-stone-700 transition-colors">
+        <p className="text-xs text-stone-500 font-medium min-h-[1rem] truncate">{product.brand}</p>
+        <h4 className="text-sm font-semibold text-stone-900 line-clamp-2 leading-tight min-h-[2.25rem] group-hover:text-stone-700 transition-colors">
           {product.title}
         </h4>
         <div className="flex items-center gap-2">

@@ -453,8 +453,8 @@ function ProductCard({ product, categorySlug }: { product: UiProduct; categorySl
       {/* Content */}
       <div className="p-5 space-y-3">
         <div>
-          <div className="text-sm text-stone-500 font-medium">{product.brand}</div>
-          <h3 className="font-semibold text-stone-900 group-hover:text-stone-700 transition-colors line-clamp-2 leading-tight">{product.name}</h3>
+          <div className="text-sm text-stone-500 font-medium min-h-[1.25rem] truncate">{product.brand}</div>
+          <h3 className="font-semibold text-stone-900 group-hover:text-stone-700 transition-colors line-clamp-2 leading-tight min-h-[2.5rem]">{product.name}</h3>
         </div>
 
         <div className="flex items-center gap-2">
