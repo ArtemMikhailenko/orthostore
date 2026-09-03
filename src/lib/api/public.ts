@@ -26,6 +26,8 @@ export type Subcategory = {
   categoryId: string;
   parentSubcategoryId?: string | null;
   relatedProductIds?: string[];
+  relatedCategoryId?: string | null;
+  relatedSubcategoryId?: string | null;
   nameI18n: { uk: string; en?: string };
   imageUrl?: string;
   sort?: number;

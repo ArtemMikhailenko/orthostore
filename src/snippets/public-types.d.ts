@@ -42,6 +42,8 @@ export interface Product {
   categoryIds: string[];
   subcategoryIds?: string[];
   relatedProductIds?: string[];
+  relatedCategoryId?: string | null;
+  relatedSubcategoryId?: string | null;
   tags: string[];
   images: string[];
   attributes: { key: string; value: string | number | boolean }[];
@@ -73,6 +75,8 @@ export interface Category {
   imageUrl?: string | null;
   cardSize?: string | null;
   relatedProductIds?: string[];
+  relatedCategoryId?: string | null;
+  relatedSubcategoryId?: string | null;
   sort?: number | null;
   isActive: boolean;
   createdAt?: string | null;

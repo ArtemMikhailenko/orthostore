@@ -469,25 +469,45 @@ export default function ProductDetailPage() {
   const { data: allCategories } = useCategories();
   const { data: allSubcategories } = useSubcategories();
 
-  const manualRelatedIds = useMemo<string[]>(() => {
-    const own = (product?.relatedProductIds ?? []) as string[];
-    if (own.length) return own;
+  // A recommendation source can be: an explicit product list, a whole
+  // subcategory, or a whole category. Priority within one config: list →
+  // subcategory → category.
+  type RecCfg = {
+    relatedProductIds?: string[];
+    relatedSubcategoryId?: string | null;
+    relatedCategoryId?: string | null;
+  };
+  const recQueryFrom = (cfg?: RecCfg | null) => {
+    if (!cfg) return null;
+    const ids = (cfg.relatedProductIds ?? []) as string[];
+    if (ids.length) return { ids, limit: Math.min(ids.length, 24) };
+    if (cfg.relatedSubcategoryId)
+      return { subcategory: cfg.relatedSubcategoryId, limit: 8, sort: "-createdAt" };
+    if (cfg.relatedCategoryId)
+      return { category: cfg.relatedCategoryId, limit: 8, sort: "-createdAt" };
+    return null;
+  };
+
+  // Resolve across levels: product → its subcategory → its category → auto.
+  const resolvedQuery = useMemo(() => {
+    const own = recQueryFrom(product as RecCfg | undefined);
+    if (own) return own;
     for (const sid of (product?.subcategoryIds ?? []) as string[]) {
-      const sub = allSubcategories?.find((s) => s._id === sid);
-      const r = (sub?.relatedProductIds ?? []) as string[];
-      if (r.length) return r;
+      const q = recQueryFrom(allSubcategories?.find((s) => s._id === sid) as RecCfg | undefined);
+      if (q) return q;
     }
     for (const cid of (product?.categoryIds ?? []) as string[]) {
-      const cat = allCategories?.find((c) => (c._id as string) === cid);
-      const r = ((cat as any)?.relatedProductIds ?? []) as string[];
-      if (r.length) return r;
+      const q = recQueryFrom(allCategories?.find((c) => (c._id as string) === cid) as RecCfg | undefined);
+      if (q) return q;
     }
-    return [];
+    return null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product, allSubcategories, allCategories]);
 
-  const relatedQuery = manualRelatedIds.length
-    ? { ids: manualRelatedIds, limit: Math.min(manualRelatedIds.length, 24) }
-    : { category: categoryId, limit: 8, sort: "-createdAt" };
+  const manualRelatedIds = (resolvedQuery && "ids" in resolvedQuery
+    ? resolvedQuery.ids
+    : []) as string[];
+  const relatedQuery = resolvedQuery ?? { category: categoryId, limit: 8, sort: "-createdAt" };
   const { data: relatedData } = useProducts(relatedQuery);
 
   const relatedProducts = useMemo(() => {
@@ -501,7 +521,7 @@ export default function ProductDetailPage() {
         )
         .slice(0, 8);
     }
-    return items.slice(0, 4);
+    return items.slice(0, 8);
   }, [relatedData, productSlug, manualRelatedIds]);
 
   // Record current product into "recently viewed" and load the list (excluding current)
