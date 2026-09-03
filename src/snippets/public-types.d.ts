@@ -40,6 +40,8 @@ export interface Product {
   titleI18n: I18nText;
   descriptionI18n?: I18nText;
   categoryIds: string[];
+  subcategoryIds?: string[];
+  relatedProductIds?: string[];
   tags: string[];
   images: string[];
   attributes: { key: string; value: string | number | boolean }[];
@@ -69,6 +71,8 @@ export interface Category {
   nameI18n: I18nText;
   descriptionI18n?: I18nText;
   imageUrl?: string | null;
+  cardSize?: string | null;
+  relatedProductIds?: string[];
   sort?: number | null;
   isActive: boolean;
   createdAt?: string | null;

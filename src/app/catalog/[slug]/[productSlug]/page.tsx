@@ -9,6 +9,7 @@ import {
   useProduct,
   useManufacturers,
   useCategories,
+  useSubcategories,
   useCountries,
   useProducts,
   useProductReviews,
@@ -461,20 +462,47 @@ export default function ProductDetailPage() {
     setSelectedTooth(null);
   }, [selectedVariant, product?._id]);
 
-  // Related products (same category)
+  // ── Recommended products (layered fallback) ──
+  // 1) product's own picks → 2) its subcategory defaults → 3) its category
+  // defaults → 4) auto (same category, newest). Configured in the admin.
   const categoryId = product?.categoryIds?.[0];
-  const { data: relatedData } = useProducts({
-    category: categoryId,
-    limit: 8,
-    sort: "-createdAt",
-  });
-  const relatedProducts = useMemo(
-    () =>
-      (relatedData?.items ?? []).filter(
-        (p) => p.slug !== productSlug
-      ).slice(0, 4),
-    [relatedData, productSlug]
-  );
+  const { data: allCategories } = useCategories();
+  const { data: allSubcategories } = useSubcategories();
+
+  const manualRelatedIds = useMemo<string[]>(() => {
+    const own = (product?.relatedProductIds ?? []) as string[];
+    if (own.length) return own;
+    for (const sid of (product?.subcategoryIds ?? []) as string[]) {
+      const sub = allSubcategories?.find((s) => s._id === sid);
+      const r = (sub?.relatedProductIds ?? []) as string[];
+      if (r.length) return r;
+    }
+    for (const cid of (product?.categoryIds ?? []) as string[]) {
+      const cat = allCategories?.find((c) => (c._id as string) === cid);
+      const r = ((cat as any)?.relatedProductIds ?? []) as string[];
+      if (r.length) return r;
+    }
+    return [];
+  }, [product, allSubcategories, allCategories]);
+
+  const relatedQuery = manualRelatedIds.length
+    ? { ids: manualRelatedIds, limit: Math.min(manualRelatedIds.length, 24) }
+    : { category: categoryId, limit: 8, sort: "-createdAt" };
+  const { data: relatedData } = useProducts(relatedQuery);
+
+  const relatedProducts = useMemo(() => {
+    const items = (relatedData?.items ?? []).filter((p) => p.slug !== productSlug);
+    if (manualRelatedIds.length) {
+      const order = new Map(manualRelatedIds.map((id, i) => [id, i]));
+      return [...items]
+        .sort(
+          (a, b) =>
+            (order.get(a._id as string) ?? 999) - (order.get(b._id as string) ?? 999),
+        )
+        .slice(0, 8);
+    }
+    return items.slice(0, 4);
+  }, [relatedData, productSlug, manualRelatedIds]);
 
   // Record current product into "recently viewed" and load the list (excluding current)
   useEffect(() => {

@@ -25,6 +25,7 @@ export type Subcategory = {
   slug: string;
   categoryId: string;
   parentSubcategoryId?: string | null;
+  relatedProductIds?: string[];
   nameI18n: { uk: string; en?: string };
   imageUrl?: string;
   sort?: number;
@@ -44,6 +45,7 @@ export function getManufacturers(): Promise<Manufacturer[]> {
 export type GetProductsParams = {
   q?: string;
   qLike?: string;
+  ids?: string | string[];
   category?: string;
   subcategory?: string;
   manufacturerId?: string | string[];
