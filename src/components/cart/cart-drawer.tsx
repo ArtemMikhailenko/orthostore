@@ -74,6 +74,11 @@ export function CartDrawer() {
                             Зуб {it.tooth}
                           </div>
                         ) : null}
+                        {it.color ? (
+                          <div className="inline-flex items-center gap-1 text-[11px] font-medium text-fuchsia-700 bg-fuchsia-100 px-2 py-0.5 rounded-full mt-1">
+                            Колір: {it.color}
+                          </div>
+                        ) : null}
                       </div>
                       <button onClick={() => removeItem(it.id)} className="p-2 text-stone-400 hover:text-red-600 hover:bg-red-50 rounded">
                         <Trash2 className="w-4 h-4" />

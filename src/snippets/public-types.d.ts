@@ -47,6 +47,7 @@ export interface Product {
   tags: string[];
   images: string[];
   attributes: { key: string; value: string | number | boolean }[];
+  colors?: { name: string; hex?: string }[];
   variants: ProductVariant[];
   manufacturerIds: string[];
   countryIds: string[];

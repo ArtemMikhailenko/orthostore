@@ -14,6 +14,7 @@ export type CartItem = {
   brand?: string;
   options?: Record<string, string | number>; // variant options snapshot (Розмір/Тип/…)
   tooth?: string; // FDI tooth number for per-piece brackets/tubes (e.g. "16")
+  color?: string; // selected colour name (e.g. elastic ligatures)
 };
 
 type CartState = {

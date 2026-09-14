@@ -21,6 +21,7 @@ import { pickI18n } from "@/snippets/i18n";
 import { useCartStore } from "@/lib/cart-store";
 import { getAccessToken } from "@/lib/api/auth";
 import { ToothSelector } from "@/components/ui/tooth-selector";
+import { ColorSelector } from "@/components/ui/color-selector";
 import {
   addRecentlyViewed,
   getRecentlyViewed,
@@ -360,6 +361,7 @@ export default function ProductDetailPage() {
 
   const [selectedVariant, setSelectedVariant] = useState(0);
   const [selectedTooth, setSelectedTooth] = useState<string | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -446,6 +448,14 @@ export default function ProductDetailPage() {
 
   const needTooth = isToothProduct && isPieceVariant;
 
+  // Selectable colours (e.g. elastic ligatures). Shown whenever the admin has
+  // added colours to this product.
+  const colors = useMemo(
+    () => ((product as any)?.colors ?? []) as { name: string; hex?: string }[],
+    [product]
+  );
+  const needColor = colors.length > 0;
+
   // Pre-select the admin-chosen default variant (else the first) on load
   useEffect(() => {
     if (!product) return;
@@ -461,6 +471,11 @@ export default function ProductDetailPage() {
   useEffect(() => {
     setSelectedTooth(null);
   }, [selectedVariant, product?._id]);
+
+  // Reset the chosen colour when the product changes
+  useEffect(() => {
+    setSelectedColor(null);
+  }, [product?._id]);
 
   // ── Recommended products (layered fallback) ──
   // 1) product's own picks → 2) its subcategory defaults → 3) its category
@@ -558,10 +573,12 @@ export default function ProductDetailPage() {
   const handleAddToCart = () => {
     if (!product || !variant) return;
     if (needTooth && !selectedTooth) return; // guard: tooth required
+    if (needColor && !selectedColor) return; // guard: colour required
     const toothSuffix = needTooth && selectedTooth ? `-t${selectedTooth}` : "";
+    const colorSuffix = needColor && selectedColor ? `-c${selectedColor}` : "";
     addItem(
       {
-        id: `${product._id}-${variant._id || selectedVariant}${toothSuffix}`,
+        id: `${product._id}-${variant._id || selectedVariant}${toothSuffix}${colorSuffix}`,
         productId: String(product._id),
         sku: variant.sku,
         name: title,
@@ -570,6 +587,7 @@ export default function ProductDetailPage() {
         brand: brandName || undefined,
         options: variant.options as Record<string, string | number> | undefined,
         tooth: needTooth && selectedTooth ? selectedTooth : undefined,
+        color: needColor && selectedColor ? selectedColor : undefined,
       },
       quantity
     );
@@ -786,6 +804,15 @@ export default function ProductDetailPage() {
               />
             )}
 
+            {/* Colour picker — e.g. elastic ligatures/chains */}
+            {needColor && (
+              <ColorSelector
+                colors={colors}
+                value={selectedColor}
+                onChange={setSelectedColor}
+              />
+            )}
+
             {/* Price block */}
             <div className="bg-stone-50 rounded-2xl p-6 space-y-4">
               <div className="flex items-end gap-3">
@@ -836,7 +863,7 @@ export default function ProductDetailPage() {
 
                 <button
                   onClick={handleAddToCart}
-                  disabled={needTooth && !selectedTooth}
+                  disabled={(needTooth && !selectedTooth) || (needColor && !selectedColor)}
                   className="flex-1 flex items-center justify-center gap-3 bg-stone-900 text-white py-3.5 px-6 rounded-xl font-medium hover:bg-stone-800 transition-all duration-300 shadow-lg shadow-stone-900/20 hover:shadow-xl hover:shadow-stone-900/30 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-stone-900 disabled:active:scale-100"
                 >
                   <ShoppingCart className="w-5 h-5" />
@@ -847,6 +874,11 @@ export default function ProductDetailPage() {
               {needTooth && !selectedTooth && (
                 <p className="text-xs text-amber-600">
                   Оберіть зуб, щоб додати товар у кошик
+                </p>
+              )}
+              {needColor && !selectedColor && (
+                <p className="text-xs text-amber-600">
+                  Оберіть колір, щоб додати товар у кошик
                 </p>
               )}
 

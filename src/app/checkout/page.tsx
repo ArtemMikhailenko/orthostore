@@ -920,6 +920,7 @@ export default function CheckoutPage() {
                               options: {
                                 ...(item.options ?? {}),
                                 ...(item.tooth ? { 'Зуб': item.tooth } : {}),
+                                ...(item.color ? { 'Колір': item.color } : {}),
                               } as Record<string, string | number>,
                             })),
                             deliveryFee: actualDeliveryPrice,
