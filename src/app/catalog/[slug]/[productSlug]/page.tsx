@@ -358,6 +358,8 @@ export default function ProductDetailPage() {
   const { data: manufacturers } = useManufacturers();
   const { data: categories } = useCategories();
   const { data: countries } = useCountries();
+  const { data: allCategories } = useCategories();
+  const { data: allSubcategories } = useSubcategories();
 
   const [selectedVariant, setSelectedVariant] = useState(0);
   const [selectedTooth, setSelectedTooth] = useState<string | null>(null);
@@ -448,12 +450,23 @@ export default function ProductDetailPage() {
 
   const needTooth = isToothProduct && isPieceVariant;
 
-  // Selectable colours (e.g. elastic ligatures). Shown whenever the admin has
-  // added colours to this product.
-  const colors = useMemo(
-    () => ((product as any)?.colors ?? []) as { name: string; hex?: string }[],
-    [product]
-  );
+  // Selectable colours (e.g. elastic ligatures). Resolved from the product,
+  // else its subcategory defaults, else its category defaults.
+  const colors = useMemo<{ name: string; hex?: string }[]>(() => {
+    const own = ((product?.colors ?? []) as { name: string; hex?: string }[]);
+    if (own.length) return own;
+    for (const sid of (product?.subcategoryIds ?? []) as string[]) {
+      const sub = allSubcategories?.find((s) => s._id === sid);
+      const c = (sub?.colors ?? []) as { name: string; hex?: string }[];
+      if (c.length) return c;
+    }
+    for (const cid of (product?.categoryIds ?? []) as string[]) {
+      const cat = allCategories?.find((c) => (c._id as string) === cid);
+      const c = ((cat as any)?.colors ?? []) as { name: string; hex?: string }[];
+      if (c.length) return c;
+    }
+    return [];
+  }, [product, allSubcategories, allCategories]);
   const needColor = colors.length > 0;
 
   // Pre-select the admin-chosen default variant (else the first) on load
@@ -481,8 +494,6 @@ export default function ProductDetailPage() {
   // 1) product's own picks → 2) its subcategory defaults → 3) its category
   // defaults → 4) auto (same category, newest). Configured in the admin.
   const categoryId = product?.categoryIds?.[0];
-  const { data: allCategories } = useCategories();
-  const { data: allSubcategories } = useSubcategories();
 
   // A recommendation source can be: an explicit product list, a whole
   // subcategory, or a whole category. Priority within one config: list →

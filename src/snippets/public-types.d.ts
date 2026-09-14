@@ -78,6 +78,7 @@ export interface Category {
   relatedProductIds?: string[];
   relatedCategoryId?: string | null;
   relatedSubcategoryId?: string | null;
+  colors?: { name: string; hex?: string }[];
   sort?: number | null;
   isActive: boolean;
   createdAt?: string | null;

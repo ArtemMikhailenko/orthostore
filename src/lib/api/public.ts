@@ -28,6 +28,7 @@ export type Subcategory = {
   relatedProductIds?: string[];
   relatedCategoryId?: string | null;
   relatedSubcategoryId?: string | null;
+  colors?: { name: string; hex?: string }[];
   nameI18n: { uk: string; en?: string };
   imageUrl?: string;
   sort?: number;
