@@ -451,7 +451,7 @@ function ProductCard({ product, categorySlug }: { product: UiProduct; categorySl
       </div>
 
       {/* Content */}
-      <div className="p-5 space-y-3">
+      <div className="p-3 sm:p-5 space-y-2 sm:space-y-3">
         <div>
           <div className="text-sm text-stone-500 font-medium min-h-[1.25rem] truncate">{product.brand}</div>
           <h3 className="font-semibold text-stone-900 group-hover:text-stone-700 transition-colors line-clamp-2 leading-tight min-h-[2.5rem]">{product.name}</h3>
@@ -859,9 +859,9 @@ function CategoryProductsPageInner() {
 
             {/* Sort + View + Filters — hidden on the subcategory-cards view */}
             {!showSubcategoryCards && (
-            <div className="flex items-center gap-3">
-              {/* View mode toggle */}
-              <div className="flex items-center bg-white border border-stone-300 rounded-xl overflow-hidden shadow-sm">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              {/* View mode toggle — hidden on mobile (grid is default there) */}
+              <div className="hidden sm:flex items-center bg-white border border-stone-300 rounded-xl overflow-hidden shadow-sm">
                 <button
                   onClick={() => setViewMode('grid')}
                   className={cn('p-2.5 transition-colors', viewMode === 'grid' ? 'bg-stone-900 text-white' : 'text-stone-400 hover:text-stone-600')}
@@ -999,7 +999,7 @@ function CategoryProductsPageInner() {
         {isLoading && uiProducts.length === 0 ? (
           <div className={cn(
             viewMode === 'grid'
-              ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8'
+              ? 'grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-8'
               : 'flex flex-col gap-4',
           )}>
             {Array.from({ length: 8 }).map((_, i) => (
@@ -1009,7 +1009,7 @@ function CategoryProductsPageInner() {
         ) : uiProducts.length > 0 ? (
           <div className={cn(
             viewMode === 'grid'
-              ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-12'
+              ? 'grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-8 mb-12'
               : 'flex flex-col gap-4 mb-12',
           )}>
             {uiProducts.map(product =>

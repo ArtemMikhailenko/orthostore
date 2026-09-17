@@ -946,7 +946,7 @@ export default function ProductDetailPage() {
 
         {/* Tabs: Description / Attributes / Delivery */}
         <div className="mt-16">
-          <div className="flex gap-1 border-b border-stone-200">
+          <div className="flex gap-1 border-b border-stone-200 overflow-x-auto flex-nowrap [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {(
               [
                 { key: "description", label: "Опис" },
@@ -959,7 +959,7 @@ export default function ProductDetailPage() {
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
                 className={cn(
-                  "px-6 py-3.5 text-sm font-medium transition-all duration-200 border-b-2 -mb-px",
+                  "px-4 sm:px-6 py-3.5 text-sm font-medium transition-all duration-200 border-b-2 -mb-px whitespace-nowrap shrink-0",
                   activeTab === tab.key
                     ? "border-stone-900 text-stone-900"
                     : "border-transparent text-stone-400 hover:text-stone-600"

@@ -26,10 +26,13 @@ export function CartDrawer() {
         onClick={close}
       />
 
-      {/* Panel */}
+      {/* Panel — wrapped in a viewport-sized, clipping container so the
+          off-canvas (translate-x-full) panel never causes horizontal page
+          overflow on mobile. */}
+      <div className="fixed inset-0 z-[61] overflow-hidden pointer-events-none">
       <aside
         className={cn(
-          'fixed right-0 top-0 bottom-0 z-[61] w-full sm:w-[420px] bg-white shadow-2xl border-l border-stone-200 rounded-l-2xl overflow-hidden transition-transform duration-300 ease-out flex flex-col',
+          'absolute right-0 top-0 bottom-0 w-full sm:w-[420px] bg-white shadow-2xl border-l border-stone-200 rounded-l-2xl overflow-hidden transition-transform duration-300 ease-out flex flex-col pointer-events-auto',
           isOpen ? 'translate-x-0' : 'translate-x-full'
         )}
         aria-hidden={!isOpen}
@@ -127,6 +130,7 @@ export function CartDrawer() {
           </Link>
         </div>
       </aside>
+      </div>
     </>
   );
 }
