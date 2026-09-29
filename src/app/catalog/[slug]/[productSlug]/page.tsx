@@ -799,6 +799,27 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
+            {/* ZOO elastics chart shortcut */}
+            {product.slug === "ormco-intermax-elastics" && (
+              <Link
+                href="/elastyky-zoo"
+                className="group flex items-center justify-between gap-3 rounded-2xl border border-sky-200 bg-gradient-to-r from-sky-50 to-white px-4 py-3 hover:border-sky-300 hover:shadow-sm transition-all"
+              >
+                <span className="flex items-center gap-3">
+                  <span className="flex -space-x-1.5">
+                    <span className="w-4 h-4 rounded-full bg-pink-400 border-2 border-white" />
+                    <span className="w-5 h-5 rounded-full bg-sky-400 border-2 border-white" />
+                    <span className="w-6 h-6 rounded-full bg-amber-400 border-2 border-white" />
+                  </span>
+                  <span>
+                    <span className="block text-sm font-semibold text-stone-900">Таблиця еластиків ZOO</span>
+                    <span className="block text-xs text-stone-500">Оберіть розмір і силу за зручною таблицею</span>
+                  </span>
+                </span>
+                <span className="text-sky-600 group-hover:translate-x-0.5 transition-transform">→</span>
+              </Link>
+            )}
+
             {/* Option groups (separate selector per option) */}
             <OptionGroupsSelector
               variants={product.variants}
