@@ -3,12 +3,15 @@
 import React from "react";
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
-import { ZooElasticsTable } from "@/components/sections/ZooElasticsTable";
+import { ZooElasticsTable, ZOO_PRODUCT_SLUG } from "@/components/sections/ZooElasticsTable";
+import { useProduct } from "@/lib/api/hooks";
 
 export default function ZooElasticsPage() {
+  const { data: product } = useProduct(ZOO_PRODUCT_SLUG);
+  const entries = ((product as any)?.elasticsTable?.entries ?? []) as any[];
+
   return (
     <div className="min-h-screen bg-stone-50/40">
-      {/* Header */}
       <div className="relative overflow-hidden border-b border-stone-200/60 bg-white">
         <div className="absolute -top-24 -right-16 w-72 h-72 rounded-full bg-gradient-to-br from-sky-100 via-amber-50 to-transparent blur-2xl opacity-70" aria-hidden />
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-8 pb-6">
@@ -33,7 +36,11 @@ export default function ZooElasticsPage() {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        <ZooElasticsTable />
+        {entries.length > 0 ? (
+          <ZooElasticsTable product={product} entries={entries} />
+        ) : (
+          <p className="text-stone-500">Таблиця тимчасово недоступна.</p>
+        )}
       </div>
     </div>
   );

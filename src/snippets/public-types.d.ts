@@ -48,6 +48,21 @@ export interface Product {
   images: string[];
   attributes: { key: string; value: string | number | boolean }[];
   colors?: { name: string; hex?: string }[];
+  elasticsTable?: {
+    title?: string;
+    entries: {
+      group: "intra" | "extra";
+      size: string;
+      mm: number;
+      forceName: string;
+      oz: string;
+      g: string;
+      level: number;
+      animal: string;
+      art: string;
+      colorArt?: string;
+    }[];
+  } | null;
   variants: ProductVariant[];
   manufacturerIds: string[];
   countryIds: string[];

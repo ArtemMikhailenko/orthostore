@@ -22,7 +22,7 @@ import { useCartStore } from "@/lib/cart-store";
 import { getAccessToken } from "@/lib/api/auth";
 import { ToothSelector } from "@/components/ui/tooth-selector";
 import { ColorSelector } from "@/components/ui/color-selector";
-import { ZooElasticsTable, ZOO_PRODUCT_SLUG } from "@/components/sections/ZooElasticsTable";
+import { ZooElasticsTable } from "@/components/sections/ZooElasticsTable";
 import {
   addRecentlyViewed,
   getRecentlyViewed,
@@ -469,7 +469,7 @@ export default function ProductDetailPage() {
     return [];
   }, [product, allSubcategories, allCategories]);
   const needColor = colors.length > 0;
-  const isZoo = (product?.slug ?? "") === ZOO_PRODUCT_SLUG;
+  const isZoo = (((product as any)?.elasticsTable?.entries?.length ?? 0) > 0);
 
   // Pre-select the admin-chosen default variant (else the first) on load
   useEffect(() => {
@@ -969,9 +969,12 @@ export default function ProductDetailPage() {
         {isZoo && (
           <section className="mt-12">
             <h2 className="text-2xl font-light text-stone-900 tracking-tight mb-5">
-              Оберіть еластики за таблицею <span className="font-semibold">ZOO</span>
+              Оберіть потрібні еластики
             </h2>
-            <ZooElasticsTable />
+            <ZooElasticsTable
+              product={product}
+              entries={(product as any).elasticsTable.entries}
+            />
           </section>
         )}
 
