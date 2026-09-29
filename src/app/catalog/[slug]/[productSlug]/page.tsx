@@ -22,6 +22,7 @@ import { useCartStore } from "@/lib/cart-store";
 import { getAccessToken } from "@/lib/api/auth";
 import { ToothSelector } from "@/components/ui/tooth-selector";
 import { ColorSelector } from "@/components/ui/color-selector";
+import { ZooElasticsTable, ZOO_PRODUCT_SLUG } from "@/components/sections/ZooElasticsTable";
 import {
   addRecentlyViewed,
   getRecentlyViewed,
@@ -468,6 +469,7 @@ export default function ProductDetailPage() {
     return [];
   }, [product, allSubcategories, allCategories]);
   const needColor = colors.length > 0;
+  const isZoo = (product?.slug ?? "") === ZOO_PRODUCT_SLUG;
 
   // Pre-select the admin-chosen default variant (else the first) on load
   useEffect(() => {
@@ -799,33 +801,28 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            {/* ZOO elastics chart shortcut */}
-            {product.slug === "ormco-intermax-elastics" && (
-              <Link
-                href="/elastyky-zoo"
-                className="group flex items-center justify-between gap-3 rounded-2xl border border-sky-200 bg-gradient-to-r from-sky-50 to-white px-4 py-3 hover:border-sky-300 hover:shadow-sm transition-all"
-              >
-                <span className="flex items-center gap-3">
-                  <span className="flex -space-x-1.5">
-                    <span className="w-4 h-4 rounded-full bg-pink-400 border-2 border-white" />
-                    <span className="w-5 h-5 rounded-full bg-sky-400 border-2 border-white" />
-                    <span className="w-6 h-6 rounded-full bg-amber-400 border-2 border-white" />
-                  </span>
-                  <span>
-                    <span className="block text-sm font-semibold text-stone-900">Таблиця еластиків ZOO</span>
-                    <span className="block text-xs text-stone-500">Оберіть розмір і силу за зручною таблицею</span>
-                  </span>
+            {/* ZOO product: purchase happens in the matrix below */}
+            {isZoo && (
+              <div className="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 flex items-center gap-3">
+                <span className="flex -space-x-1.5 shrink-0">
+                  <span className="w-4 h-4 rounded-full bg-pink-400 border-2 border-white" />
+                  <span className="w-5 h-5 rounded-full bg-amber-400 border-2 border-white" />
+                  <span className="w-6 h-6 rounded-full bg-sky-400 border-2 border-white" />
                 </span>
-                <span className="text-sky-600 group-hover:translate-x-0.5 transition-transform">→</span>
-              </Link>
+                <span className="text-sm text-stone-600">
+                  Оберіть потрібні розміри та силу в <span className="font-semibold text-stone-900">таблиці нижче ↓</span>
+                </span>
+              </div>
             )}
 
             {/* Option groups (separate selector per option) */}
-            <OptionGroupsSelector
-              variants={product.variants}
-              selectedIndex={selectedVariant}
-              onSelect={setSelectedVariant}
-            />
+            {!isZoo && (
+              <OptionGroupsSelector
+                variants={product.variants}
+                selectedIndex={selectedVariant}
+                onSelect={setSelectedVariant}
+              />
+            )}
 
             {/* Tooth picker — for per-piece brackets / buccal tubes */}
             {needTooth && (
@@ -846,6 +843,7 @@ export default function ProductDetailPage() {
             )}
 
             {/* Price block */}
+            {!isZoo && (
             <div className="bg-stone-50 rounded-2xl p-6 space-y-4">
               <div className="flex items-end gap-3">
                 <span className="text-4xl font-bold text-stone-900">
@@ -922,6 +920,8 @@ export default function ProductDetailPage() {
               )}
             </div>
 
+            )}
+
             {/* Guarantees */}
             <div className="grid grid-cols-3 gap-3">
               <div className="flex flex-col items-center text-center p-4 bg-white rounded-xl border border-stone-200/50">
@@ -964,6 +964,16 @@ export default function ProductDetailPage() {
             )}
           </div>
         </div>
+
+        {/* ZOO elastics matrix (this product only) */}
+        {isZoo && (
+          <section className="mt-12">
+            <h2 className="text-2xl font-light text-stone-900 tracking-tight mb-5">
+              Оберіть еластики за таблицею <span className="font-semibold">ZOO</span>
+            </h2>
+            <ZooElasticsTable />
+          </section>
+        )}
 
         {/* Tabs: Description / Attributes / Delivery */}
         <div className="mt-16">
