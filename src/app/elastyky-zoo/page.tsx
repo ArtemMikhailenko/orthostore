@@ -2,42 +2,41 @@
 
 import React, { useMemo, useState } from "react";
 import Link from "next/link";
-import { ShoppingCart, Check, Info, Minus, Plus } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useProduct } from "@/lib/api/hooks";
 import { productDisplayPrice } from "@/lib/api/public";
 import { useCartStore } from "@/lib/cart-store";
 
 /* ─── ZOO elastics data (Ormco) ─── */
-type Size = { size: string; mm: number; colored?: boolean };
+type Size = { size: string; mm: number };
 type Cell = { name: string; art: string; colorArt?: string };
-type Force = { key: string; name: string; oz: string; g: string };
+type Force = { key: string; name: string; oz: string; g: string; level: number };
 
 const SIZES: Size[] = [
-  { size: '1/8"', mm: 3.18, colored: true },
-  { size: '3/16"', mm: 4.76, colored: true },
-  { size: '1/4"', mm: 6.35, colored: true },
-  { size: '5/16"', mm: 7.94, colored: true },
-  { size: '3/8"', mm: 9.35, colored: true },
+  { size: '1/8"', mm: 3.18 },
+  { size: '3/16"', mm: 4.76 },
+  { size: '1/4"', mm: 6.35 },
+  { size: '5/16"', mm: 7.94 },
+  { size: '3/8"', mm: 9.35 },
   { size: '1/2"', mm: 12.7 },
   { size: '5/8"', mm: 15.9 },
   { size: '3/4"', mm: 19.1 },
 ];
 
 const FORCES_INTRA: Force[] = [
-  { key: "weak", name: "Слабкі", oz: "2 oz", g: "60 г" },
-  { key: "medium", name: "Середні", oz: "3 oz", g: "85 г" },
-  { key: "medstrong", name: "Середньо-сильні", oz: "3.5 oz", g: "100 г" },
-  { key: "strong", name: "Сильні", oz: "4.5 oz", g: "130 г" },
-  { key: "vstrong", name: "Дуже сильні", oz: "6 oz", g: "170 г" },
+  { key: "weak", name: "Слабкі", oz: "2 oz", g: "60 г", level: 1 },
+  { key: "medium", name: "Середні", oz: "3 oz", g: "85 г", level: 2 },
+  { key: "medstrong", name: "Середньо-сильні", oz: "3.5 oz", g: "100 г", level: 3 },
+  { key: "strong", name: "Сильні", oz: "4.5 oz", g: "130 г", level: 4 },
+  { key: "vstrong", name: "Дуже сильні", oz: "6 oz", g: "170 г", level: 5 },
 ];
 
 const FORCES_EXTRA: Force[] = [
-  { key: "exweak", name: "Слабкі", oz: "8 oz", g: "230 г" },
-  { key: "exstrong", name: "Сильні", oz: "14 oz", g: "400 г" },
+  { key: "exweak", name: "Слабкі", oz: "8 oz", g: "230 г", level: 4 },
+  { key: "exstrong", name: "Сильні", oz: "14 oz", g: "400 г", level: 5 },
 ];
 
-// cells[group][size][forceKey]
 const CELLS: Record<"intra" | "extra", Record<string, Record<string, Cell>>> = {
   intra: {
     '1/8"': {
@@ -103,22 +102,53 @@ const CELLS: Record<"intra" | "extra", Record<string, Record<string, Cell>>> = {
   },
 };
 
-/* Proportional swatch for the elastic diameter. */
-function DiameterDot({ mm }: { mm: number }) {
-  const px = Math.round(mm * 1.25) + 6; // ~10px .. ~30px
+const STRENGTH_COLORS = ["#34d399", "#a3e635", "#f59e0b", "#f97316", "#ef4444"];
+
+/* Proportional ring drawn to the elastic's real diameter. */
+function ElasticRing({ mm, size = "md" }: { mm: number; size?: "sm" | "md" }) {
+  const scale = size === "sm" ? 1.4 : 2.1;
+  const px = Math.round(mm * scale) + (size === "sm" ? 6 : 10);
+  const border = Math.max(2, Math.round(px / 9));
   return (
     <span
-      className="inline-block rounded-full border-[1.5px] border-stone-400"
-      style={{ width: px, height: px }}
+      className="inline-block rounded-full"
+      style={{
+        width: px,
+        height: px,
+        border: `${border}px solid #a8a29e`,
+        boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.6)",
+      }}
       aria-hidden
     />
+  );
+}
+
+/* Small 5-bar strength meter. */
+function StrengthMeter({ level }: { level: number }) {
+  return (
+    <span className="inline-flex items-end gap-[3px] h-3.5" aria-hidden>
+      {[0, 1, 2, 3, 4].map((i) => (
+        <span
+          key={i}
+          className="w-[3px] rounded-full"
+          style={{
+            height: `${6 + i * 2}px`,
+            background: i < level ? STRENGTH_COLORS[level - 1] : "#e7e5e4",
+          }}
+        />
+      ))}
+    </span>
   );
 }
 
 export default function ZooElasticsPage() {
   const [group, setGroup] = useState<"intra" | "extra">("intra");
   const { data: product } = useProduct("ormco-intermax-elastics");
+
+  const items = useCartStore((s) => s.items);
   const addItem = useCartStore((s) => s.addItem);
+  const increase = useCartStore((s) => s.increase);
+  const decrease = useCartStore((s) => s.decrease);
   const openCart = useCartStore((s) => s.open);
 
   const price = useMemo(
@@ -128,27 +158,22 @@ export default function ZooElasticsPage() {
 
   const forces = group === "intra" ? FORCES_INTRA : FORCES_EXTRA;
   const cells = CELLS[group];
-  // Only rows that have at least one cell in the active group.
   const rows = useMemo(
     () => SIZES.filter((s) => cells[s.size] && Object.keys(cells[s.size]).length),
     [cells]
   );
 
-  // Per-cell quantity + colored choice + "added" flash.
-  const [qty, setQty] = useState<Record<string, number>>({});
   const [colored, setColored] = useState<Record<string, boolean>>({});
-  const [added, setAdded] = useState<Record<string, boolean>>({});
+  const cellKey = (size: string, fk: string) => `${group}-${size}-${fk}`;
 
-  const cellId = (size: string, fk: string) => `${group}-${size}-${fk}`;
-  const getQty = (id: string) => qty[id] ?? 1;
-  const bumpQty = (id: string, d: number) =>
-    setQty((q) => ({ ...q, [id]: Math.max(1, (q[id] ?? 1) + d) }));
+  const skuFor = (id: string, cell: Cell) =>
+    cell.colorArt && colored[id] ? (cell.colorArt as string) : cell.art;
 
   const add = (size: string, force: Force, cell: Cell) => {
     if (!product) return;
-    const id = cellId(size, force.key);
+    const id = cellKey(size, force.key);
     const isColored = !!cell.colorArt && !!colored[id];
-    const sku = isColored ? (cell.colorArt as string) : cell.art;
+    const sku = skuFor(id, cell);
     addItem(
       {
         id: `zoo-${sku}`,
@@ -166,45 +191,37 @@ export default function ZooElasticsPage() {
           ...(isColored ? { Колір: "Кольорові" } : {}),
         },
       },
-      getQty(id)
+      1
     );
     openCart();
-    setAdded((a) => ({ ...a, [id]: true }));
-    setTimeout(() => setAdded((a) => ({ ...a, [id]: false })), 1500);
   };
 
-  /* ── One cell's interactive controls (shared desktop + mobile) ── */
-  const CellControls = ({
-    size,
-    force,
-    cell,
-    compact,
-  }: {
-    size: string;
-    force: Force;
-    cell: Cell;
-    compact?: boolean;
-  }) => {
-    const id = cellId(size, force.key);
+  /* ── Cell content (shared desktop + mobile) ── */
+  const CellBody = ({ size, force, cell }: { size: string; force: Force; cell: Cell }) => {
+    const id = cellKey(size, force.key);
     const isColored = !!cell.colorArt && !!colored[id];
+    const sku = skuFor(id, cell);
+    const inCart = items.find((it) => it.id === `zoo-${sku}`);
+
     return (
-      <div className={cn("flex flex-col gap-2", compact ? "" : "h-full")}>
-        <div>
-          <div className="font-semibold text-stone-900 leading-tight">{cell.name}</div>
-          <div className="text-[11px] font-mono text-stone-400 mt-0.5">
-            {isColored ? cell.colorArt : cell.art}
+      <div className="flex flex-col h-full">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <div className="font-semibold text-stone-900 leading-tight truncate">{cell.name}</div>
+            <div className="text-[11px] font-mono text-stone-400 mt-0.5">{sku}</div>
           </div>
+          {cell.colorArt && (
+            <span className="w-4 h-4 rounded-full bg-gradient-to-br from-pink-400 via-amber-300 to-sky-400 shrink-0 ring-2 ring-white shadow-sm" title="Доступні кольорові" />
+          )}
         </div>
 
         {cell.colorArt && (
-          <div className="flex gap-1">
+          <div className="mt-2 inline-flex rounded-full bg-stone-100 p-0.5 text-[10px] font-medium w-fit">
             <button
               onClick={() => setColored((c) => ({ ...c, [id]: false }))}
               className={cn(
-                "px-2 py-0.5 rounded-full text-[10px] font-medium border transition-colors",
-                !isColored
-                  ? "border-stone-900 bg-stone-900 text-white"
-                  : "border-stone-300 text-stone-500 hover:border-stone-400"
+                "px-2 py-0.5 rounded-full transition-colors",
+                !isColored ? "bg-white text-stone-900 shadow-sm" : "text-stone-500"
               )}
             >
               Прозорі
@@ -212,61 +229,55 @@ export default function ZooElasticsPage() {
             <button
               onClick={() => setColored((c) => ({ ...c, [id]: true }))}
               className={cn(
-                "px-2 py-0.5 rounded-full text-[10px] font-medium border transition-colors inline-flex items-center gap-1",
-                isColored
-                  ? "border-sky-500 bg-sky-500 text-white"
-                  : "border-stone-300 text-stone-500 hover:border-stone-400"
+                "px-2 py-0.5 rounded-full transition-colors",
+                isColored ? "bg-white text-stone-900 shadow-sm" : "text-stone-500"
               )}
             >
-              <span className="w-2 h-2 rounded-full bg-gradient-to-br from-pink-400 via-yellow-400 to-sky-400" />
               Кольорові
             </button>
           </div>
         )}
 
-        <div className="mt-auto flex items-center gap-2">
-          <div className="flex items-center border border-stone-300 rounded-lg overflow-hidden shrink-0">
+        <div className="mt-auto pt-3">
+          {inCart ? (
+            <div className="flex items-center justify-between rounded-xl bg-stone-900 text-white pl-1 pr-1 py-1">
+              <button
+                onClick={() => decrease(`zoo-${sku}`)}
+                className="p-1.5 rounded-lg hover:bg-white/15"
+                aria-label="Менше"
+              >
+                <Minus className="w-4 h-4" />
+              </button>
+              <span className="text-sm font-semibold tabular-nums">{inCart.quantity} уп.</span>
+              <button
+                onClick={() => increase(`zoo-${sku}`)}
+                className="p-1.5 rounded-lg hover:bg-white/15"
+                aria-label="Більше"
+              >
+                <Plus className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
             <button
-              onClick={() => bumpQty(id, -1)}
-              className="p-1.5 hover:bg-stone-100 text-stone-600"
-              aria-label="Менше"
+              onClick={() => add(size, force, cell)}
+              disabled={!product}
+              className="w-full inline-flex items-center justify-center gap-1.5 rounded-xl border border-stone-300 bg-white py-2 text-sm font-medium text-stone-800 hover:border-stone-900 hover:bg-stone-900 hover:text-white transition-all disabled:opacity-40"
             >
-              <Minus className="w-3 h-3" />
+              <ShoppingCart className="w-4 h-4" />
+              Додати
             </button>
-            <span className="w-6 text-center text-xs font-semibold text-stone-900">
-              {getQty(id)}
-            </span>
-            <button
-              onClick={() => bumpQty(id, 1)}
-              className="p-1.5 hover:bg-stone-100 text-stone-600"
-              aria-label="Більше"
-            >
-              <Plus className="w-3 h-3" />
-            </button>
-          </div>
-          <button
-            onClick={() => add(size, force, cell)}
-            disabled={!product}
-            className={cn(
-              "flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg py-1.5 px-2 text-xs font-medium transition-all disabled:opacity-40",
-              added[id]
-                ? "bg-emerald-600 text-white"
-                : "bg-stone-900 text-white hover:bg-stone-800"
-            )}
-          >
-            {added[id] ? <Check className="w-3.5 h-3.5" /> : <ShoppingCart className="w-3.5 h-3.5" />}
-            <span className="hidden sm:inline">{added[id] ? "Додано" : "У кошик"}</span>
-          </button>
+          )}
         </div>
       </div>
     );
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-stone-50/40">
       {/* Header */}
-      <div className="border-b border-stone-200/60 bg-gradient-to-b from-stone-50 to-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-8 pb-6">
+      <div className="relative overflow-hidden border-b border-stone-200/60 bg-white">
+        <div className="absolute -top-24 -right-16 w-72 h-72 rounded-full bg-gradient-to-br from-sky-100 via-amber-50 to-transparent blur-2xl opacity-70" aria-hidden />
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-8 pb-6">
           <div className="text-sm text-stone-400 mb-3 font-medium">
             <Link href="/" className="hover:text-stone-600">Головна</Link>
             <span className="mx-2">/</span>
@@ -274,30 +285,40 @@ export default function ZooElasticsPage() {
             <span className="mx-2">/</span>
             <span className="text-stone-600">Еластики ZOO</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-light text-stone-900 tracking-tight">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-stone-900 text-white text-[11px] font-semibold px-2.5 py-1">
+              <Sparkles className="w-3 h-3" /> ORMCO
+            </span>
+            {price > 0 && (
+              <span className="text-[11px] font-medium text-stone-500 bg-stone-100 rounded-full px-2.5 py-1">
+                {price} ₴ / упаковка
+              </span>
+            )}
+          </div>
+          <h1 className="text-3xl sm:text-[2.75rem] leading-tight font-light text-stone-900 tracking-tight mt-3">
             Еластична тяга <span className="font-semibold">ZOO</span>
           </h1>
           <p className="text-stone-500 mt-2 max-w-2xl">
-            Оберіть розмір (діаметр) та силу тяги — кожна комбінація має свою тварину.
-            Оберіть кількість і додайте потрібні у кошик.
+            Кожна комбінація розміру та сили має свою тварину. Оберіть потрібні —
+            і додайте у кошик у пару кліків.
           </p>
 
-          {/* Legend */}
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-4 text-xs text-stone-500">
             <span className="inline-flex items-center gap-2">
-              <DiameterDot mm={11} /> діаметр = розмір тяги
+              <span className="inline-block w-3.5 h-3.5 rounded-full border-2 border-stone-400" />
+              коло = реальний діаметр тяги
             </span>
             <span className="inline-flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-gradient-to-br from-pink-400 via-yellow-400 to-sky-400" />
-              доступні кольорові
+              <StrengthMeter level={4} /> сила тяги
             </span>
-            <span className="inline-flex items-center gap-1.5">
-              <Info className="w-3.5 h-3.5" /> ціна {price ? `${price} ₴ / уп.` : "за упаковку"}
+            <span className="inline-flex items-center gap-2">
+              <span className="w-3.5 h-3.5 rounded-full bg-gradient-to-br from-pink-400 via-amber-300 to-sky-400" />
+              доступні кольорові
             </span>
           </div>
 
           {/* Group tabs */}
-          <div className="inline-flex mt-5 p-1 bg-stone-100 rounded-xl">
+          <div className="inline-flex mt-5 p-1 bg-stone-100 rounded-full">
             {(
               [
                 { key: "intra", label: "Внутрішньоротові" },
@@ -308,10 +329,10 @@ export default function ZooElasticsPage() {
                 key={g.key}
                 onClick={() => setGroup(g.key)}
                 className={cn(
-                  "px-4 py-2 rounded-lg text-sm font-medium transition-all",
+                  "px-4 py-2 rounded-full text-sm font-medium transition-all",
                   group === g.key
-                    ? "bg-white text-stone-900 shadow-sm"
-                    : "text-stone-500 hover:text-stone-700"
+                    ? "bg-stone-900 text-white shadow-sm"
+                    : "text-stone-500 hover:text-stone-800"
                 )}
               >
                 {g.label}
@@ -323,17 +344,22 @@ export default function ZooElasticsPage() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         {/* ─── Desktop matrix ─── */}
-        <div className="hidden lg:block overflow-x-auto">
-          <table className="w-full border-separate border-spacing-2">
+        <div className="hidden lg:block">
+          <table className="w-full border-separate border-spacing-3">
             <thead>
               <tr>
-                <th className="w-[130px]" />
+                <th className="w-[120px]" />
                 {forces.map((f) => (
-                  <th key={f.key} className="align-bottom">
-                    <div className="rounded-xl bg-stone-900 text-white px-3 py-2.5 text-center">
-                      <div className="text-sm font-semibold leading-tight">{f.name}</div>
-                      <div className="text-[11px] text-white/70 mt-0.5">
-                        {f.oz} · {f.g}
+                  <th key={f.key} className="align-bottom sticky top-0 z-10">
+                    <div className="rounded-2xl bg-white border border-stone-200 shadow-sm px-3 py-3 text-center">
+                      <div
+                        className="mx-auto mb-2 h-1 w-10 rounded-full"
+                        style={{ background: STRENGTH_COLORS[f.level - 1] }}
+                      />
+                      <div className="text-sm font-semibold text-stone-900 leading-tight">{f.name}</div>
+                      <div className="text-[11px] text-stone-400 mt-0.5">{f.oz} · {f.g}</div>
+                      <div className="flex justify-center mt-1.5">
+                        <StrengthMeter level={f.level} />
                       </div>
                     </div>
                   </th>
@@ -343,24 +369,27 @@ export default function ZooElasticsPage() {
             <tbody>
               {rows.map((s) => (
                 <tr key={s.size}>
-                  {/* size label */}
                   <td className="align-middle">
-                    <div className="rounded-xl border border-stone-200 bg-stone-50 px-3 py-3 flex flex-col items-center gap-1.5 text-center">
-                      <DiameterDot mm={s.mm} />
-                      <div className="text-sm font-semibold text-stone-900">{s.size}</div>
-                      <div className="text-[11px] text-stone-500">{s.mm} мм</div>
+                    <div className="rounded-2xl border border-stone-200 bg-white px-2 py-4 flex flex-col items-center gap-2 text-center">
+                      <span className="flex items-center justify-center h-[52px]">
+                        <ElasticRing mm={s.mm} />
+                      </span>
+                      <div className="text-base font-semibold text-stone-900">{s.size}</div>
+                      <div className="text-[11px] text-stone-500 -mt-1">{s.mm} мм</div>
                     </div>
                   </td>
                   {forces.map((f) => {
                     const cell = cells[s.size]?.[f.key];
                     return (
-                      <td key={f.key} className="align-top">
+                      <td key={f.key} className="align-stretch">
                         {cell ? (
-                          <div className="h-full rounded-xl border border-stone-200 bg-white p-3 hover:border-sky-300 hover:shadow-sm transition-all">
-                            <CellControls size={s.size} force={f} cell={cell} />
+                          <div className="h-full rounded-2xl border border-stone-200 bg-white p-3.5 hover:border-stone-900 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                            <CellBody size={s.size} force={f} cell={cell} />
                           </div>
                         ) : (
-                          <div className="h-full rounded-xl border border-dashed border-stone-200/70 bg-stone-50/40 min-h-[96px]" />
+                          <div className="h-full min-h-[120px] rounded-2xl border border-dashed border-stone-200 bg-stone-50/50 flex items-center justify-center">
+                            <span className="text-stone-300 text-xl">·</span>
+                          </div>
                         )}
                       </td>
                     );
@@ -374,24 +403,27 @@ export default function ZooElasticsPage() {
         {/* ─── Mobile: grouped by size ─── */}
         <div className="lg:hidden space-y-5">
           {rows.map((s) => (
-            <div key={s.size} className="rounded-2xl border border-stone-200 overflow-hidden">
+            <div key={s.size} className="rounded-2xl border border-stone-200 bg-white overflow-hidden">
               <div className="flex items-center gap-3 bg-stone-50 px-4 py-3 border-b border-stone-200">
-                <DiameterDot mm={s.mm} />
+                <ElasticRing mm={s.mm} size="sm" />
                 <div>
-                  <div className="font-semibold text-stone-900">{s.size}</div>
-                  <div className="text-xs text-stone-500">{s.mm} мм</div>
+                  <div className="font-semibold text-stone-900 leading-none">{s.size}</div>
+                  <div className="text-xs text-stone-500 mt-1">{s.mm} мм</div>
                 </div>
               </div>
-              <div className="divide-y divide-stone-100">
+              <div className="grid grid-cols-2 gap-3 p-3">
                 {forces.map((f) => {
                   const cell = cells[s.size]?.[f.key];
                   if (!cell) return null;
                   return (
-                    <div key={f.key} className="p-4">
-                      <div className="text-[11px] font-medium uppercase tracking-wide text-sky-600 mb-2">
-                        {f.name} · {f.oz} / {f.g}
+                    <div key={f.key} className="rounded-xl border border-stone-200 p-3 flex flex-col">
+                      <div className="flex items-center gap-1.5 mb-2">
+                        <StrengthMeter level={f.level} />
+                        <span className="text-[10px] font-medium uppercase tracking-wide text-stone-500 truncate">
+                          {f.name}
+                        </span>
                       </div>
-                      <CellControls size={s.size} force={f} cell={cell} compact />
+                      <CellBody size={s.size} force={f} cell={cell} />
                     </div>
                   );
                 })}
@@ -400,8 +432,9 @@ export default function ZooElasticsPage() {
           ))}
         </div>
 
-        <p className="text-xs text-stone-400 mt-8">
-          * Артикули 636-… — кольорові варіанти. Сила вказана в унціях (oz) та грамах.
+        <p className="text-xs text-stone-400 mt-8 max-w-2xl">
+          Артикули 636-… — кольорові варіанти. Сила тяги вказана в унціях (oz) та
+          грамах; ціна — за упаковку.
         </p>
       </div>
     </div>
