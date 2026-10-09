@@ -1,7 +1,10 @@
 'use client'
 import React, { useState, useEffect, useRef } from 'react';
-import { cn } from '@/lib/utils';
+import { cn, formatPrice } from '@/lib/utils';
 import Link from 'next/link';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { getProducts, getCategories, productDisplayPrice } from '@/lib/api/public';
 import { 
   Menu, 
   X, 
@@ -277,14 +280,70 @@ function Navigation() {
 // Search Bar Component
 function SearchBar({ isOpen, onToggle, isMobile = false }: { isOpen: boolean; onToggle: () => void; isMobile?: boolean }) {
   const [query, setQuery] = useState('');
+  const [debounced, setDebounced] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const [results, setResults] = useState<any[]>([]);
+  const [isFetching, setIsFetching] = useState(false);
+  const [categories, setCategories] = useState<any[]>([]);
+  const router = useRouter();
+
+  // Client-only data fetching (plain fetch in effects) — the header renders
+  // outside the react-query provider during static export, so we must not use
+  // useQuery here.
+  useEffect(() => {
+    getCategories().then(setCategories).catch(() => {});
+  }, []);
+
+  // Debounce typing before hitting the API.
+  useEffect(() => {
+    const t = setTimeout(() => setDebounced(query.trim()), 250);
+    return () => clearTimeout(t);
+  }, [query]);
+
+  // Substring search (qLike) — matches partial words, unlike the backend `q`
+  // ($text) which only matches whole words.
+  useEffect(() => {
+    if (debounced.length < 2) {
+      setResults([]);
+      setIsFetching(false);
+      return;
+    }
+    let alive = true;
+    setIsFetching(true);
+    getProducts({ qLike: debounced, limit: 8 })
+      .then((res) => { if (alive) setResults((res?.items ?? []) as any[]); })
+      .catch(() => { if (alive) setResults([]); })
+      .finally(() => { if (alive) setIsFetching(false); });
+    return () => { alive = false; };
+  }, [debounced]);
+
+  const catSlugOf = (p: any) =>
+    categories?.find((c) => (p.categoryIds ?? []).includes(c._id))?.slug ?? 'catalog';
+  const hrefOf = (p: any) => `/catalog/${catSlugOf(p)}/${p.slug}`;
+
+  const go = (href: string) => {
+    setIsFocused(false);
+    setQuery('');
+    router.push(href);
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && results.length > 0) {
+      e.preventDefault();
+      go(hrefOf(results[0]));
+    } else if (e.key === 'Escape') {
+      setIsFocused(false);
+    }
+  };
 
   const popularSearches = [
     'Металеві брекети',
-    'Керамічні брекети', 
+    'Керамічні брекети',
     'Ортодонтичні дуги',
     'Лігатури еластичні'
   ];
+
+  const hasQuery = query.trim().length >= 2;
 
   return (
     <div className="relative w-full max-w-lg">
@@ -294,6 +353,7 @@ function SearchBar({ isOpen, onToggle, isMobile = false }: { isOpen: boolean; on
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={onKeyDown}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setTimeout(() => setIsFocused(false), 200)}
           placeholder="Пошук товарів..."
@@ -308,15 +368,43 @@ function SearchBar({ isOpen, onToggle, isMobile = false }: { isOpen: boolean; on
 
       {/* Search Dropdown */}
       {isFocused && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-stone-200 shadow-xl z-50 rounded-lg overflow-hidden">
-          {query ? (
-            <div className="p-4">
-              <div className="text-sm text-stone-500 mb-3">
-                Результати для "{query}"
-              </div>
-              <div className="text-sm text-stone-400">
-                Пошук в процесі розробки...
-              </div>
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-stone-200 shadow-xl z-50 rounded-lg overflow-hidden max-h-[70vh] overflow-y-auto">
+          {hasQuery ? (
+            <div className="py-2">
+              {isFetching && results.length === 0 ? (
+                <div className="p-4 text-sm text-stone-400">Пошук…</div>
+              ) : results.length === 0 ? (
+                <div className="p-4 text-sm text-stone-400">
+                  Нічого не знайдено за запитом «{query.trim()}»
+                </div>
+              ) : (
+                results.map((p) => {
+                  const { price } = productDisplayPrice(p);
+                  const name = p.titleI18n?.uk || p.titleI18n?.en || p.slug;
+                  const img = p.images?.[0];
+                  return (
+                    <button
+                      key={p._id || p.slug}
+                      onMouseDown={(e) => { e.preventDefault(); go(hrefOf(p)); }}
+                      className="flex items-center gap-3 w-full text-left px-4 py-2.5 hover:bg-stone-50 transition-colors"
+                    >
+                      <div className="relative w-12 h-12 shrink-0 bg-stone-50 border border-stone-100 rounded-lg overflow-hidden flex items-center justify-center">
+                        {img ? (
+                          <Image src={img} alt={name} fill sizes="48px" className="object-contain p-1" />
+                        ) : (
+                          <Package className="w-5 h-5 text-stone-300" />
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-sm text-stone-900 truncate">{name}</div>
+                        {price > 0 && (
+                          <div className="text-sm font-semibold text-stone-900">{formatPrice(price)}</div>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })
+              )}
             </div>
           ) : (
             <div className="p-4">
@@ -327,7 +415,7 @@ function SearchBar({ isOpen, onToggle, isMobile = false }: { isOpen: boolean; on
                 {popularSearches.map((item, index) => (
                   <button
                     key={index}
-                    onClick={() => setQuery(item)}
+                    onMouseDown={(e) => { e.preventDefault(); setQuery(item); }}
                     className="block w-full text-left text-sm text-stone-600 hover:text-stone-900 hover:bg-stone-50 p-2 rounded transition-colors"
                   >
                     {item}
