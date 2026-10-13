@@ -977,7 +977,7 @@ function CategoryProductsPageInner() {
                       alt={pickI18n(sub.nameI18n as any, 'uk')}
                       fill
                       sizes="(max-width:768px) 50vw, 25vw"
-                      className="object-contain p-4 group-hover:scale-105 transition-transform duration-500"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
                     <div className="absolute inset-0 flex items-center justify-center">
