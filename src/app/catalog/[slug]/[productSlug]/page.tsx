@@ -801,17 +801,32 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            {/* ZOO product: purchase happens in the matrix below */}
+            {/* ZOO product: price + purchase happens in the matrix below */}
             {isZoo && (
-              <div className="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 flex items-center gap-3">
-                <span className="flex -space-x-1.5 shrink-0">
-                  <span className="w-4 h-4 rounded-full bg-pink-400 border-2 border-white" />
-                  <span className="w-5 h-5 rounded-full bg-amber-400 border-2 border-white" />
-                  <span className="w-6 h-6 rounded-full bg-sky-400 border-2 border-white" />
-                </span>
-                <span className="text-sm text-stone-600">
-                  Оберіть потрібні розміри та силу в <span className="font-semibold text-stone-900">таблиці нижче ↓</span>
-                </span>
+              <div className="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 space-y-2">
+                {price > 0 && (
+                  <div className="flex items-end gap-3">
+                    <span className="text-3xl font-bold text-stone-900">
+                      {price.toLocaleString()} ₴
+                    </span>
+                    {originalPrice && (
+                      <span className="text-lg text-stone-400 line-through mb-0.5">
+                        {originalPrice.toLocaleString()} ₴
+                      </span>
+                    )}
+                    <span className="text-sm text-stone-500 mb-1">/ упаковка</span>
+                  </div>
+                )}
+                <div className="flex items-center gap-3">
+                  <span className="flex -space-x-1.5 shrink-0">
+                    <span className="w-4 h-4 rounded-full bg-pink-400 border-2 border-white" />
+                    <span className="w-5 h-5 rounded-full bg-amber-400 border-2 border-white" />
+                    <span className="w-6 h-6 rounded-full bg-sky-400 border-2 border-white" />
+                  </span>
+                  <span className="text-sm text-stone-600">
+                    Оберіть потрібні розміри та силу в <span className="font-semibold text-stone-900">таблиці нижче ↓</span>
+                  </span>
+                </div>
               </div>
             )}
 
