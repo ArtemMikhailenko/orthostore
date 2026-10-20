@@ -250,21 +250,22 @@ const CARD_STYLES: Record<CardStyle, { container: string; img: string; overlay: 
     img: "",
     overlay: "bg-gradient-to-t from-black/75 via-black/15 to-transparent",
   },
+  // All non-photo styles now mirror "photo" (as on ІНСТРУМЕНТИ) so the
+  // darkening overlay is identical on every card regardless of image brightness.
   dark: {
-    container: "bg-stone-900 border border-stone-700",
-    img: "opacity-55 group-hover:opacity-75",
-    overlay: "bg-gradient-to-t from-stone-900/85 via-stone-900/30 to-transparent",
+    container: "border border-stone-200",
+    img: "",
+    overlay: "bg-gradient-to-t from-black/75 via-black/15 to-transparent",
   },
   light: {
-    container: "bg-stone-200 border border-stone-300",
-    img: "opacity-60 group-hover:opacity-85",
-    overlay: "bg-gradient-to-t from-stone-900/70 via-stone-900/15 to-transparent",
+    container: "border border-stone-200",
+    img: "",
+    overlay: "bg-gradient-to-t from-black/75 via-black/15 to-transparent",
   },
   accent: {
-    container: "bg-stone-900 border border-stone-700",
-    img: "opacity-55 group-hover:opacity-80",
-    overlay:
-      "bg-gradient-to-t from-stone-900/90 via-stone-900/25 to-transparent group-hover:from-stone-900/70 transition-all duration-500",
+    container: "border border-stone-200",
+    img: "",
+    overlay: "bg-gradient-to-t from-black/75 via-black/15 to-transparent",
   },
 };
 
