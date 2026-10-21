@@ -25,6 +25,23 @@ export type ElasticEntry = {
 
 const STRENGTH_COLORS = ["#34d399", "#a3e635", "#f59e0b", "#f97316", "#ef4444"];
 
+/** Parse the numeric grams out of a force's "г" value (e.g. "170 г" → 170). */
+function parseGrams(g: string | number | undefined): number {
+  const n = parseFloat(String(g ?? "").replace(",", ".").replace(/[^\d.]/g, ""));
+  return Number.isFinite(n) ? n : 0;
+}
+/** Strength 1–5 derived from the real force (grams), so colour/order are always
+ * correct even for custom forces where the stored level may be wrong. */
+function gramsToLevel(g: string | number | undefined, fallback = 1): number {
+  const n = parseGrams(g);
+  if (!n) return Math.min(5, Math.max(1, fallback || 1));
+  if (n <= 70) return 1;
+  if (n <= 90) return 2;
+  if (n <= 115) return 3;
+  if (n <= 150) return 4;
+  return 5;
+}
+
 function ElasticRing({ mm, size = "md" }: { mm: number; size?: "sm" | "md" }) {
   const scale = size === "sm" ? 1.4 : 2.1;
   const px = Math.round(mm * scale) + (size === "sm" ? 6 : 10);
@@ -97,16 +114,23 @@ export function ZooElasticsTable({
     return [...map.values()].sort((a, b) => a.mm - b.mm);
   }, [groupEntries]);
 
-  // Columns (forces) sorted by strength level.
+  // Columns (forces) ordered & coloured by real force (grams), not the stored
+  // level — so custom forces are always correct.
   const forces = useMemo(() => {
     const map = new Map<
       string,
-      { name: string; oz: string; g: string; level: number }
+      { name: string; oz: string; g: string; level: number; grams: number }
     >();
     groupEntries.forEach((e) =>
-      map.set(e.forceName, { name: e.forceName, oz: e.oz, g: e.g, level: e.level })
+      map.set(e.forceName, {
+        name: e.forceName,
+        oz: e.oz,
+        g: e.g,
+        level: gramsToLevel(e.g, e.level),
+        grams: parseGrams(e.g),
+      })
     );
-    return [...map.values()].sort((a, b) => a.level - b.level);
+    return [...map.values()].sort((a, b) => a.grams - b.grams || a.level - b.level);
   }, [groupEntries]);
 
   // cells[size][forceName]

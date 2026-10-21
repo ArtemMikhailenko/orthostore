@@ -220,7 +220,7 @@ function OptionGroupsSelector({
     <div className="space-y-5">
       {groups.map((g) => (
         <div key={g.name} className="space-y-3">
-          <h3 className="text-sm font-medium text-stone-900 uppercase tracking-wider">
+          <h3 className="text-sm font-semibold text-stone-900">
             {g.name}
           </h3>
           <div className="flex flex-wrap gap-2">
