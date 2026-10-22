@@ -31,7 +31,13 @@ export function ColorSelector({
       <div className="flex flex-wrap gap-2.5">
         {colors.map((c) => {
           const selected = value === c.name;
-          const hex = c.hex?.trim();
+          // Two-tone colours are stored as "primary/secondary" (e.g.
+          // "#22c55e/#3b82f6"). Split and render a diagonal split swatch.
+          const [h1, h2] = (c.hex || "").split("/").map((s) => s.trim());
+          const hasColor = !!h1;
+          const swatchBg = h2
+            ? `linear-gradient(135deg, ${h1} 0 50%, ${h2} 50% 100%)`
+            : h1;
           return (
             <button
               key={c.name}
@@ -50,9 +56,9 @@ export function ColorSelector({
                   "relative inline-flex items-center justify-center w-5 h-5 rounded-full border shrink-0",
                   selected ? "border-white/40" : "border-stone-300"
                 )}
-                style={hex ? { backgroundColor: hex } : undefined}
+                style={hasColor ? { background: swatchBg } : undefined}
               >
-                {!hex && (
+                {!hasColor && (
                   <span className="text-[9px] font-semibold uppercase text-stone-400">
                     {c.name.charAt(0)}
                   </span>
@@ -60,7 +66,7 @@ export function ColorSelector({
                 {selected && (
                   <Check
                     className="w-3 h-3 drop-shadow"
-                    style={{ color: hex ? contrastColor(hex) : "#0c0a09" }}
+                    style={{ color: hasColor ? contrastColor(h1) : "#0c0a09" }}
                   />
                 )}
               </span>
