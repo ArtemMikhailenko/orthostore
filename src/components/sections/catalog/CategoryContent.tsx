@@ -36,11 +36,11 @@ export function CategoryContent({ slug }: { slug: string }) {
       )}
 
       {blocks.length > 0 && (
-        <div className="max-w-5xl mx-auto space-y-5">
+        <div className="space-y-10">
           {blocks.map((b, i) => (
             <div
               key={i}
-              className="flex flex-col sm:flex-row gap-5 sm:gap-6 sm:items-center rounded-2xl border border-stone-200/70 bg-white p-5 sm:p-6"
+              className="flex flex-col sm:flex-row gap-6 sm:gap-10 sm:items-center"
             >
               {b.img && b.img.trim() && (
                 <Image
@@ -49,7 +49,7 @@ export function CategoryContent({ slug }: { slug: string }) {
                   width={400}
                   height={400}
                   sizes="(max-width:640px) 100vw, 240px"
-                  className="w-full sm:w-56 md:w-60 h-auto rounded-xl border border-stone-200/60 shrink-0 bg-stone-50"
+                  className="w-full sm:w-56 md:w-60 h-auto rounded-xl shrink-0"
                 />
               )}
               {b.text && b.text.trim() && (
