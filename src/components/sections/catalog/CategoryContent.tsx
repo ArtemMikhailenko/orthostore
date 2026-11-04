@@ -40,7 +40,7 @@ export function CategoryContent({ slug }: { slug: string }) {
           {blocks.map((b, i) => (
             <div
               key={i}
-              className="flex flex-col sm:flex-row gap-5 sm:gap-6 items-center rounded-2xl border border-stone-200/70 bg-white p-5 sm:p-6"
+              className="flex flex-col sm:flex-row gap-5 sm:gap-6 sm:items-center rounded-2xl border border-stone-200/70 bg-white p-5 sm:p-6"
             >
               {b.img && b.img.trim() && (
                 <Image
@@ -48,8 +48,8 @@ export function CategoryContent({ slug }: { slug: string }) {
                   alt=""
                   width={400}
                   height={400}
-                  sizes="(max-width:640px) 100vw, 288px"
-                  className="w-full sm:w-64 md:w-72 h-auto rounded-xl border border-stone-200/60 shrink-0 bg-stone-50 self-center"
+                  sizes="(max-width:640px) 100vw, 240px"
+                  className="w-full sm:w-56 md:w-60 h-auto rounded-xl border border-stone-200/60 shrink-0 bg-stone-50"
                 />
               )}
               {b.text && b.text.trim() && (
