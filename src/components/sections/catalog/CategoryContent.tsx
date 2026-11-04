@@ -48,8 +48,8 @@ export function CategoryContent({ slug }: { slug: string }) {
                   alt=""
                   width={400}
                   height={400}
-                  sizes="(max-width:640px) 100vw, 224px"
-                  className="w-full sm:w-56 h-auto rounded-xl border border-stone-200/60 shrink-0 bg-stone-50 self-center"
+                  sizes="(max-width:640px) 100vw, 288px"
+                  className="w-full sm:w-64 md:w-72 h-auto rounded-xl border border-stone-200/60 shrink-0 bg-stone-50 self-center"
                 />
               )}
               {b.text && b.text.trim() && (
