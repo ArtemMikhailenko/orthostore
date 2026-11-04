@@ -6,6 +6,7 @@ import { useProducts, useManufacturers, useCategories, useCountries, useSubcateg
 import { productDisplayPrice } from '@/lib/api/public';
 import type { ProductWithDiscounts } from '@/lib/api/public.types';
 import { pickI18n } from '@/snippets/i18n';
+import { CategoryContent } from '@/components/sections/catalog/CategoryContent';
 import {
   SlidersHorizontal,
   Star,
@@ -961,6 +962,7 @@ function CategoryProductsPageInner() {
 
       {/* Subcategory cards / Products */}
       <div className="max-w-7xl mx-auto px-6 py-8">
+        {!activeSub && <CategoryContent slug={slug} />}
         {(slug === 'propysy-breketiv' || slug.includes('propys')) && <PropysyReference />}
         {showSubcategoryCards ? (
           <div className="flex flex-wrap justify-center gap-6">
